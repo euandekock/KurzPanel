@@ -29,7 +29,13 @@ public:
     void initialise (const String& commandLine)
     {
         // Do your application's initialisation code here..
+	Image icon (Image::RGB, 32, 32, true);
+
         mainWindow = new MainAppWindow();
+
+        mainWindow->setIcon(icon);
+        //mainWindow->setUsingNativeTitleBar(true);
+
     }
 
     void shutdown()
@@ -57,7 +63,7 @@ public:
 
     bool moreThanOneInstanceAllowed()
     {
-        return true;
+        return false;
     }
 
     void anotherInstanceStarted (const String& commandLine)

@@ -43,12 +43,27 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/k_showdirlist_aa556dbb.o \
+  $(OBJDIR)/k_dir_f6e2dba.o \
+  $(OBJDIR)/k_direntry_9bee4242.o \
+  $(OBJDIR)/k_dirlist_982854d8.o \
+  $(OBJDIR)/k_lfoshape_f8ce1949.o \
+  $(OBJDIR)/k_lfoshapelist_b179e0e7.o \
+  $(OBJDIR)/k_program_2240b831.o \
+  $(OBJDIR)/k_programlist_9132cbcf.o \
+  $(OBJDIR)/k_songlist_cfddba70.o \
+  $(OBJDIR)/kurz_connection_1416370c.o \
+  $(OBJDIR)/kurz_sysex_msg_da053d1e.o \
+  $(OBJDIR)/kurz_view_lfo_shape_f6ba302b.o \
   $(OBJDIR)/MainWindow_499ac812.o \
   $(OBJDIR)/Main_90ebc5c2.o \
+  $(OBJDIR)/Rack_8dea4be0.o \
+  $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/juce_audio_basics_2442e4ea.o \
   $(OBJDIR)/juce_audio_devices_a4c8a728.o \
   $(OBJDIR)/juce_audio_formats_d349f0c8.o \
   $(OBJDIR)/juce_audio_processors_44a134a2.o \
+  $(OBJDIR)/juce_audio_utils_f63b12e8.o \
   $(OBJDIR)/juce_core_aff681cc.o \
   $(OBJDIR)/juce_data_structures_bdd6d488.o \
   $(OBJDIR)/juce_events_79b2840.o \
@@ -72,6 +87,66 @@ clean:
 	-@rm -rf $(OBJDIR)/*
 	-@rm -rf $(OBJDIR)
 
+$(OBJDIR)/k_showdirlist_aa556dbb.o: ../../Source/k_showdirlist.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_showdirlist.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_dir_f6e2dba.o: ../../Source/k_dir.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_dir.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_direntry_9bee4242.o: ../../Source/k_direntry.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_direntry.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_dirlist_982854d8.o: ../../Source/k_dirlist.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_dirlist.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_lfoshape_f8ce1949.o: ../../Source/k_lfoshape.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_lfoshape.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_lfoshapelist_b179e0e7.o: ../../Source/k_lfoshapelist.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_lfoshapelist.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_program_2240b831.o: ../../Source/k_program.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_program.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_programlist_9132cbcf.o: ../../Source/k_programlist.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_programlist.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/k_songlist_cfddba70.o: ../../Source/k_songlist.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_songlist.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/kurz_connection_1416370c.o: ../../Source/kurz_connection.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling kurz_connection.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/kurz_sysex_msg_da053d1e.o: ../../Source/kurz_sysex_msg.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling kurz_sysex_msg.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/kurz_view_lfo_shape_f6ba302b.o: ../../Source/kurz_view_lfo_shape.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling kurz_view_lfo_shape.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/MainWindow_499ac812.o: ../../Source/MainWindow.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling MainWindow.cpp"
@@ -80,6 +155,16 @@ $(OBJDIR)/MainWindow_499ac812.o: ../../Source/MainWindow.cpp
 $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Main.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Rack_8dea4be0.o: ../../Source/Rack.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Rack.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling BinaryData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_audio_basics_2442e4ea.o: ../../JuceLibraryCode/modules/juce_audio_basics/juce_audio_basics.cpp
@@ -100,6 +185,11 @@ $(OBJDIR)/juce_audio_formats_d349f0c8.o: ../../JuceLibraryCode/modules/juce_audi
 $(OBJDIR)/juce_audio_processors_44a134a2.o: ../../JuceLibraryCode/modules/juce_audio_processors/juce_audio_processors.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling juce_audio_processors.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/juce_audio_utils_f63b12e8.o: ../../JuceLibraryCode/modules/juce_audio_utils/juce_audio_utils.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling juce_audio_utils.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_core_aff681cc.o: ../../JuceLibraryCode/modules/juce_core/juce_core.cpp

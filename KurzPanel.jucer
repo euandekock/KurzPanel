@@ -4,10 +4,57 @@
               bundleIdentifier="com.gekkotek.KurzPanel" jucerVersion="3.0.0"
               companyName="GekkoTek" defines="JUCE_ALSA_MIDI_INPUT_NAME=&quot;\&quot;KurzPanel\ Input\&quot;&quot; JUCE_ALSA_MIDI_OUTPUT_NAME=&quot;\&quot;KurzPanel\ Output\&quot;&quot; JUCE_ALSA_MIDI_INPUT_PORT_NAME=&quot;\&quot;KurzPanel\ In\&quot;&quot; JUCE_ALSA_MIDI_OUTPUT_PORT_NAME=&quot;\&quot;KurzPanel\ Out\&quot;&quot;">
   <MAINGROUP id="u1DoVG" name="KurzPanel">
+    <GROUP id="{5F0A26A0-98E1-029D-4DDD-3FCC2B8A446E}" name="Images">
+      <FILE id="ShzBIV" name="klogo128x128.png" compile="0" resource="1"
+            file="Images/klogo128x128.png"/>
+      <FILE id="GB7Jqy" name="klogo32x32.png" compile="0" resource="1" file="Images/klogo32x32.png"/>
+    </GROUP>
     <GROUP id="{859873B3-6FE5-42EA-F6F0-0DD8A8DBCF22}" name="Source">
+      <FILE id="nqIgQt" name="k_showdirlist.cpp" compile="1" resource="0"
+            file="Source/k_showdirlist.cpp"/>
+      <FILE id="XATOo1" name="k_showdirlist.h" compile="0" resource="0" file="Source/k_showdirlist.h"/>
+      <FILE id="vtkJFs" name="audioComponent.h" compile="0" resource="0"
+            file="Source/audioComponent.h"/>
+      <FILE id="Y2h4KE" name="k_dir.cpp" compile="1" resource="0" file="Source/k_dir.cpp"/>
+      <FILE id="CJJz93" name="k_dir.h" compile="0" resource="0" file="Source/k_dir.h"/>
+      <FILE id="KDiKGF" name="k_direntry.cpp" compile="1" resource="0" file="Source/k_direntry.cpp"/>
+      <FILE id="ef8gde" name="k_direntry.h" compile="0" resource="0" file="Source/k_direntry.h"/>
+      <FILE id="yHIzoh" name="k_dirlist.cpp" compile="1" resource="0" file="Source/k_dirlist.cpp"/>
+      <FILE id="estmqB" name="k_dirlist.h" compile="0" resource="0" file="Source/k_dirlist.h"/>
+      <FILE id="PY24wB" name="k_lfoshape.cpp" compile="1" resource="0" file="Source/k_lfoshape.cpp"/>
+      <FILE id="t4OtdH" name="k_lfoshape.h" compile="0" resource="0" file="Source/k_lfoshape.h"/>
+      <FILE id="Js5yLn" name="k_lfoshapelist.cpp" compile="1" resource="0"
+            file="Source/k_lfoshapelist.cpp"/>
+      <FILE id="VFp8qQ" name="k_lfoshapelist.h" compile="0" resource="0"
+            file="Source/k_lfoshapelist.h"/>
+      <FILE id="EQuXp0" name="k_program.cpp" compile="1" resource="0" file="Source/k_program.cpp"/>
+      <FILE id="zrSzsl" name="k_program.h" compile="0" resource="0" file="Source/k_program.h"/>
+      <FILE id="dmfU7W" name="k_programlist.cpp" compile="1" resource="0"
+            file="Source/k_programlist.cpp"/>
+      <FILE id="aLzSIo" name="k_programlist.h" compile="0" resource="0" file="Source/k_programlist.h"/>
+      <FILE id="LY7wX3" name="k_songlist.cpp" compile="1" resource="0" file="Source/k_songlist.cpp"/>
+      <FILE id="FlA5QM" name="k_songlist.h" compile="0" resource="0" file="Source/k_songlist.h"/>
+      <FILE id="DF7Mwz" name="k_songobj.h" compile="0" resource="0" file="Source/k_songobj.h"/>
+      <FILE id="KitX7H" name="kurz_connection.cpp" compile="1" resource="0"
+            file="Source/kurz_connection.cpp"/>
+      <FILE id="U1DuvJ" name="kurz_connection.h" compile="0" resource="0"
+            file="Source/kurz_connection.h"/>
+      <FILE id="aYvF4M" name="kurz_sysex_msg.cpp" compile="1" resource="0"
+            file="Source/kurz_sysex_msg.cpp"/>
+      <FILE id="efC82s" name="kurz_sysex_msg.h" compile="0" resource="0"
+            file="Source/kurz_sysex_msg.h"/>
+      <FILE id="cz0RXm" name="kurz_view_lfo_shape.cpp" compile="1" resource="0"
+            file="Source/kurz_view_lfo_shape.cpp"/>
+      <FILE id="H8piMJ" name="kurz_view_lfo_shape.h" compile="0" resource="0"
+            file="Source/kurz_view_lfo_shape.h"/>
       <FILE id="Lk701c" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
       <FILE id="NU0iZp" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
       <FILE id="BKv5jp" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="rBm3fQ" name="objects.h" compile="0" resource="0" file="Source/objects.h"/>
+      <FILE id="PhPdh4" name="Rack.cpp" compile="1" resource="0" file="Source/Rack.cpp"/>
+      <FILE id="re9SyX" name="Rack.h" compile="0" resource="0" file="Source/Rack.h"/>
+      <FILE id="FnpEvu" name="tables.h" compile="0" resource="0" file="Source/tables.h"/>
+      <FILE id="o5LbIO" name="types.h" compile="0" resource="0" file="Source/types.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -23,9 +70,11 @@
     <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
     <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="1"/>
   </MODULES>
   <EXPORTFORMATS>
-    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules">
+    <LINUX_MAKE targetFolder="Builds/Linux" juceFolder="../juce/modules" smallIcon="GB7Jqy"
+                bigIcon="ShzBIV">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="KurzPanel"/>

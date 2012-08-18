@@ -8,8 +8,8 @@
   ==============================================================================
 */
 
-#ifndef __MAINWINDOW_H_ECA8875__
-#define __MAINWINDOW_H_ECA8875__
+#ifndef __MAINWINDOW_H_C6D3BF6E__
+#define __MAINWINDOW_H_C6D3BF6E__
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -38,4 +38,4 @@ private:
 };
 
 
-#endif  // __MAINWINDOW_H_ECA8875__
+#endif  // __MAINWINDOW_H_C6D3BF6E__
