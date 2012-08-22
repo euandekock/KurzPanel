@@ -282,27 +282,73 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
 	     * the message and then track it's status - setting the queue_status when we are done.
 	     */
 
-	      else if(tmpMsg->Data[1] == 0x03 && tmpMsg->Data[2] == shapeType)
+	      else if(tmpMsg->Data[1] == 0x03)
 	      {
-		cout << "Processing an LFO Shape Table" << endl;
-		if (state == KSTATE_NEWMSG)
-		  {
-		    lfo_item = new KurzLFOShape(*tmpMsg);
-
-		    state = KSTATE_INMSG;
-		  }
-		else if(state == KSTATE_INMSG)
-		  {
-		    /*
-		     * Add the new message on to the end
-		     */
-		    cout << "Should be adding to the Object" << endl;
-
-
-		    if(tmpMsg->Status == K_MSG_OK)
+	      if(tmpMsg->Data[2] == progType)
 		      {
-			cout << "New MSG Size is: " << dec << tmpMsg->pSize << endl;
-			lfo_item->addMessage(*tmpMsg);
+			cout << "Processing an Program" << endl;
+			if (state == KSTATE_NEWMSG)
+			  {
+			    prog_item = new KurzProgram(*tmpMsg);
+
+			    state = KSTATE_INMSG;
+			  }
+			else if(state == KSTATE_INMSG)
+			  {
+			    /*
+			     * Add the new message on to the end
+			     */
+			    cout << "Should be adding to the Object" << endl;
+
+
+			    if(tmpMsg->Status == K_MSG_OK)
+			      {
+				cout << "New MSG Size is: " << dec << tmpMsg->pSize << endl;
+				prog_item->addMessage(*tmpMsg);
+			      }
+			  }
+			if(prog_item->Status == KurzProgram::KPROG_MSG_GOOD)
+			  {
+			  cout << "Adding a new Program ID: " << dec << (int)prog_item->programID << endl;
+			  listDir.Programs.Program.insert(pair<uint8, KurzProgram>(prog_item->programID, *prog_item));
+
+			  // Lookup our ID as the list order may have changed...
+			  for(int count = 0; count < listDir.Programs.List.size(); count++)
+				{
+				if(prog_item->programID == listDir.Programs.List[count].ID)
+					{
+					listDir.Programs.List[count].Status = KurzDirEntry::KITEM_FULL;
+					break;
+					}
+				}
+
+			  //listDir.LFOShapes.ItemReady(tmpMsg->Data[3]);
+			  state = KSTATE_LVL3; // Allow new messages to be processed.
+			  }
+		      }
+	      if(tmpMsg->Data[2] == shapeType)
+		      {
+			cout << "Processing an LFO Shape Table" << endl;
+			if (state == KSTATE_NEWMSG)
+			  {
+			    lfo_item = new KurzLFOShape(*tmpMsg);
+
+			    state = KSTATE_INMSG;
+			  }
+			else if(state == KSTATE_INMSG)
+			  {
+			    /*
+			     * Add the new message on to the end
+			     */
+			    cout << "Should be adding to the Object" << endl;
+
+
+			    if(tmpMsg->Status == K_MSG_OK)
+			      {
+				cout << "New MSG Size is: " << dec << tmpMsg->pSize << endl;
+				lfo_item->addMessage(*tmpMsg);
+			      }
+			  }
 			if(lfo_item->Status == KurzLFOShape::KLFO_MSG_GOOD)
 			  {
 			  cout << "Adding a new LFO ID: " << dec << (int)lfo_item->shapeID << endl;
@@ -322,7 +368,6 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
 			  state = KSTATE_LVL3; // Allow new messages to be processed.
 			  }
 		      }
-		  }
 	      }
 
 

@@ -31,6 +31,8 @@
 #include <iostream>
 #include "k_direntry.h"
 #include "k_dirlist.h"
+#include "k_program.h"
+#include "k_programlist.h"
 #include "k_lfoshape.h"
 #include "k_lfoshapelist.h"
 #include "kurz_view_lfo_shape.h"

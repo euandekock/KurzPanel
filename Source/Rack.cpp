@@ -1118,6 +1118,7 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
         }
       else if (progDir.Programs.Status == KurzDirList::KDIR_OK)
         {
+        progDir.Programs.setSysexLink(remoteLink);
         k_ShowDirList *showDirList = new k_ShowDirList((KurzDirList *)&progDir.Programs);
         DialogWindow::showModalDialog(String(progDir.Programs.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
         showDirList->resized();

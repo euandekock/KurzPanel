@@ -250,7 +250,31 @@ void k_ShowDirList::sortOrderChanged(int newSortColumnId, bool isForwards)
 void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEvent &e)
 {
 //if(internalQ->List[rowNumber].Type = shapeType)
-if(internalQ->Type = shapeType)
+if(internalQ->Type == progType)
+	{
+	KurzProgramList *progDir = (KurzProgramList *)internalQ;
+
+	uint8 ID = progDir->List[rowNumber].ID;
+
+	if(progDir->getItemStatus(rowNumber, 1) == KurzDirEntry::KITEM_FULL)
+		{
+		map<uint8, KurzProgram>::iterator i;
+
+		i = progDir->Program.find(ID);
+		cout << "Located ID: " << dec << (int)ID << " in Directory" << endl;
+
+		if(i != progDir->Program.end())
+			{
+			KurzProgram &program = i->second;
+			cout << "Instantiated a Program Object: " << program.programName << endl;
+
+			//KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
+			//DialogWindow::showModalDialog(String(progDir->List[rowNumber].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
+			//delete LFOView;
+			}
+		}
+	}
+if(internalQ->Type == shapeType)
 	{
 	KurzLFOShapeList *lfoDir = (KurzLFOShapeList *)internalQ;
 

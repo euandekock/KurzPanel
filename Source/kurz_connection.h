@@ -85,6 +85,7 @@ enum KURZ_CONNECT_STATE
 // Fwd declarations...
 class  KurzDirEntry;
 class KurzLFOShape;
+class KurzProgram;
 class KurzDir;
 
 class KurzConnection
@@ -106,6 +107,7 @@ public:
 
     KurzDirEntry *item;
     KurzLFOShape *lfo_item;
+    KurzProgram *prog_item;
 
     KurzConnection(uint8 localID, uint8 remoteID, MidiOutput *midiOutChannel, deque<string> &inQueue, KurzDir &outDir);
     ~KurzConnection();

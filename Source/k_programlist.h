@@ -15,6 +15,7 @@ public:
 
 	KurzProgramList();
 	~KurzProgramList();
+	int getItemStatus(uint8 rowId, uint8 getItem);
 	};
 
 
