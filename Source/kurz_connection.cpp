@@ -289,8 +289,8 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
 			cout << "Processing an Program" << endl;
 			if (state == KSTATE_NEWMSG)
 			  {
-			    prog_item = new KurzProgram(*tmpMsg);
-
+			    prog_item = new KurzProgram();
+			    prog_item->addMessage(*tmpMsg);
 			    state = KSTATE_INMSG;
 			  }
 			else if(state == KSTATE_INMSG)
@@ -300,13 +300,13 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
 			     */
 			    cout << "Should be adding to the Object" << endl;
 
-
 			    if(tmpMsg->Status == K_MSG_OK)
 			      {
 				cout << "New MSG Size is: " << dec << tmpMsg->pSize << endl;
 				prog_item->addMessage(*tmpMsg);
 			      }
 			  }
+			// All data has been received now, we can add our message to the Directory
 			if(prog_item->Status == KurzProgram::KPROG_MSG_GOOD)
 			  {
 			  cout << "Adding a new Program ID: " << dec << (int)prog_item->programID << endl;

@@ -17,6 +17,8 @@ using namespace std;
 
 class KurzProgram
     {
+    string msg; // The actual message - we will wait until we have the whole message before we try and process it...
+
     uint programLoc;
 public:
 
@@ -38,6 +40,7 @@ enum KurzProgramStatus
 
     string programName;
 
+    KurzProgram();
     KurzProgram(const uint8 *sysex_msg, const uint8 sysex_len);
     KurzProgram(const KurzSysexMsg &sysMsg);
 
@@ -45,6 +48,8 @@ enum KurzProgramStatus
 
     void addMessage(const uint8 *sysex_msg, const uint8 sysex_len);
     void addMessage(const KurzSysexMsg &sysMsg);
+    void decodeMessage();
+    int decodeProgram(uint8 *msg);
     };
 
 
