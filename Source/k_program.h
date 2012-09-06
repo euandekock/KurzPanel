@@ -8,14 +8,11 @@
 #ifndef KURZPROGRAM_H_
 #define KURZPROGRAM_H_
 
-#include <iostream>
-#include <iomanip>
-
-#include "kurz_sysex_msg.h"
+#include "k_object.h"
 
 using namespace std;
 
-class KurzProgram
+class KurzProgram : KurzObject
     {
     string msg; // The actual message - we will wait until we have the whole message before we try and process it...
 
@@ -49,7 +46,7 @@ enum KurzProgramStatus
     void addMessage(const uint8 *sysex_msg, const uint8 sysex_len);
     void addMessage(const KurzSysexMsg &sysMsg);
     void decodeMessage();
-    int decodeProgram(uint8 *msg);
+    int decode(uint8 *msg);
     };
 
 

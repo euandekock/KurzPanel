@@ -284,6 +284,26 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
 
 	      else if(tmpMsg->Data[1] == 0x03)
 	      {
+	      /*
+	      TODO:
+	      All object specific processing here should be moved to the kDir object. The connection just
+	      needs to call addMessage - even the map insert code can occur inside the KDir class.
+
+	      Basically we don't even need to concern ourselves with the message internal state, except
+	      for if we want to check if it's OK to send the next message. (KSTATE_LVL3)
+
+	      The 6 lines of code below should replace all the special handling we currently have.
+	      */
+	      /*
+	      listDir->addMessage(*tmpMsg);
+
+	      if(listDir.MsgStatus = PROCESSED)
+		state = KSTATE_LVL3;
+	      else
+		state = KSTATE_INMSG;
+
+	      */
+
 	      if(tmpMsg->Data[2] == progType)
 		      {
 			cout << "Processing an Program" << endl;

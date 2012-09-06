@@ -6,6 +6,13 @@
 #ifndef  K_DIR_H
 #define  K_DIR_H
 
+/*
+TODO:
+See kurz_connection.cpp
+
+We need to move all the generic message buildup and processing to this class
+*/
+
 class KurzDir
 	{
 

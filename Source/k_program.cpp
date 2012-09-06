@@ -7,10 +7,8 @@
 
 #include "k_program.h"
 
-//KurzProgram::KurzProgram(const KurzSysexMsg &sysMsg) : programLoc(0), Status(KPROG_MSG_EMPTY)
 KurzProgram::KurzProgram() : Status(KPROG_MSG_EMPTY ),  programType(0), programID(0), programSize(0), outputProg(0), stealing(0), polyLimit(0), programName("")
     {
-    //msg = string((char *)&sysMsg.Data[12], sysMsg.pSize - 12);
     msg = string("");
     }
 KurzProgram::~KurzProgram()
@@ -35,13 +33,13 @@ void KurzProgram::addMessage(const KurzSysexMsg &sysMsg)
 	    {
 	    if(msg.size() == programSize)
 		{
-		Status = KPROG_MSG_GOOD; // Should really have an override here to allow an PROG status
+		Status = KPROG_MSG_GOOD; // Should really have an override here to allow a PROG status to be set
 		cout << "Completed Processing a FULL PROG program" << endl;
 		decodeMessage();
 		}
 	    else
 		{
-		Status = KPROG_MSG_GOOD; // Should really have an override here to allow an PROG status
+		Status = KPROG_MSG_GOOD; // Should really have an override here to allow a PROG status to be set
 		cout << "Completed Processing a FULL PROG program (Bad Size):" << dec << (int)programSize << " Loc:" << (int) msg.size() << endl;
 		}
 	    }
@@ -67,8 +65,117 @@ void KurzProgram::decodeMessage()
 			{
 			case progType:
 				cout << "Processing a Program Segment" << endl;
-				loc += decodeProgram((uint8 *)msg.c_str());
+				loc += decode((uint8 *)msg.c_str());
 				break;
+			case unknownType:
+				cout << "Skipping an Unknown Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case blockType:
+				cout << "Skipping a block Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case indexType:
+				cout << "Skipping a index Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case tableType:
+				cout << "Skipping a table Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case shapeType:
+				cout << "Skipping a shape Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case soundType:
+				cout << "Skipping a sound Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case keymapType:
+				cout << "Skipping a keymap Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case mlistType:
+				cout << "Skipping a mlist Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case menuType:
+				cout << "Skipping a menu Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case mngType:
+				cout << "Skipping a mng Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case melType:
+				cout << "Skipping a mel Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case itblType:
+				cout << "Skipping a itbl Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case fxType:
+				cout << "Skipping a fx Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case vmapType:
+				cout << "Skipping a vmap Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case pmapType:
+				cout << "Skipping a pmap Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case editType:
+				cout << "Skipping a edit Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case layerType:
+				cout << "Skipping a layer Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case asrType:
+				cout << "Skipping a asr Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case lfoType:
+				cout << "Skipping a lfo Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case envType:
+				cout << "Skipping a env Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case efxType:
+				cout << "Skipping a efx Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case invType:
+				cout << "Skipping a inv Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case mxrType:
+				cout << "Skipping a mxr Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case songType:
+				cout << "Skipping a song Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case plistType:
+				cout << "Skipping a  Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case bmapType:
+				cout << "Skipping a plist Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+			case lastType:
+				cout << "Skipping a last Type Segment (" << hex << (int)msg[loc] << ")" << endl;
+				loc = msg.size();
+				break;
+
 			default:
 				cout << "Skipping an Unknown Segment (" << hex << (int)msg[loc] << ")" << endl;
 				loc = msg.size();
@@ -77,7 +184,7 @@ void KurzProgram::decodeMessage()
 		}
 	}
 
-int KurzProgram::decodeProgram(uint8 *msg)
+int KurzProgram::decode(uint8 *msg)
 	{
 	programType = msg[0];
 	programID   = msg[1];
