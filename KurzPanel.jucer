@@ -10,6 +10,7 @@
       <FILE id="GB7Jqy" name="klogo32x32.png" compile="0" resource="1" file="Images/klogo32x32.png"/>
     </GROUP>
     <GROUP id="{859873B3-6FE5-42EA-F6F0-0DD8A8DBCF22}" name="Source">
+      <FILE id="lc1T0n" name="k_object.h" compile="0" resource="0" file="Source/k_object.h"/>
       <FILE id="nqIgQt" name="k_showdirlist.cpp" compile="1" resource="0"
             file="Source/k_showdirlist.cpp"/>
       <FILE id="XATOo1" name="k_showdirlist.h" compile="0" resource="0" file="Source/k_showdirlist.h"/>
