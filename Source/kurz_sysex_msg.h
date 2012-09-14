@@ -20,10 +20,10 @@ using namespace std;
 
 enum kurzSysexMsgStatus
     {
-    K_MSG_EMPTY = 0,
-    K_MSG_BAD,
-    K_MSG_OK,
-    K_MSG_GOOD
+    KSXMSG_EMPTY = 0,
+    KSXMSG_BAD,
+    KSXMSG_OK,
+    KSXMSG_GOOD
     };
 
 class KurzSysexMsg

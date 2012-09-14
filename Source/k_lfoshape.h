@@ -41,13 +41,11 @@ enum KurzLFOShapeStatus
     vector<int16> vectWave;
 
 
-    KurzLFOShape(const uint8 *sysex_msg, const uint8 sysex_len);
-    KurzLFOShape(const KurzSysexMsg &sysMsg);
+    KurzLFOShape();
 
     ~KurzLFOShape();
 
-    void addMessage(const uint8 *sysex_msg, const uint8 sysex_len);
-    void addMessage(const KurzSysexMsg &sysMsg);
+    void decode(uint8 *msg);
     };
 
 

@@ -5,27 +5,27 @@
  *      Author: Euan de Kock
  */
 
-#include "k_dir.h"
 #include "kurz_connection.h"
 #include "k_lfoshape.h"
+#include "k_dir.h"
 
 
 using namespace std;
 
 KurzConnection::KurzConnection(uint8 localID, uint8 remoteID, MidiOutput *midiOutChannel, deque<string> &inQueue, KurzDir &outDir) :
-localConnectID(localID),
-remoteConnectID(remoteID),
-midiOutput(midiOutChannel),
-sendQueue(inQueue),
-listDir(outDir),
-state(KSTATE_INIT),
-packetCount(0),
-item(0),
-lfo_item(0)
+    localConnectID(localID),
+    remoteConnectID(remoteID),
+    midiOutput(midiOutChannel),
+    sendQueue(inQueue),
+    listDir(outDir),
+    state(KSTATE_INIT),
+    packetCount(0),
+    item(0),
+    lfo_item(0)
     {
     // Initiate a connection
     if(sendQueue.size() > 0)
-	processMessage(nullptr, 0);
+        processMessage(nullptr, 0);
     return;
     }
 
@@ -44,8 +44,8 @@ void KurzConnection::sendDataPacket(const uint8 *in_msg, unsigned int in_len)
     string msg;
 
     msg = string((char *)msg_head, 5) +
-	  string((char *)in_msg, in_len) +
-	  string((char *)KurzSysexMsg::chksum(&in_msg[2], in_len-2), 2);
+            string((char *)in_msg, in_len) +
+            string((char *)KurzSysexMsg::chksum(&in_msg[2], in_len-2), 2);
 
     sendQueue.push_back(msg);
 
@@ -68,354 +68,256 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
      * to the sendQueue
      */
     if(in_len == 0)
-	{
-	msg_type = 0x00;
-	}
+        {
+        msg_type = 0x00;
+        }
     else
-	{
-	msg_type = in_msg[3];
-	print_data(in_msg, in_len);
-	}
+        {
+        msg_type = in_msg[3];
+        print_data(in_msg, in_len);
+        }
 
     if(state < KSTATE_LVL3) // Disconnected State, still negotiating
-	{
-	switch(msg_type)
-	    {
-	case 0x00:
-	    if(state == KSTATE_INIT)
-		{
-		state = KSTATE_LVL0;
-		sysex = sysex_connect;
-		len = 8;
-		sysex[1] = remoteConnectID;
-		sysex[2] = 0x78;
-		sysex[3] = localConnectID;
-		}
-	    break;
-	case 0x79:
-	    state = KSTATE_LVL1;
-	    sysex = sysex_connect;
-	    len = 8;
-	    sysex[1] = remoteConnectID;
-	    sysex[2] = 0x79;
-	    sysex[3] = localConnectID;
-	    break;
-	case 0x7A:
-	    state = KSTATE_LVL2;
-	    sysex = sysex_connect;
-	    len = 8;
-	    sysex[1] = remoteConnectID;
-	    sysex[2] = 0x7A;
-	    sysex[3] = localConnectID;
-	    break;
-	case 0x7B:
-	    state = KSTATE_LVL3; // Now connected, we can prepare to send our next queued message
-	    processMessage(nullptr, 0); // Recurse back on ourself to process any new messages in the queue
-	    break;
-	default:
-	    cout << "Unhandled Message type received: " << hex << msg_type << endl;
-	    break;
-	    }
+        {
+        switch(msg_type)
+            {
+            case 0x00:
+                if(state == KSTATE_INIT)
+                    {
+                    state = KSTATE_LVL0;
+                    sysex = sysex_connect;
+                    len = 8;
+                    sysex[1] = remoteConnectID;
+                    sysex[2] = 0x78;
+                    sysex[3] = localConnectID;
+                    }
+                break;
+            case 0x79:
+                state = KSTATE_LVL1;
+                sysex = sysex_connect;
+                len = 8;
+                sysex[1] = remoteConnectID;
+                sysex[2] = 0x79;
+                sysex[3] = localConnectID;
+                break;
+            case 0x7A:
+                state = KSTATE_LVL2;
+                sysex = sysex_connect;
+                len = 8;
+                sysex[1] = remoteConnectID;
+                sysex[2] = 0x7A;
+                sysex[3] = localConnectID;
+                break;
+            case 0x7B:
+                state = KSTATE_LVL3; // Now connected, we can prepare to send our next queued message
+                processMessage(nullptr, 0); // Recurse back on ourself to process any new messages in the queue
+                break;
+            default:
+                cout << "Unhandled Message type received: " << hex << msg_type << endl;
+                break;
+            }
 
-	// Did we create an outgoing response message to handle
-	if(len > 0)
-	    {
-	    cout << "Sending a Handshake MIDI message:" << (int)sysex[2] << " Length(" << (int)len << ")" << endl;
-	    print_data((uint8 *)sysex, len);
+        // Did we create an outgoing response message to handle
+        if(len > 0)
+            {
+            cout << "Sending a Handshake MIDI message:" << (int)sysex[2] << " Length(" << (int)len << ")" << endl;
+            print_data((uint8 *)sysex, len);
 
-	    MidiMessage newMsg = MidiMessage::createSysExMessage(sysex, len);
-	    midiOutput->sendMessageNow(newMsg);
-	    }
-	}
+            MidiMessage newMsg = MidiMessage::createSysExMessage(sysex, len);
+            midiOutput->sendMessageNow(newMsg);
+            }
+        }
     // Connected State - Handle an incoming message
     else
-	{
-	switch(msg_type)
-	    {
-	case 0x00:
-	    // Can we send a new outgoing request (and do we have one ?)
-	    if(state == KSTATE_LVL3 && sendQueue.size() > 0)
-		{
-		sysex_str = sendQueue.front();
-		sendQueue.pop_front();
+        {
+        switch(msg_type)
+            {
+            case 0x00:
+                // Can we send a new outgoing request (and do we have one ?)
+                if(state == KSTATE_LVL3 && sendQueue.size() > 0)
+                    {
+                    sysex_str = sendQueue.front();
+                    sendQueue.pop_front();
 
-		sysex = (uint8 *) sysex_str.c_str();
-		len = sysex_str.length();
+                    sysex = (uint8 *) sysex_str.c_str();
+                    len = sysex_str.length();
 
-		/*
-		 *Push in our locally configured parameter values
-		 */
-		sysex[1] = remoteConnectID;
-		sysex[3] = localConnectID;
-		sysex[4] = packetCount++;
+                    /*
+         *Push in our locally configured parameter values
+         */
+                    sysex[1] = remoteConnectID;
+                    sysex[3] = localConnectID;
+                    sysex[4] = packetCount++;
 
-		state = KSTATE_NEWMSG;
-		}
-	    break;
-	case 0x7C: // Data Packet
+                    state = KSTATE_NEWMSG;
+                    }
+                break;
+            case 0x7C: // Data Packet
 
-	    /*
-	     * When we receive a valid 0x7C message, we should be able to automatically
-	     * instantiate a sysex class from the data. This will allow us to verify the
-	     * chksum before we send back the ACK message
-	     */
-	    {
-	    KurzSysexMsg *tmpMsg = new KurzSysexMsg(in_msg, in_len);
-	    //tmpMsg = KurzSysexMsg
+                /*
+         * When we receive a valid 0x7C message, we should be able to automatically
+         * instantiate a sysex class from the data. This will allow us to verify the
+         * chksum before we send back the ACK message
+         */
+                {
+                KurzSysexMsg *tmpMsg = new KurzSysexMsg(in_msg, in_len);
+                //tmpMsg = KurzSysexMsg
 
-	    if(tmpMsg->Status == K_MSG_OK)
-	      {
-	      sysex = sysex_ack;
-	      len = 5;
+                if(tmpMsg->Status == KSXMSG_OK)
+                    {
+                    sysex = sysex_ack;
+                    len = 5;
 
-	      sysex[1] = remoteConnectID;
-	      sysex[3] = localConnectID;
-	      sysex[4] = tmpMsg->pktNum; // Which block number are we Acknowledging
-	      }
+                    sysex[1] = remoteConnectID;
+                    sysex[3] = localConnectID;
+                    sysex[4] = tmpMsg->pktNum; // Which block number are we Acknowledging
+                    }
 
-	    // If it's a list item response...
-	    if(tmpMsg->Data[1] == 0x01)
-	      {
-		KurzDirList *ListQueue = &listDir.OtherItems;
-		/* TODO
-		 * We should be processing a k_dirlist item here, create it, and then add it to the appropriate
-		 * sub collection within the main k_dir instance
-		 * We no longer base our direntry classes on the sysex class, we just extract the data and create the
-		 * appropriate type usaing the Data string.
-		 */
-		cout << "Processing a List Item" << endl;
-		item = new KurzDirEntry(tmpMsg->Data);
+                // If it's a list item response...
+                if(tmpMsg->Data[1] == 0x01)
+                    {
+                    KurzDirList *ListQueue = &listDir.OtherItems;
+                    /*
+                     * TODO - This should probably also move into the k_dir class...
+                     */
+                    cout << "Processing a List Item" << endl;
+                    item = new KurzDirEntry(tmpMsg->Data);
 
-	    switch(item->Type)
-		{
-		 case unknownType:
-		 case blockType:
-		 case indexType:
-		     break;
-		 case tableType:
-		     ListQueue = &listDir.MasterTable;
-		     break;
-		 case shapeType:
-		     ListQueue = &listDir.LFOShapes;
-		     break;
-		 case soundType:
-		     ListQueue = &listDir.SoundBlock;
-		     break;
-		 case keymapType:
-		     ListQueue = &listDir.KBDMap;
-		     break;
-		 case mlistType:
-		     ListQueue = &listDir.MIDIProgList;
-		     break;
-		 case menuType:
-		     break;
-		 case mngType:
-		     break;
-		 case melType:
-		     break;
-		 case itblType:
-		     ListQueue = &listDir.Intonations;
-		     break;
-		 case fxType:
-		     ListQueue = &listDir.CompiledEffects;
-		     break;
-		 case vmapType:
-		     ListQueue = &listDir.VelocityMaps;
-		     break;
-		 case pmapType:
-		     ListQueue = &listDir.PressureMaps;
-		     break;
-		 case editType:
-		     ListQueue = &listDir.EditorDescriptor;
-		     break;
-		 case progType:
-		     ListQueue = &listDir.Programs;
-		     break;
-		 case layerType:
-		     ListQueue = &listDir.Layers;
-		     break;
-		 case asrType:
-		     break;
-		 case lfoType:
-		     break;
-		 case envType:
-		     break;
-		 case efxType:
-		     break;
-		 case invType:
-		     break;
-		 case mxrType:
-		     break;
-		 case songType:
-		     ListQueue = &listDir.SongList;
-		     break;
-		 case plistType:
-		     ListQueue = &listDir.PLists;
-		     break;
-		 case bmapType:
-		     ListQueue = &listDir.BinList;
-		     break;
-		 case lastType:
-		     break;
-		}
-	       if(ListQueue != nullptr)
-	       {
-		if(item->ID > 0)
-		  {
-		    ListQueue->List.push_back(*item);
-		    ListQueue->Status = KurzDirList::KDIR_FILLING;
-		  }
-		else
-		  {
-		    ListQueue->Status = KurzDirList::KDIR_OK;
-		    state = KSTATE_LVL3;
-		    if(ListQueue->List.size() > 0)
-			{
-			//ListQueue->ListReady(0); // Call the ListDir's ListReady function now.
-			}
-		  }
-	      }
-	      }
-	    /*
-	     * Need to allow the message to be built up, so we don't necessarily use the constructor
-	     * to add the 2nd and subsequent message parts. Need to set the state when we create
-	     * the message and then track it's status - setting the queue_status when we are done.
-	     */
+                    switch(item->Type)
+                        {
+                        case unknownType:
+                        case blockType:
+                        case indexType:
+                            break;
+                        case tableType:
+                            ListQueue = &listDir.MasterTable;
+                            break;
+                        case shapeType:
+                            ListQueue = &listDir.LFOShapes;
+                            break;
+                        case soundType:
+                            ListQueue = &listDir.SoundBlock;
+                            break;
+                        case keymapType:
+                            ListQueue = &listDir.KBDMap;
+                            break;
+                        case mlistType:
+                            ListQueue = &listDir.MIDIProgList;
+                            break;
+                        case menuType:
+                            break;
+                        case mngType:
+                            break;
+                        case melType:
+                            break;
+                        case itblType:
+                            ListQueue = &listDir.Intonations;
+                            break;
+                        case fxType:
+                            ListQueue = &listDir.CompiledEffects;
+                            break;
+                        case vmapType:
+                            ListQueue = &listDir.VelocityMaps;
+                            break;
+                        case pmapType:
+                            ListQueue = &listDir.PressureMaps;
+                            break;
+                        case editType:
+                            ListQueue = &listDir.EditorDescriptor;
+                            break;
+                        case progType:
+                            ListQueue = &listDir.Programs;
+                            break;
+                        case layerType:
+                            ListQueue = &listDir.Layers;
+                            break;
+                        case asrType:
+                            break;
+                        case lfoType:
+                            break;
+                        case envType:
+                            break;
+                        case efxType:
+                            break;
+                        case invType:
+                            break;
+                        case mxrType:
+                            break;
+                        case songType:
+                            ListQueue = &listDir.SongList;
+                            break;
+                        case plistType:
+                            ListQueue = &listDir.PLists;
+                            break;
+                        case bmapType:
+                            ListQueue = &listDir.BinList;
+                            break;
+                        case lastType:
+                            break;
+                        }
+                    if(ListQueue != nullptr)
+                        {
+                        if(item->ID > 0)
+                            {
+                            ListQueue->List.push_back(*item);
+                            ListQueue->Status = KurzDirList::KDIR_FILLING;
+                            }
+                        else
+                            {
+                            ListQueue->Status = KurzDirList::KDIR_OK;
+                            state = KSTATE_LVL3;
+                            if(ListQueue->List.size() > 0)
+                                {
+                                //ListQueue->ListReady(0); // Call the ListDir's ListReady function now.
+                                }
+                            }
+                        }
+                    }
+                /*
+                 * Need to allow the message to be built up, so we don't necessarily use the constructor
+                 * to add the 2nd and subsequent message parts. Need to set the state when we create
+                 * the message and then track it's status - setting the queue_status when we are done.
+                 */
 
-	      else if(tmpMsg->Data[1] == 0x03)
-	      {
-	      /*
-	      TODO:
-	      All object specific processing here should be moved to the kDir object. The connection just
-	      needs to call addMessage - even the map insert code can occur inside the KDir class.
+                // Received Dump Data Response
+                else if(tmpMsg->Data[1] == 0x03)
+                    {
+                    listDir.addMessage(tmpMsg);
 
-	      Basically we don't even need to concern ourselves with the message internal state, except
-	      for if we want to check if it's OK to send the next message. (KSTATE_LVL3)
+                    if(listDir.msgStatus == KurzDir::KMSG_GOOD)
+                        state = KSTATE_LVL3;
+                    else
+                        state = KSTATE_INMSG;
 
-	      The 6 lines of code below should replace all the special handling we currently have.
-	      */
-	      /*
-	      listDir->addMessage(*tmpMsg);
-
-	      if(listDir.MsgStatus = PROCESSED)
-		state = KSTATE_LVL3;
-	      else
-		state = KSTATE_INMSG;
-
-	      */
-
-	      if(tmpMsg->Data[2] == progType)
-		      {
-			cout << "Processing an Program" << endl;
-			if (state == KSTATE_NEWMSG)
-			  {
-			    prog_item = new KurzProgram();
-			    prog_item->addMessage(*tmpMsg);
-			    state = KSTATE_INMSG;
-			  }
-			else if(state == KSTATE_INMSG)
-			  {
-			    /*
-			     * Add the new message on to the end
-			     */
-			    cout << "Should be adding to the Object" << endl;
-
-			    if(tmpMsg->Status == K_MSG_OK)
-			      {
-				cout << "New MSG Size is: " << dec << tmpMsg->pSize << endl;
-				prog_item->addMessage(*tmpMsg);
-			      }
-			  }
-			// All data has been received now, we can add our message to the Directory
-			if(prog_item->Status == KurzProgram::KPROG_MSG_GOOD)
-			  {
-			  cout << "Adding a new Program ID: " << dec << (int)prog_item->programID << endl;
-			  listDir.Programs.Program.insert(pair<uint8, KurzProgram>(prog_item->programID, *prog_item));
-
-			  // Lookup our ID as the list order may have changed...
-			  for(int count = 0; count < listDir.Programs.List.size(); count++)
-				{
-				if(prog_item->programID == listDir.Programs.List[count].ID)
-					{
-					listDir.Programs.List[count].Status = KurzDirEntry::KITEM_FULL;
-					break;
-					}
-				}
-
-			  //listDir.LFOShapes.ItemReady(tmpMsg->Data[3]);
-			  state = KSTATE_LVL3; // Allow new messages to be processed.
-			  }
-		      }
-	      if(tmpMsg->Data[2] == shapeType)
-		      {
-			cout << "Processing an LFO Shape Table" << endl;
-			if (state == KSTATE_NEWMSG)
-			  {
-			    lfo_item = new KurzLFOShape(*tmpMsg);
-
-			    state = KSTATE_INMSG;
-			  }
-			else if(state == KSTATE_INMSG)
-			  {
-			    /*
-			     * Add the new message on to the end
-			     */
-			    cout << "Should be adding to the Object" << endl;
+                    }
 
 
-			    if(tmpMsg->Status == K_MSG_OK)
-			      {
-				cout << "New MSG Size is: " << dec << tmpMsg->pSize << endl;
-				lfo_item->addMessage(*tmpMsg);
-			      }
-			  }
-			if(lfo_item->Status == KurzLFOShape::KLFO_MSG_GOOD)
-			  {
-			  cout << "Adding a new LFO ID: " << dec << (int)lfo_item->shapeID << endl;
-			  listDir.LFOShapes.LFOShapes.insert(pair<uint8, KurzLFOShape>(lfo_item->shapeID, *lfo_item));
-
-			  // Lookup our ID as the list order may have changed...
-			  for(int count = 0; count < listDir.LFOShapes.List.size(); count++)
-				{
-				if(lfo_item->shapeID == listDir.LFOShapes.List[count].ID)
-					{
-					listDir.LFOShapes.List[count].Status = KurzDirEntry::KITEM_FULL;
-					break;
-					}
-				}
-
-			  //listDir.LFOShapes.ItemReady(tmpMsg->Data[3]);
-			  state = KSTATE_LVL3; // Allow new messages to be processed.
-			  }
-		      }
-	      }
+                }
+                break;
+            case 0x7E: // Data Ack, silently continue
+                break;
+            default:
+                cout << "Unhandled Message type received: " << hex << msg_type << endl;
+                break;
+            }
+        if(len > 0)
+            {
+            cout << "Sending a Connected Sysex MIDI message:" << (int)sysex[2]  << " Length(" << (int)len << ")" << endl;
+            print_data(sysex, len);
 
 
-	    }
-	    break;
-	case 0x7E: // Data Ack, silently continue
-	    break;
-	default:
-	    cout << "Unhandled Message type received: " << hex << msg_type << endl;
-	    break;
-	    }
-	if(len > 0)
-	    {
-	    cout << "Sending a Connected Sysex MIDI message:" << (int)sysex[2]  << " Length(" << (int)len << ")" << endl;
+            MidiMessage newMsg = MidiMessage::createSysExMessage(sysex, len);
+            midiOutput->sendMessageNow(newMsg);
 
+            // Loop around to see if we can send another queued message
+            if(state == KSTATE_LVL3)
+                {
+                cout << "SYSEX Process Complete Queue size: " << endl;
+                processMessage(nullptr, 0);
+                }
 
-	    MidiMessage newMsg = MidiMessage::createSysExMessage(sysex, len);
-	    midiOutput->sendMessageNow(newMsg);
-
-	    // Loop around to see if we can send another queued message
-	    if(state == KSTATE_LVL3)
-		{
-		cout << "SYSEX Process Complete Queue size: " << endl;
-		processMessage(nullptr, 0);
-		}
-
-	    }
-	}
+            }
+        }
     }
 
 void KurzConnection::print_data(const uint8 *msg, unsigned int len)
@@ -425,14 +327,14 @@ void KurzConnection::print_data(const uint8 *msg, unsigned int len)
     uint8 lsb;
 
     for(count = 0; count < len; count++)
-	{
-	cout << uppercase << setfill('0') << setw(2) << hex << (int)(msg[count]) << " ";
-	}
+        {
+        cout << uppercase << setfill('0') << setw(2) << hex << (int)(msg[count]) << " ";
+        }
     cout << endl;
 
     for(count = 0; count < len; count++)
-	{
-    	cout << nouppercase << setfill(' ') << setw(2) << (uint8)(isprint(msg[count]) ? msg[count] : '.') << " ";
-	}
+        {
+        cout << nouppercase << setfill(' ') << setw(2) << (uint8)(isprint(msg[count]) ? msg[count] : '.') << " ";
+        }
     cout << endl;
     }

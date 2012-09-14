@@ -15,11 +15,27 @@ We need to move all the generic message buildup and processing to this class
 
 class KurzDir
 	{
+    string msg;
+    uint msgSize;
 
-public:
+    public:
+
+    enum KurzMsgStatus
+        {
+        KMSG_EMPTY = 0,
+        KMSG_BAD,
+        KMSG_OK,
+        KMSG_GOOD
+        };
+
 	KurzDir();
-	~KurzDir();
-	/*
+    ~KurzDir();
+
+    void addMessage(KurzSysexMsg *Msg);
+    void newMessage(KurzSysexMsg *Msg);
+
+    KurzMsgStatus msgStatus;
+    /*
 	 * Holds a set of classes, one for each allowable Directory Type
 	 */
 	KurzDirList MasterTable;

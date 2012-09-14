@@ -72,7 +72,7 @@
 
 
 KurzSysexMsg::KurzSysexMsg(const uint8 *sysex_msg, const uint8 sysex_len) :
-  Status(K_MSG_EMPTY), pSize(0)
+  Status(KSXMSG_EMPTY), pSize(0)
 {
   uint8 count;
   uint8 bitfield;
@@ -94,11 +94,11 @@ KurzSysexMsg::KurzSysexMsg(const uint8 *sysex_msg, const uint8 sysex_len) :
            << (int) sysex_msg[sysex_len - 2] << " Got :"
            << (int) chksum_calc[0] << " " << (int) chksum_calc[1] << endl;
 
-      Status = K_MSG_BAD;
+      Status = KSXMSG_BAD;
     }
   else
     {
-      Status = K_MSG_OK;
+      Status = KSXMSG_OK;
 
       pktNum = sysex_msg[5];
 
@@ -163,7 +163,7 @@ KurzSysexMsg::KurzSysexMsg(const uint8 *sysex_msg, const uint8 sysex_len) :
         {
           //Type = unknownType;
           //ID = pSize = 0;
-          Status = K_MSG_EMPTY;
+          Status = KSXMSG_EMPTY;
         }
     }
 }
