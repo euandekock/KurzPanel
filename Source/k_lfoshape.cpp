@@ -19,7 +19,7 @@ KurzLFOShape::~KurzLFOShape()
     {
     }
 
-void KurzLFOShape::decode(uint8 *msg)
+uint KurzLFOShape::decode(uint8 *msg)
     {
     uint loc;
     uint Size = 0;
@@ -58,4 +58,5 @@ void KurzLFOShape::decode(uint8 *msg)
         vectWave.push_back((int16)(shapeWave[count] << 8 | shapeWave[count+1]));
         }
     Status = KurzLFOShape::KLFO_MSG_GOOD;
+    return Size;
     }

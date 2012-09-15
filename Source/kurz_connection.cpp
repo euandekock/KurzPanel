@@ -180,7 +180,7 @@ void KurzConnection::processMessage(const uint8 *in_msg, unsigned int in_len)
                     /*
                      * TODO - This should probably also move into the k_dir class...
                      */
-                    cout << "Processing a List Item" << endl;
+                    cout << "Processing a List Item of type: " << hex << tmpMsg->Data[2] << endl;
                     item = new KurzDirEntry(tmpMsg->Data);
 
                     switch(item->Type)

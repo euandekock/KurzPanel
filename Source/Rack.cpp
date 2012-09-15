@@ -1287,6 +1287,23 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == iButton19)
     {
         //[UserButtonCode_iButton19] -- add your button handler code here..
+          sendQueue.clear();
+          remoteLink->sendDataPacket(msg_42, 7);
+          remoteLink->sendDataPacket(msg_44, 7);
+          remoteLink->sendDataPacket(msg_45, 7);
+          remoteLink->sendDataPacket(msg_46, 7);
+          remoteLink->sendDataPacket(msg_47, 7);
+          remoteLink->sendDataPacket(msg_4B, 7);
+          remoteLink->sendDataPacket(msg_4C, 7);
+          remoteLink->sendDataPacket(msg_4D, 7);
+          remoteLink->sendDataPacket(msg_4E, 7);
+          remoteLink->sendDataPacket(msg_4F, 7);
+          remoteLink->sendDataPacket(msg_50, 7);
+          remoteLink->sendDataPacket(msg_51, 7);
+          remoteLink->sendDataPacket(msg_5B, 7);
+          //remoteLink->sendDataPacket(msg_5C, 7);
+          remoteLink->sendDataPacket(msg_5E, 7);
+          remoteLink->sendDataPacket(msg_5F, 7);
         //[/UserButtonCode_iButton19]
     }
 

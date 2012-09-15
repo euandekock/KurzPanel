@@ -45,7 +45,7 @@ enum KurzLFOShapeStatus
 
     ~KurzLFOShape();
 
-    void decode(uint8 *msg);
+    uint decode(uint8 *msg);
     };
 
 

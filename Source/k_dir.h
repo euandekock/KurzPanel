@@ -33,6 +33,7 @@ class KurzDir
 
     void addMessage(KurzSysexMsg *Msg);
     void newMessage(KurzSysexMsg *Msg);
+    void decodeMessage(string &msg);
 
     KurzMsgStatus msgStatus;
     /*
