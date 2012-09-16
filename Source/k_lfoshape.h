@@ -13,11 +13,11 @@
 #include <vector>
 #include <map>
 
-#include "kurz_sysex_msg.h"
+#include "k_object.h"
 
 using namespace std;
 
-class KurzLFOShape
+class KurzLFOShape : KurzObject
     {
     uint shapeLoc;
 public:
@@ -45,7 +45,8 @@ enum KurzLFOShapeStatus
 
     ~KurzLFOShape();
 
-    uint decode(uint8 *msg);
+    uint decode(uint8 *msg, uint loc);
+    void display();
     };
 
 

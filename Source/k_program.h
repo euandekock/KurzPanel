@@ -9,14 +9,12 @@
 #define KURZPROGRAM_H_
 
 #include "k_object.h"
+#include "k_layer.h"
 
 using namespace std;
 
 class KurzProgram : KurzObject
     {
-    //string msg; // The actual message - we will wait until we have the whole message before we try and process it...
-
-    uint programLoc;
 public:
 
 enum KurzProgramStatus
@@ -37,16 +35,18 @@ enum KurzProgramStatus
 
     string programName;
 
+    KurzLFOBlock LFO[2];
+    KurzLayer Layer[4];
+
     KurzProgram();
     KurzProgram(const uint8 *sysex_msg, const uint8 sysex_len);
     KurzProgram(const KurzSysexMsg &sysMsg);
 
     ~KurzProgram();
 
-    //void addMessage(const uint8 *sysex_msg, const uint8 sysex_len);
-    //void addMessage(const KurzSysexMsg &sysMsg);
-    void decodeMessage(string &msg);
-    int decode(uint8 *msg);
+    uint decode(uint8 *msg, uint loc);
+    void display();
+
     };
 
 

@@ -19,18 +19,17 @@ KurzLFOShape::~KurzLFOShape()
     {
     }
 
-uint KurzLFOShape::decode(uint8 *msg)
+uint KurzLFOShape::decode(uint8 *msg, uint loc)
     {
-    uint loc;
     uint Size = 0;
+    uint startLoc = loc;
 
-    shapeType = msg[0];
-    shapeID   = msg[1];
+    shapeType = msg[loc++];
+    shapeID   = msg[loc++];
 
-    Size = msg[2] << 8 | msg[3];
-    shapeOffset = msg[4] << 8 | msg[5];
+    Size = msg[loc++] << 8 | msg[loc++];
+    shapeOffset = msg[loc++] << 8 | msg[loc++];
 
-    loc = 6;
     shapeLoc = 0;
     shapeName.clear();
 
@@ -43,20 +42,31 @@ uint KurzLFOShape::decode(uint8 *msg)
     if(loc%2)
         loc++;
 
-    shapeSize = Size - loc; // True Shapesize after the Type, ID, Shapecount, Offset and Name Parameters.
+    shapeSize = Size - (loc - startLoc); // True Shapesize after the Type, ID, Shapecount, Offset and Name Parameters.
+    shapeSize = 512;
 
-    for(; loc < Size; loc++)
+    startLoc = loc;
+
+    for(; loc < (startLoc + shapeSize); loc++)
         {
         cout << " " << hex << (int)msg[loc];
 
         shapeWave[shapeLoc++] = msg[loc];
         }
     cout << endl;
-    cout << "LFO Shape Table. ID: " << (int)shapeID << " Size: " << (int)shapeSize << " Offset: " << shapeOffset << " Name: " << shapeName << endl;
+    cout << "LFO Shape Table. ID: " << (int)shapeID << " Size " << (int)Size << " Shape Size: " << (int)shapeSize << " Offset: " << shapeOffset << " Name: " << shapeName << endl;
     for(uint count = 0; count < shapeSize; count += 2)
         {
         vectWave.push_back((int16)(shapeWave[count] << 8 | shapeWave[count+1]));
         }
     Status = KurzLFOShape::KLFO_MSG_GOOD;
-    return Size;
+    return loc;
+    }
+void KurzLFOShape::display()
+    {
+    cout << "LFO Shape ";
+    if(shapeID > 0)
+        cout << shapeName << endl;
+    else
+        cout << "empty" << endl;
     }

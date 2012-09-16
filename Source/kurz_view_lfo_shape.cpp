@@ -31,7 +31,7 @@
 //==============================================================================
 KurzViewLFOShape::KurzViewLFOShape (vector<int16> &wave)
     : LFOShape(wave)
-{
+    {
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -41,10 +41,10 @@ KurzViewLFOShape::KurzViewLFOShape (vector<int16> &wave)
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
-}
+    }
 
 KurzViewLFOShape::~KurzViewLFOShape()
-{
+    {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
@@ -52,11 +52,11 @@ KurzViewLFOShape::~KurzViewLFOShape()
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
-}
+    }
 
 //==============================================================================
 void KurzViewLFOShape::paint (Graphics& g)
-{
+    {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
@@ -66,8 +66,7 @@ void KurzViewLFOShape::paint (Graphics& g)
     vector<int16>::iterator i;
 
     uint16 count = 0;
-
-
+    int16 start = 0;
 
     Path crossHair;
 
@@ -78,20 +77,23 @@ void KurzViewLFOShape::paint (Graphics& g)
     crossHair.lineTo(256.0f, 400.0f);
 
     i = LFOShape.begin();
+    start = *i;
 
     Path waveLine;
     waveLine.startNewSubPath(0.0f, (float)(*i / 200) + 200);
 
     while(i != LFOShape.end())
-            {
-	    waveLine.lineTo(2*(count++), (float)(*i / 200) + 200);
-	    i++;
-            }
+        {
+        waveLine.lineTo(2*(count++), (float)(*i / 200) + 200);
+        i++;
+        }
+    // Tidy up by drawing to the start Y location
+    waveLine.lineTo(2*(count), (float)(start / 200) + 200);
 
-//    myPath.startNewSubPath (10.0f, 10.0f);          // move the current position to (10, 10)
-//    myPath.lineTo (100.0f, 200.0f);                 // draw a line from here to (100, 200)
-//    myPath.quadraticTo (0.0f, 150.0f, 5.0f, 50.0f); // draw a curve that ends at (5, 50)
-//    myPath.closeSubPath();                          // close the subpath with a line back to (10, 10)
+    //    myPath.startNewSubPath (10.0f, 10.0f);          // move the current position to (10, 10)
+    //    myPath.lineTo (100.0f, 200.0f);                 // draw a line from here to (100, 200)
+    //    myPath.quadraticTo (0.0f, 150.0f, 5.0f, 50.0f); // draw a curve that ends at (5, 50)
+    //    myPath.closeSubPath();                          // close the subpath with a line back to (10, 10)
 
     // add an ellipse as well, which will form a second sub-path within the path..
     //myPath.addEllipse (50.0f, 50.0f, 40.0f, 30.0f);
@@ -114,13 +116,13 @@ void KurzViewLFOShape::paint (Graphics& g)
     g.strokePath (waveLine, PathStrokeType (2.0f));
 
     //[/UserPaint]
-}
+    }
 
 void KurzViewLFOShape::resized()
-{
+    {
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
-}
+    }
 
 
 

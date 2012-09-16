@@ -34,13 +34,13 @@ using namespace std;
 #define K_KEY_MODE 0x11
 #define K_KEY_CHAN_UP 0x12
 #define K_KEY_CHAN_DN 0x13
-#define K_KEY_CHAN_XX 0x14
+#define K_KEY_CHAN_DD 0x14
 #define K_KEY_PROG_UP 0x15
 #define K_KEY_PROG_DN 0x16
-#define K_KEY_PROG_XX 0x17
+#define K_KEY_PROG_DD 0x17
 #define K_KEY_VAL_UP 0x18
 #define K_KEY_VAL_DN 0x19
-#define K_KEY_VAL_XX 0x1A
+#define K_KEY_VAL_DD 0x1A
 #define K_KEY_ENTER 0x1B
 #define K_KEY_STORE 0x1C
 #define K_KEY_A 0x20

@@ -11,7 +11,8 @@ using namespace std;
 class KurzObject
     {
 public:
-        virtual int decode(uint8 *msg) = 0;
+        virtual uint decode(uint8 *msg, uint loc) = 0;
+        virtual void display() = 0;
     };
 
 #endif // K_OBJECT_H

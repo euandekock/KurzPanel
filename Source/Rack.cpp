@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  18 Aug 2012 5:45:26pm
+  Creation date:  16 Sep 2012 7:03:21pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -121,7 +121,10 @@ Rack::Rack ()
       label30 (0),
       label31 (0),
       label32 (0),
-      label33 (0)
+      label33 (0),
+      iButtonChanDD (0),
+      iButtonProgDD (0),
+      iButtonValDD (0)
 {
     addAndMakeVisible (labelLCD = new Label (L"new label",
                                              L"123456789012345\n123456789012345"));
@@ -693,6 +696,27 @@ Rack::Rack ()
     label33->setColour (TextEditor::textColourId, Colours::black);
     label33->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
+    addAndMakeVisible (iButtonChanDD = new ImageButton (L"new button"));
+    iButtonChanDD->addListener (this);
+
+    iButtonChanDD->setImages (false, true, true,
+                              ImageCache::getFromMemory (buttonUpS_png, buttonUpS_pngSize), 1.0000f, Colour (0x0),
+                              Image(), 1.0000f, Colour (0x0),
+                              ImageCache::getFromMemory (buttonDnS_png, buttonDnS_pngSize), 1.0000f, Colour (0x0));
+    addAndMakeVisible (iButtonProgDD = new ImageButton (L"new button"));
+    iButtonProgDD->addListener (this);
+
+    iButtonProgDD->setImages (false, true, true,
+                              ImageCache::getFromMemory (buttonUpS_png, buttonUpS_pngSize), 1.0000f, Colour (0x0),
+                              Image(), 1.0000f, Colour (0x0),
+                              ImageCache::getFromMemory (buttonDnS_png, buttonDnS_pngSize), 1.0000f, Colour (0x0));
+    addAndMakeVisible (iButtonValDD = new ImageButton (L"new button"));
+    iButtonValDD->addListener (this);
+
+    iButtonValDD->setImages (false, true, true,
+                             ImageCache::getFromMemory (buttonUpS_png, buttonUpS_pngSize), 1.0000f, Colour (0x0),
+                             Image(), 1.0000f, Colour (0x0),
+                             ImageCache::getFromMemory (buttonDnS_png, buttonDnS_pngSize), 1.0000f, Colour (0x0));
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -817,6 +841,9 @@ Rack::~Rack()
     deleteAndZero (label31);
     deleteAndZero (label32);
     deleteAndZero (label33);
+    deleteAndZero (iButtonChanDD);
+    deleteAndZero (iButtonProgDD);
+    deleteAndZero (iButtonValDD);
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -858,12 +885,12 @@ void Rack::resized()
     iButton7->setBounds (704, 160, 30, 30);
     iButton8->setBounds (768, 160, 30, 30);
     iButton9->setBounds (832, 160, 30, 30);
-    iButtonChanUP->setBounds (392, 16, 30, 30);
-    iButtonChanDN->setBounds (440, 16, 30, 30);
-    iButtonProgUP->setBounds (520, 16, 30, 30);
-    iButtonProgDN->setBounds (568, 16, 30, 30);
-    iButtonValUP->setBounds (648, 16, 30, 30);
-    iButtonValDN->setBounds (696, 16, 30, 30);
+    iButtonChanUP->setBounds (440, 16, 30, 30);
+    iButtonChanDN->setBounds (392, 16, 30, 30);
+    iButtonProgUP->setBounds (568, 16, 30, 30);
+    iButtonProgDN->setBounds (520, 16, 30, 30);
+    iButtonValUP->setBounds (696, 16, 30, 30);
+    iButtonValDN->setBounds (648, 16, 30, 30);
     iButtonEnter->setBounds (768, 16, 30, 30);
     iButtonStore->setBounds (832, 16, 30, 30);
     label2->setBounds (40, 128, 30, 30);
@@ -909,6 +936,9 @@ void Rack::resized()
     label31->setBounds (704, 234, 30, 30);
     label32->setBounds (768, 234, 30, 30);
     label33->setBounds (832, 234, 30, 30);
+    iButtonChanDD->setBounds (424, 24, 14, 14);
+    iButtonProgDD->setBounds (552, 24, 14, 14);
+    iButtonValDD->setBounds (680, 24, 14, 14);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -1306,6 +1336,24 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
           remoteLink->sendDataPacket(msg_5F, 7);
         //[/UserButtonCode_iButton19]
     }
+    else if (buttonThatWasClicked == iButtonChanDD)
+    {
+        //[UserButtonCode_iButtonChanDD] -- add your button handler code here..
+      sendSynthKey(K_KEY_CHAN_DD);
+        //[/UserButtonCode_iButtonChanDD]
+    }
+    else if (buttonThatWasClicked == iButtonProgDD)
+    {
+        //[UserButtonCode_iButtonProgDD] -- add your button handler code here..
+      sendSynthKey(K_KEY_PROG_DD);
+        //[/UserButtonCode_iButtonProgDD]
+    }
+    else if (buttonThatWasClicked == iButtonValDD)
+    {
+        //[UserButtonCode_iButtonValDD] -- add your button handler code here..
+      sendSynthKey(K_KEY_VAL_DD);
+        //[/UserButtonCode_iButtonValDD]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -1586,37 +1634,37 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="new button" id="e690a11733c79382" memberName="iButtonChanUP"
-               virtualName="" explicitFocusOrder="0" pos="392 16 30 30" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="440 16 30 30" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="buttonUpUp_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonUpDn_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="new button" id="ad93d1a9d4bab3cf" memberName="iButtonChanDN"
-               virtualName="" explicitFocusOrder="0" pos="440 16 30 30" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="392 16 30 30" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="buttonDnUp_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDnDn_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="new button" id="777000bf837ffc24" memberName="iButtonProgUP"
-               virtualName="" explicitFocusOrder="0" pos="520 16 30 30" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="568 16 30 30" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="buttonUpUp_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonUpDn_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="new button" id="1389c251bf1953e6" memberName="iButtonProgDN"
-               virtualName="" explicitFocusOrder="0" pos="568 16 30 30" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="520 16 30 30" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="buttonDnUp_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDnDn_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="new button" id="900f17715204ac25" memberName="iButtonValUP"
-               virtualName="" explicitFocusOrder="0" pos="648 16 30 30" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="696 16 30 30" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="buttonUpUp_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonUpDn_png"
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="new button" id="9a4dfdb0041ae534" memberName="iButtonValDN"
-               virtualName="" explicitFocusOrder="0" pos="696 16 30 30" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="648 16 30 30" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="buttonDnUp_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDnDn_png"
@@ -1857,6 +1905,24 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="J" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="36"/>
+  <IMAGEBUTTON name="new button" id="245c2cd1410ece92" memberName="iButtonChanDD"
+               virtualName="" explicitFocusOrder="0" pos="424 24 14 14" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUpS_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDnS_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="fb7a9aa98c453be5" memberName="iButtonProgDD"
+               virtualName="" explicitFocusOrder="0" pos="552 24 14 14" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUpS_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDnS_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="fd60e6052f266704" memberName="iButtonValDD"
+               virtualName="" explicitFocusOrder="0" pos="680 24 14 14" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUpS_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDnS_png"
+               opacityDown="1" colourDown="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -1917,3 +1983,21 @@ static const unsigned char resource_Rack_buttonDnDn_png[] = { 137,80,78,71,13,10
 
 const char* Rack::buttonDnDn_png = (const char*) resource_Rack_buttonDnDn_png;
 const int Rack::buttonDnDn_pngSize = 204;
+
+// JUCER_RESOURCE: buttonDnS_png, 207, "../Images/ButtonDnS.png"
+static const unsigned char resource_Rack_buttonDnS_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,14,0,0,0,14,8,2,0,0,0,144,42,186,134,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,0,6,98,75,
+71,68,0,255,0,255,0,255,160,189,167,147,0,0,0,9,112,72,89,115,0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,7,116,73,77,69,7,220,9,16,11,1,40,212,218,53,64,0,0,0,79,73,68,65,84,40,207,237,209,161,17,192,48,
+12,67,209,180,103,106,51,19,143,96,238,33,188,255,62,82,65,47,176,73,73,89,63,213,99,58,186,219,204,72,142,231,0,84,149,152,89,68,108,169,170,10,103,11,122,175,231,120,221,79,191,161,66,18,192,246,88,
+146,226,238,153,9,96,125,172,187,95,54,111,48,39,158,238,144,37,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* Rack::buttonDnS_png = (const char*) resource_Rack_buttonDnS_png;
+const int Rack::buttonDnS_pngSize = 207;
+
+// JUCER_RESOURCE: buttonUpS_png, 207, "../Images/ButtonUpS.png"
+static const unsigned char resource_Rack_buttonUpS_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,14,0,0,0,14,8,2,0,0,0,144,42,186,134,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,0,6,98,75,
+71,68,0,255,0,255,0,255,160,189,167,147,0,0,0,9,112,72,89,115,0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,7,116,73,77,69,7,220,9,16,11,1,24,242,3,5,236,0,0,0,79,73,68,65,84,40,207,237,209,161,13,192,48,16,
+67,209,126,235,246,31,36,227,28,184,17,66,204,110,130,178,130,74,77,80,88,141,31,176,244,25,99,216,6,174,239,73,202,204,176,93,85,146,22,20,176,29,128,164,45,5,86,226,125,227,167,71,104,60,49,182,181,
+162,187,231,156,219,176,221,125,3,220,231,23,247,237,190,134,90,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
+
+const char* Rack::buttonUpS_png = (const char*) resource_Rack_buttonUpS_png;
+const int Rack::buttonUpS_pngSize = 207;

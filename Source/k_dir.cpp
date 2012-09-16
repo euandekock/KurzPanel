@@ -53,58 +53,6 @@ void KurzDir::addMessage(KurzSysexMsg *sysMsg)
                 cout << "Completed Building a FULL MSG" << endl;
                 decodeMessage(msg);
 
-//                switch(sysMsg->Data[2])
-//                    {
-//                    case progType:
-//                        {
-//                        cout << "Creating a new ProgramType Object here, and adding it to our Directory List." << endl;
-//                        KurzProgram prog_item = KurzProgram();
-//                        prog_item.decodeMessage(msg);
-//                        if(prog_item.Status == KurzProgram::KPROG_MSG_GOOD)
-//                            {
-//                            cout << "Adding a new Program ID: " << dec << (int)prog_item.programID << endl;
-//                            Programs.Program.insert(pair<uint8, KurzProgram>(prog_item.programID, prog_item));
-
-//                            // Lookup our ID as the list order may have changed...
-//                            for(int count = 0; count < Programs.List.size(); count++)
-//                                {
-//                                if(prog_item.programID == Programs.List[count].ID)
-//                                    {
-//                                    Programs.List[count].Status = KurzDirEntry::KITEM_FULL;
-//                                    break;
-//                                    }
-//                                }
-
-//                            msgStatus = KMSG_GOOD; // Should really have an override here to allow a status to be set
-//                            }
-//                        }
-//                        break;
-//                    case shapeType:
-//                        {
-//                        cout << "Creating a new ShapeType Object here, and adding it to our Directory List." << endl;
-//                        KurzLFOShape shape_item = KurzLFOShape();
-
-//                        shape_item.decode((uint8 *)msg.c_str());
-//                        if(shape_item.Status == KurzLFOShape::KLFO_MSG_GOOD)
-//                            {
-//                            cout << "Adding a new Shape ID: " << dec << (int)shape_item.shapeID << endl;
-//                            LFOShapes.LFOShapes.insert(pair<uint8, KurzLFOShape>(shape_item.shapeID, shape_item));
-
-//                            // Lookup our ID as the list order may have changed...
-//                            for(int count = 0; count < LFOShapes.List.size(); count++)
-//                                {
-//                                if(shape_item.shapeID == LFOShapes.List[count].ID)
-//                                    {
-//                                    LFOShapes.List[count].Status = KurzDirEntry::KITEM_FULL;
-//                                    break;
-//                                    }
-//                                }
-
-//                            msgStatus = KMSG_GOOD; // Should really have an override here to allow a status to be set
-//                            }
-//                        }
-//                        break;
-//                    }
                 }
             else
                 {
@@ -126,6 +74,9 @@ void KurzDir::decodeMessage(string &msg)
     uint size = 0;
     uint ID = 0;
 
+    KurzProgram *CurrentProgram = NULL; // Determines what Layer Object we are currently processing.
+    int CurrentLayer = -1; // Determines what Layer Object we are currently processing.
+
     while(loc < msg.size())
         {
         type = msg[loc];
@@ -137,13 +88,25 @@ void KurzDir::decodeMessage(string &msg)
             case progType:
                 {
                 cout << "Creating a new ProgramType Object here, and adding it to our Directory List." << endl;
+
+                CurrentLayer = -1; // New Program, reset the layer reference...
+
                 KurzProgram prog_item = KurzProgram();
-                //prog_item.decodeMessage(msg);
-                loc += prog_item.decode((uint8 *)msg.c_str());
+                loc = prog_item.decode((uint8 *)msg.c_str(), loc);
+
                 if(prog_item.Status == KurzProgram::KPROG_MSG_GOOD)
                     {
                     cout << "Adding a new Program ID: " << dec << (int)prog_item.programID << endl;
                     Programs.Program.insert(pair<uint8, KurzProgram>(prog_item.programID, prog_item));
+
+                    map<uint8, KurzProgram>::iterator i;
+
+                    i = Programs.Program.find(prog_item.programID);
+
+                    if(i != Programs.Program.end())
+                        {
+                        CurrentProgram = &i->second;
+                        }
 
                     // Lookup our ID as the list order may have changed...
                     for(int count = 0; count < Programs.List.size(); count++)
@@ -189,7 +152,7 @@ void KurzDir::decodeMessage(string &msg)
                 cout << "Creating a new ShapeType Object here, and adding it to our Directory List." << endl;
                 KurzLFOShape shape_item = KurzLFOShape();
 
-                loc += shape_item.decode((uint8 *)msg.c_str());
+                loc = shape_item.decode((uint8 *)msg.c_str(), loc);
                 if(shape_item.Status == KurzLFOShape::KLFO_MSG_GOOD)
                     {
                     cout << "Adding a new Shape ID: " << dec << (int)shape_item.shapeID << endl;
@@ -287,32 +250,39 @@ void KurzDir::decodeMessage(string &msg)
                     loc = msg.size();
                 break;
             case layerType:
-                cout << "Skipping a layer Type Segment (" << hex << (int)msg[loc] << ") Size " << dec << (int)size << endl;
-                loc += 32; // Only skip the Layer header...
-                // Skip the name...
-                while(msg[loc] != '\0')
+
+                if(CurrentProgram)
                     {
-                    cout << msg[loc];
-                    loc++;
+                    CurrentLayer++;
+                    jassert(CurrentLayer < 4);
+
+                    cout << "Processing Layer[" << (int)CurrentLayer << "] Type Segment (" << hex << (int)msg[loc] << ") Size " << dec << (int)size << endl;
+
+                    loc = CurrentProgram->Layer[CurrentLayer].decode((uint8 *)msg.c_str(), loc);
                     }
-                loc++;
-
-                if(loc%2)
-                    loc++;
-                cout << endl;
-
-                //if(size > 0)
-                //    loc += size;
-                //else
-                //        loc = msg.size();
                 break;
             case asrType:
                 cout << "Skipping a asr Type Segment (" << hex << (int)msg[loc] << ") ID " << dec << (int)ID  << endl;
                 loc += 8;
                 break;
             case lfoType:
-                cout << "Skipping a lfo Type Segment (" << hex << (int)msg[loc] << ") ID " << dec << (int)ID << endl;
-                loc += 8;
+                if(CurrentProgram)
+                    {
+                    cout << "Processing lfoType[" << (int)msg[loc+1] << "] Type Segment (" << hex << (int)msg[loc] << ") Size " << dec << (int)size << endl;
+
+                    if(msg[loc+1] == 1)
+                        loc = CurrentProgram->Layer[CurrentLayer].LFO[0].decode((uint8 *)msg.c_str(), loc);
+                    else if(msg[loc+1] == 2)
+                        loc = CurrentProgram->Layer[CurrentLayer].LFO[1].decode((uint8 *)msg.c_str(), loc);
+                    else if(msg[loc+1] == 9)
+                        loc = CurrentProgram->LFO[0].decode((uint8 *)msg.c_str(), loc);
+                    else if(msg[loc+1] == 10)
+                        loc = CurrentProgram->LFO[1].decode((uint8 *)msg.c_str(), loc);
+                    }
+        else
+            {
+                    loc += 8;
+                    }
                 break;
             case envType:
                 cout << "Skipping a env Type Segment (" << hex << (int)msg[loc] << ") ID " << dec << (int)ID << endl;
