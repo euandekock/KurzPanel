@@ -281,6 +281,9 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
                         program.Layer[count].LFO[1].display();
                         }
                     }
+                KurzShowProgram *ProgView = new KurzShowProgram(program);
+                DialogWindow::showModalDialog(String("Program Show"), ProgView, ProgView, Colours::black, false, true, true);
+                delete ProgView;
                 }
             }
         }

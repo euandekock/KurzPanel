@@ -36,6 +36,7 @@
 #include "k_lfoshape.h"
 #include "k_lfoshapelist.h"
 #include "kurz_view_lfo_shape.h"
+#include "KurzShowProgram.h"
 using namespace std;
 
 /*

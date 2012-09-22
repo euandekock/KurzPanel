@@ -27,12 +27,6 @@
 #define __JUCE_MEMORY_JUCEHEADER__
 
 //==============================================================================
-#if JUCE_MINGW
- /** This allocator is not defined in mingw gcc. */
- #define alloca              __builtin_alloca
-#endif
-
-//==============================================================================
 /** Fills a block of memory with zeros. */
 inline void zeromem (void* memory, size_t numBytes) noexcept        { memset (memory, 0, numBytes); }
 
@@ -103,10 +97,10 @@ inline Type* createCopyIfNotNull (const Type* pointer)     { return pointer != n
  extern JUCE_API void  juceDLL_free (void*);
 
  #define JUCE_LEAK_DETECTOR(OwnerClass)  public:\
-              static void* operator new (size_t sz)           { return juce::juceDLL_malloc ((int) sz); } \
-              static void* operator new (size_t, void* p)     { return p; } \
-              static void operator delete (void* p)           { juce::juceDLL_free (p); } \
-              static void operator delete (void*, void*)      {}
+    static void* operator new (size_t sz)           { return juce::juceDLL_malloc (sz); } \
+    static void* operator new (size_t, void* p)     { return p; } \
+    static void operator delete (void* p)           { juce::juceDLL_free (p); } \
+    static void operator delete (void*, void*)      {}
 #endif
 
 //==============================================================================

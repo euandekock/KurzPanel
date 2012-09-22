@@ -10,12 +10,28 @@
       <FILE id="GB7Jqy" name="klogo32x32.png" compile="0" resource="1" file="Images/klogo32x32.png"/>
     </GROUP>
     <GROUP id="{859873B3-6FE5-42EA-F6F0-0DD8A8DBCF22}" name="Source">
+      <FILE id="SFTV7F" name="KurzLayerTab.cpp" compile="1" resource="0"
+            file="Source/KurzLayerTab.cpp"/>
+      <FILE id="SnYAYy" name="KurzLayerTab.h" compile="0" resource="0" file="Source/KurzLayerTab.h"/>
+      <FILE id="hlMDln" name="KurzProgramTab.cpp" compile="1" resource="0"
+            file="Source/KurzProgramTab.cpp"/>
+      <FILE id="Lkt8Qg" name="KurzProgramTab.h" compile="0" resource="0"
+            file="Source/KurzProgramTab.h"/>
+      <FILE id="CQffF5" name="k_asrb.h" compile="0" resource="0" file="Source/k_asrb.h"/>
+      <FILE id="ntXbMc" name="KurzShowProgram.cpp" compile="1" resource="0"
+            file="Source/KurzShowProgram.cpp"/>
+      <FILE id="hepumQ" name="KurzShowProgram.h" compile="0" resource="0"
+            file="Source/KurzShowProgram.h"/>
       <FILE id="lc1T0n" name="k_object.h" compile="0" resource="0" file="Source/k_object.h"/>
       <FILE id="nqIgQt" name="k_showdirlist.cpp" compile="1" resource="0"
             file="Source/k_showdirlist.cpp"/>
       <FILE id="XATOo1" name="k_showdirlist.h" compile="0" resource="0" file="Source/k_showdirlist.h"/>
       <FILE id="vtkJFs" name="audioComponent.h" compile="0" resource="0"
             file="Source/audioComponent.h"/>
+      <FILE id="mzrHQ4" name="k_envb.h" compile="0" resource="0" file="Source/k_envb.h"/>
+      <FILE id="Mv7BgW" name="k_eseg.h" compile="0" resource="0" file="Source/k_eseg.h"/>
+      <FILE id="QBF56C" name="k_layer.h" compile="0" resource="0" file="Source/k_layer.h"/>
+      <FILE id="qbkR55" name="k_lfob.h" compile="0" resource="0" file="Source/k_lfob.h"/>
       <FILE id="Y2h4KE" name="k_dir.cpp" compile="1" resource="0" file="Source/k_dir.cpp"/>
       <FILE id="CJJz93" name="k_dir.h" compile="0" resource="0" file="Source/k_dir.h"/>
       <FILE id="KDiKGF" name="k_direntry.cpp" compile="1" resource="0" file="Source/k_direntry.cpp"/>
