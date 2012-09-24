@@ -19,9 +19,9 @@ uint KurzProgram::decode(uint8 *msg, uint loc)
     programType = msg[loc++];
     programID   = msg[loc++];
 
-    programSize = (uint8)msg[loc++] << 8 | (uint8)msg[loc++];
+    programSize = (uint8)msg[loc] << 8 | (uint8)msg[loc+1];
 
-    loc++; // Skip Rfu
+    loc += 3; // Skip Size and Rfu
 
     outputProg = msg[loc++];
     stealing = msg[loc++];

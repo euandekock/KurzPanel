@@ -161,7 +161,7 @@ void KurzProgramTab::paintCell(Graphics& g, int rowNumber, int columnId, int wid
                 }
             else
                 {
-                g.drawText(String(Program.programID), 2, 0, width - 4, height,
+                g.drawText(String((unsigned int)Program.programID), 2, 0, width - 4, height,
                        Justification::centredLeft, true);
                 }
             break;
@@ -173,7 +173,7 @@ void KurzProgramTab::paintCell(Graphics& g, int rowNumber, int columnId, int wid
                 }
             else
                 {
-                g.drawText(String(Program.programSize), 2, 0, width - 4, height,
+                g.drawText(String((unsigned int)Program.programSize), 2, 0, width - 4, height,
                        Justification::centredLeft, true);
                 }
             break;
@@ -185,7 +185,7 @@ void KurzProgramTab::paintCell(Graphics& g, int rowNumber, int columnId, int wid
                 }
             else
                 {
-                g.drawText(String(Program.outputProg), 2, 0, width - 4, height,
+                g.drawText(String((unsigned int)Program.outputProg), 2, 0, width - 4, height,
                        Justification::centredLeft, true);
                 }
             break;
@@ -197,7 +197,7 @@ void KurzProgramTab::paintCell(Graphics& g, int rowNumber, int columnId, int wid
                 }
             else
                 {
-                g.drawText(String(Program.stealing), 2, 0, width - 4, height,
+                g.drawText(String((unsigned int)Program.stealing), 2, 0, width - 4, height,
                        Justification::centredLeft, true);
                 }
             break;
@@ -209,7 +209,7 @@ void KurzProgramTab::paintCell(Graphics& g, int rowNumber, int columnId, int wid
                 }
             else
                 {
-                g.drawText(String(Program.polyLimit), 2, 0, width - 4, height,
+                g.drawText(String((unsigned int)Program.polyLimit), 2, 0, width - 4, height,
                        Justification::centredLeft, true);
                 }
             break;

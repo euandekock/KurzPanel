@@ -1,4 +1,12 @@
 /*
+  TODO 24-Sep-2012
+  Ensure our sending status is tracked differently for normal key pad functions,
+  playing and SYSEX programming/reading.
+
+  We should use the SYSX status to pop up a progress message dialog, effectively
+  disabling any input controls while we send/receive data.
+*/
+/*
  * Kurz.cpp
  *
  *  Created on: Jun 16, 2012
@@ -44,8 +52,8 @@ void KurzConnection::sendDataPacket(const uint8 *in_msg, unsigned int in_len)
     string msg;
 
     msg = string((char *)msg_head, 5) +
-            string((char *)in_msg, in_len) +
-            string((char *)KurzSysexMsg::chksum(&in_msg[2], in_len-2), 2);
+          string((char *)in_msg, in_len) +
+          string((char *)KurzSysexMsg::chksum(&in_msg[2], in_len-2), 2);
 
     sendQueue.push_back(msg);
 
