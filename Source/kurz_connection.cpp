@@ -3,7 +3,7 @@
   Ensure our sending status is tracked differently for normal key pad functions,
   playing and SYSEX programming/reading.
 
-  We should use the SYSX status to pop up a progress message dialog, effectively
+  We should use the SYSEX status to pop up a progress message dialog, effectively
   disabling any input controls while we send/receive data.
 */
 /*

@@ -32,6 +32,7 @@
 KurzLayerTab::KurzLayerTab (KurzLayer &Layr)
     : Component ("Layer Tab"),
       Layer(Layr),
+      rowCount(1),
       LayerParam (0)
 {
     addAndMakeVisible (LayerParam = new TableListBox());
@@ -105,6 +106,14 @@ void KurzLayerTab::resized()
 // This is overloaded from TableListBoxModel, and should fill in the background of the whole row
 int KurzLayerTab::getNumRows()
     {
+    rowCount = 9;
+
+    if(Layer.LFO[0].lfobID > 0)
+        rowCount++;
+    if(Layer.LFO[1].lfobID > 0)
+        rowCount++;
+
+    return rowCount;
     return 0;
     }
 
@@ -118,8 +127,175 @@ void KurzLayerTab::paintRowBackground(Graphics& g, int /*rowNumber*/, int /*widt
 // components.
 void KurzLayerTab::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height,	bool /*rowIsSelected*/)
     {
-    g.setColour(Colours::black.withAlpha(0.2f));
+    //g.setColour(Colours::black.withAlpha(0.2f));
+    g.setColour(Colours::black);
+    g.setFont(font);
+
     g.fillRect(width - 1, 0, 1, height);
+
+
+
+ switch(rowNumber)
+        {
+        case 0:
+            if(columnId == 1)
+                {
+                g.drawText(String("Layer ID"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((unsigned int)Layer.ldbID), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 1:
+            if(columnId == 1)
+                {
+                g.drawText(String("Layer Size"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((unsigned int)Layer.ldbSize), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 2:
+            if(columnId == 1)
+                {
+                g.drawText(String("Layer Key Map"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((unsigned int)Layer.ldbKeymap), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 3:
+            if(columnId == 1)
+                {
+                g.drawText(String("Lo Key"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((unsigned int)Layer.ldbLokey), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 4:
+            if(columnId == 1)
+                {
+                g.drawText(String("Hi Key"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((unsigned int)Layer.ldbHikey), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 5:
+            if(columnId == 1)
+                {
+                g.drawText(String("Transpose"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((int)Layer.ldbTrans), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 6:
+            if(columnId == 1)
+                {
+                g.drawText(String("DeTune"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((int)Layer.ldbDtune), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 7:
+            if(columnId == 1)
+                {
+                g.drawText(String("Delay"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((unsigned int)Layer.ldbDelay), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 8:
+            if(columnId == 1)
+                {
+                g.drawText(String("Volume"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String((int)Layer.ldbVolume), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 9:
+            if(columnId == 1)
+                {
+                g.drawText(String("LFO 1"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String("Enabled"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        case 10:
+            if(columnId == 1)
+                {
+                g.drawText(String("LFO 2"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            else
+                {
+                g.drawText(String("Enabled"), 2, 0, width - 4, height,
+                       Justification::centredLeft, true);
+                }
+            break;
+        }
+    /*
+    uint8 ldbType;	// = layerType
+    uint8 ldbID;
+    int   ldbSize;
+    uint8 ldbKeymap;	// ID of keymapType object
+    uint8 ldbLokey;	// lowest MIDI key #
+    uint8 ldbHikey;	// highest MIDI key #
+    int8  ldbTrans;	// transpose (+/- semi-tones)
+    int8  ldbDtune;	// detune (+/- cents)
+    uint8 ldbDelay;	// delay (enum table 23)
+    int8  ldbVolume;	// volume adjust (+/-dB)
+    int8  ldbStereo;	// stereo position
+    uint8 ldbEffect;	// compiled effect ID
+    uint8 ldbNLink;	// compiled effect linkage
+    uint8 ldbKflags;	// key state flags
+    uint8 ldbXflags;	// effects flags
+    uint8 ldbEnable;	// enable switch (enum table #1)
+    uint8 ldbLegato;	// alt attack switch (enum table #1)
+    uint8 ldbVflags;	// velocity trigger stuff
+    uint8 ldbDynam;	// dynamic range (dB)
+    int8  ldbKeyTilt;	// amplitude tilt (+/-dB)
+    uint8 ldbBalCtl;	// balance control (enum table #1)
+    int8  ldbSpRange;	// soft pedal range (+/-dB)
+    int8  ldbPwRange;	// pitch wheel range (+/- quarter-tones)
+    uint8 ldbLastOut;	// used by compiled effects
+    */
     }
 //[/MiscUserCode]
 

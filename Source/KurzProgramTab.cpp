@@ -125,7 +125,10 @@ void KurzProgramTab::paintRowBackground(Graphics& g, int /*rowNumber*/, int /*wi
 // components.
 void KurzProgramTab::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height,	bool /*rowIsSelected*/)
     {
-    g.setColour(Colours::black.withAlpha(0.2f));
+    //g.setColour(Colours::black.withAlpha(0.2f));
+    g.setColour(Colours::black);
+    g.setFont(font);
+
     g.fillRect(width - 1, 0, 1, height);
 
     /*

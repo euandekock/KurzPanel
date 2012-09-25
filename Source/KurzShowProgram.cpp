@@ -36,6 +36,8 @@ KurzShowProgram::KurzShowProgram (KurzProgram &Prog)
       Program(Prog),
       tabbedComponent (0)
 {
+    font.setHeight(14.0f);
+
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (30);
     tabbedComponent->addTab ("Program", Colours::lightgrey, new KurzProgramTab (Program), true);
