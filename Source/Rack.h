@@ -30,6 +30,7 @@
 #include "kurz_view_lfo_shape.h" //Temporary won't be needed eventually.
 
 #include "k_showdirlist.h"
+#include "testKnob.h"
 
 
 //[/Headers]

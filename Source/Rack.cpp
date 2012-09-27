@@ -1307,6 +1307,11 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == iButton17)
     {
         //[UserButtonCode_iButton17] -- add your button handler code here..
+        testKnob *tstK = new testKnob();
+
+        DialogWindow::showModalDialog(String("Test Knob"), tstK, tstK, Colours::black, false, true, true);
+
+        delete tstK;
         //[/UserButtonCode_iButton17]
     }
     else if (buttonThatWasClicked == iButton18)
