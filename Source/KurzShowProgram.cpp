@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  23 Sep 2012 2:14:10am
+  Creation date:  29 Sep 2012 3:08:17am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -23,7 +23,7 @@
 //[/Headers]
 
 #include "KurzShowProgram.h"
-#include "KurzProgramTab.h"
+#include "KurzProgramTab1.h"
 #include "KurzLayerTab.h"
 
 
@@ -36,12 +36,10 @@ KurzShowProgram::KurzShowProgram (KurzProgram &Prog)
       Program(Prog),
       tabbedComponent (0)
 {
-    font.setHeight(14.0f);
-
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (30);
-    tabbedComponent->addTab ("Program", Colours::lightgrey, new KurzProgramTab (Program), true);
-    tabbedComponent->addTab ("Layer 1", Colours::lightgrey, new KurzLayerTab (Program.Layer[0]), true);
+    tabbedComponent->addTab ("Program", Colours::darkgrey, new KurzProgramTab (Program), true);
+    tabbedComponent->addTab ("Layer 1", Colours::darkgrey, new KurzLayerTab (Program.Layer[0]), true);
     tabbedComponent->setCurrentTabIndex (0);
 
 
@@ -144,9 +142,9 @@ BEGIN_JUCER_METADATA
   <TABBEDCOMPONENT name="new tabbed component" id="e34e18e6e5304a7f" memberName="tabbedComponent"
                    virtualName="" explicitFocusOrder="0" pos="0 0 100% 100%" orientation="top"
                    tabBarDepth="30" initialTab="0">
-    <TAB name="Program" colour="ffd3d3d3" useJucerComp="1" contentClassName="TableListBox"
-         constructorParams="Program" jucerComponentFile="KurzProgramTab.cpp"/>
-    <TAB name="Layer 1" colour="ffd3d3d3" useJucerComp="1" contentClassName=""
+    <TAB name="Program" colour="ff555555" useJucerComp="1" contentClassName="TableListBox"
+         constructorParams="Program" jucerComponentFile="KurzProgramTab1.cpp"/>
+    <TAB name="Layer 1" colour="ff555555" useJucerComp="1" contentClassName=""
          constructorParams="Program.Layer[0]" jucerComponentFile="KurzLayerTab.cpp"/>
   </TABBEDCOMPONENT>
 </JUCER_COMPONENT>

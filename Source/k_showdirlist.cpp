@@ -282,7 +282,7 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
                         }
                     }
                 KurzShowProgram *ProgView = new KurzShowProgram(program);
-                DialogWindow::showModalDialog(String("Program Show"), ProgView, ProgView, Colours::black, false, true, true);
+                DialogWindow::showModalDialog(String(program.programName.c_str()), ProgView, ProgView, Colours::black, false, true, true);
                 delete ProgView;
                 }
             }

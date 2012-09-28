@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Sep 2012 12:13:47am
+  Creation date:  29 Sep 2012 3:06:22am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -22,106 +22,355 @@
 //[Headers] You can add your own extra header files here...
 //[/Headers]
 
-#include "testKnob.h"
+#include "KurzProgramTab1.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
 //==============================================================================
-testKnob::testKnob ()
-    : Component ("Test Knob"),
-      slider (0),
-      greenKnob2 (0),
-      greenKnob3 (0)
+KurzProgramTab::KurzProgramTab (KurzProgram &Prog)
+    : Component ("Program Tab"),
+      Program(Prog),
+      gLFO1grp (0),
+      gASR2grp (0),
+      gASR1grp (0),
+      gLFO2grp1 (0),
+      gLFO1Shape (0),
+      gLFO1Phase (0),
+      gLFO1Min (0),
+      gLFO1Max (0),
+      lShape (0),
+      lPhase1 (0),
+      lMin1 (0),
+      lMax1 (0),
+      gLFO2Shape (0),
+      gLFO2Phase (0),
+      gLFO2Min (0),
+      gLFO2Max (0),
+      lShape2 (0),
+      lPhase2 (0),
+      lMin2 (0),
+      lMax2 (0),
+      gASR1Delay (0),
+      gASR1Attack (0),
+      gASR1Release (0),
+      gASR1Sustain (0),
+      lDelay1 (0),
+      lAttack1 (0),
+      lRelease1 (0),
+      lSustain1 (0),
+      gASR2Delay (0),
+      gASR2Attack (0),
+      gASR2Release (0),
+      gASR2Sustain (0),
+      lDelay2 (0),
+      lAttack2 (0),
+      lRelease2 (0),
+      lSustain2 (0)
 {
-    addAndMakeVisible (slider = new Slider ("new slider"));
-    slider->setRange (0, 128, 0);
-    slider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    slider->setTextBoxStyle (Slider::NoTextBox, false, 0, 0);
-    slider->addListener (this);
+    addAndMakeVisible (gLFO1grp = new GroupComponent ("gLFO1",
+                                                      "gLFO1"));
+    gLFO1grp->setTextLabelPosition (Justification::centred);
 
-    addAndMakeVisible (greenKnob2 = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
-    greenKnob2->setName ("Green Knob");
+    addAndMakeVisible (gASR2grp = new GroupComponent ("gASR2",
+                                                      "gASR2"));
+    gASR2grp->setTextLabelPosition (Justification::centred);
 
-    addAndMakeVisible (greenKnob3 = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
-    greenKnob3->setName ("Green Knob");
+    addAndMakeVisible (gASR1grp = new GroupComponent ("gASR1",
+                                                      "gASR1"));
+    gASR1grp->setTextLabelPosition (Justification::centred);
+
+    addAndMakeVisible (gLFO2grp1 = new GroupComponent ("gLFO2",
+                                                       "gLFO2"));
+    gLFO2grp1->setTextLabelPosition (Justification::centred);
+
+    addAndMakeVisible (gLFO1Shape = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Shape->setName ("gLFO1 Shape");
+
+    addAndMakeVisible (gLFO1Phase = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Phase->setName ("gLFO1 Phase");
+
+    addAndMakeVisible (gLFO1Min = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Min->setName ("gLFO1 Min");
+
+    addAndMakeVisible (gLFO1Max = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Max->setName ("gLFO1 Max");
+
+    addAndMakeVisible (lShape = new Label ("lShape",
+                                           "Shape"));
+    lShape->setFont (Font (15.0000f, Font::plain));
+    lShape->setJustificationType (Justification::centredLeft);
+    lShape->setEditable (false, false, false);
+    lShape->setColour (TextEditor::textColourId, Colours::black);
+    lShape->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lPhase1 = new Label ("lPhase",
+                                            "Phase"));
+    lPhase1->setFont (Font (15.0000f, Font::plain));
+    lPhase1->setJustificationType (Justification::centredLeft);
+    lPhase1->setEditable (false, false, false);
+    lPhase1->setColour (TextEditor::textColourId, Colours::black);
+    lPhase1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lMin1 = new Label ("lMin1",
+                                          "Min"));
+    lMin1->setFont (Font (15.0000f, Font::plain));
+    lMin1->setJustificationType (Justification::centredLeft);
+    lMin1->setEditable (false, false, false);
+    lMin1->setColour (TextEditor::textColourId, Colours::black);
+    lMin1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lMax1 = new Label ("lMax1",
+                                          "Max"));
+    lMax1->setFont (Font (15.0000f, Font::plain));
+    lMax1->setJustificationType (Justification::centredLeft);
+    lMax1->setEditable (false, false, false);
+    lMax1->setColour (TextEditor::textColourId, Colours::black);
+    lMax1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (gLFO2Shape = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Shape->setName ("gLFO2 Shape");
+
+    addAndMakeVisible (gLFO2Phase = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Phase->setName ("gLFO2 Phase");
+
+    addAndMakeVisible (gLFO2Min = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Min->setName ("gLFO2 Min");
+
+    addAndMakeVisible (gLFO2Max = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Max->setName ("gLFO2 Max");
+
+    addAndMakeVisible (lShape2 = new Label ("lShape",
+                                            "Shape"));
+    lShape2->setFont (Font (15.0000f, Font::plain));
+    lShape2->setJustificationType (Justification::centredLeft);
+    lShape2->setEditable (false, false, false);
+    lShape2->setColour (TextEditor::textColourId, Colours::black);
+    lShape2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lPhase2 = new Label ("lPhase",
+                                            "Phase"));
+    lPhase2->setFont (Font (15.0000f, Font::plain));
+    lPhase2->setJustificationType (Justification::centredLeft);
+    lPhase2->setEditable (false, false, false);
+    lPhase2->setColour (TextEditor::textColourId, Colours::black);
+    lPhase2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lMin2 = new Label ("lMin1",
+                                          "Min"));
+    lMin2->setFont (Font (15.0000f, Font::plain));
+    lMin2->setJustificationType (Justification::centredLeft);
+    lMin2->setEditable (false, false, false);
+    lMin2->setColour (TextEditor::textColourId, Colours::black);
+    lMin2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lMax2 = new Label ("lMax1",
+                                          "Max"));
+    lMax2->setFont (Font (15.0000f, Font::plain));
+    lMax2->setJustificationType (Justification::centredLeft);
+    lMax2->setEditable (false, false, false);
+    lMax2->setColour (TextEditor::textColourId, Colours::black);
+    lMax2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (gASR1Delay = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Delay->setName ("gASR1 Delay");
+
+    addAndMakeVisible (gASR1Attack = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Attack->setName ("gASR1 Attack");
+
+    addAndMakeVisible (gASR1Release = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Release->setName ("gASR1 Release");
+
+    addAndMakeVisible (gASR1Sustain = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Sustain->setName ("gASR1 Sustain");
+
+    addAndMakeVisible (lDelay1 = new Label ("lDelay",
+                                            "Delay"));
+    lDelay1->setFont (Font (15.0000f, Font::plain));
+    lDelay1->setJustificationType (Justification::centredLeft);
+    lDelay1->setEditable (false, false, false);
+    lDelay1->setColour (TextEditor::textColourId, Colours::black);
+    lDelay1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lAttack1 = new Label ("lAttack",
+                                             "Attack"));
+    lAttack1->setFont (Font (15.0000f, Font::plain));
+    lAttack1->setJustificationType (Justification::centredLeft);
+    lAttack1->setEditable (false, false, false);
+    lAttack1->setColour (TextEditor::textColourId, Colours::black);
+    lAttack1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lRelease1 = new Label ("lRelease 1",
+                                              "Release"));
+    lRelease1->setFont (Font (15.0000f, Font::plain));
+    lRelease1->setJustificationType (Justification::centredLeft);
+    lRelease1->setEditable (false, false, false);
+    lRelease1->setColour (TextEditor::textColourId, Colours::black);
+    lRelease1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lSustain1 = new Label ("lSustain",
+                                              "Sustain"));
+    lSustain1->setFont (Font (15.0000f, Font::plain));
+    lSustain1->setJustificationType (Justification::centredLeft);
+    lSustain1->setEditable (false, false, false);
+    lSustain1->setColour (TextEditor::textColourId, Colours::black);
+    lSustain1->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (gASR2Delay = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Delay->setName ("gASR2 Delay");
+
+    addAndMakeVisible (gASR2Attack = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Attack->setName ("gASR2 Attack");
+
+    addAndMakeVisible (gASR2Release = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Release->setName ("gASR2 Release");
+
+    addAndMakeVisible (gASR2Sustain = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Sustain->setName ("gASR2 Sustain");
+
+    addAndMakeVisible (lDelay2 = new Label ("lDelay",
+                                            "Delay"));
+    lDelay2->setFont (Font (15.0000f, Font::plain));
+    lDelay2->setJustificationType (Justification::centredLeft);
+    lDelay2->setEditable (false, false, false);
+    lDelay2->setColour (TextEditor::textColourId, Colours::black);
+    lDelay2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lAttack2 = new Label ("lAttack",
+                                             "Attack"));
+    lAttack2->setFont (Font (15.0000f, Font::plain));
+    lAttack2->setJustificationType (Justification::centredLeft);
+    lAttack2->setEditable (false, false, false);
+    lAttack2->setColour (TextEditor::textColourId, Colours::black);
+    lAttack2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lRelease2 = new Label ("lRelease 1",
+                                              "Release"));
+    lRelease2->setFont (Font (15.0000f, Font::plain));
+    lRelease2->setJustificationType (Justification::centredLeft);
+    lRelease2->setEditable (false, false, false);
+    lRelease2->setColour (TextEditor::textColourId, Colours::black);
+    lRelease2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (lSustain2 = new Label ("lSustain",
+                                              "Sustain"));
+    lSustain2->setFont (Font (15.0000f, Font::plain));
+    lSustain2->setJustificationType (Justification::centredLeft);
+    lSustain2->setEditable (false, false, false);
+    lSustain2->setColour (TextEditor::textColourId, Colours::black);
+    lSustain2->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (300, 370);
 
 
     //[Constructor] You can add your own custom stuff here..
-    for(int count = 0; count < 10; count++)
-        {
-        greenKnob[count] = new FilmStripKnob(greenWrap40_png, greenWrap40_pngSize, 128, false);
-        addAndMakeVisible(greenKnob[count]);
-        greenKnob[count]->setBounds(slider->getScreenX() + (50*(count+1)), slider->getScreenY(), 40, 40);
-        }
-
-
     //[/Constructor]
 }
 
-testKnob::~testKnob()
+KurzProgramTab::~KurzProgramTab()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    deleteAndZero (slider);
-    deleteAndZero (greenKnob2);
-    deleteAndZero (greenKnob3);
+    deleteAndZero (gLFO1grp);
+    deleteAndZero (gASR2grp);
+    deleteAndZero (gASR1grp);
+    deleteAndZero (gLFO2grp1);
+    deleteAndZero (gLFO1Shape);
+    deleteAndZero (gLFO1Phase);
+    deleteAndZero (gLFO1Min);
+    deleteAndZero (gLFO1Max);
+    deleteAndZero (lShape);
+    deleteAndZero (lPhase1);
+    deleteAndZero (lMin1);
+    deleteAndZero (lMax1);
+    deleteAndZero (gLFO2Shape);
+    deleteAndZero (gLFO2Phase);
+    deleteAndZero (gLFO2Min);
+    deleteAndZero (gLFO2Max);
+    deleteAndZero (lShape2);
+    deleteAndZero (lPhase2);
+    deleteAndZero (lMin2);
+    deleteAndZero (lMax2);
+    deleteAndZero (gASR1Delay);
+    deleteAndZero (gASR1Attack);
+    deleteAndZero (gASR1Release);
+    deleteAndZero (gASR1Sustain);
+    deleteAndZero (lDelay1);
+    deleteAndZero (lAttack1);
+    deleteAndZero (lRelease1);
+    deleteAndZero (lSustain1);
+    deleteAndZero (gASR2Delay);
+    deleteAndZero (gASR2Attack);
+    deleteAndZero (gASR2Release);
+    deleteAndZero (gASR2Sustain);
+    deleteAndZero (lDelay2);
+    deleteAndZero (lAttack2);
+    deleteAndZero (lRelease2);
+    deleteAndZero (lSustain2);
 
 
     //[Destructor]. You can add your own custom destruction code here..
-    for(int count = 0; count < 10; count++)
-        {
-        deleteAndZero(greenKnob[count]);
-        }
     //[/Destructor]
 }
 
 //==============================================================================
-void testKnob::paint (Graphics& g)
+void KurzProgramTab::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colours::grey);
+    g.fillAll (Colours::darkgrey);
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
 
-void testKnob::resized()
+void KurzProgramTab::resized()
 {
-    slider->setBounds (16, 16, 40, 40);
-    greenKnob2->setBounds ((16) + 0, (16) + 48, 40, 40);
-    greenKnob3->setBounds (16, 128, 40, 40);
+    gLFO1grp->setBounds (8, 8, 128, 176);
+    gASR2grp->setBounds (160, 184, 128, 176);
+    gASR1grp->setBounds (8, 184, 128, 176);
+    gLFO2grp1->setBounds (160, 8, 128, 176);
+    gLFO1Shape->setBounds (24, 40, 40, 40);
+    gLFO1Phase->setBounds (80, 40, 40, 40);
+    gLFO1Min->setBounds (24, 112, 40, 40);
+    gLFO1Max->setBounds (80, 112, 40, 40);
+    lShape->setBounds (24, 80, 40, 24);
+    lPhase1->setBounds (80, 80, 40, 24);
+    lMin1->setBounds (24, 152, 40, 24);
+    lMax1->setBounds (80, 152, 40, 24);
+    gLFO2Shape->setBounds (176, 40, 40, 40);
+    gLFO2Phase->setBounds (232, 40, 40, 40);
+    gLFO2Min->setBounds (176, 112, 40, 40);
+    gLFO2Max->setBounds (232, 112, 40, 40);
+    lShape2->setBounds (176, 80, 40, 24);
+    lPhase2->setBounds (232, 80, 40, 24);
+    lMin2->setBounds (176, 152, 40, 24);
+    lMax2->setBounds (232, 152, 40, 24);
+    gASR1Delay->setBounds (24, 208, 40, 40);
+    gASR1Attack->setBounds (80, 208, 40, 40);
+    gASR1Release->setBounds (24, 288, 40, 40);
+    gASR1Sustain->setBounds (80, 288, 40, 40);
+    lDelay1->setBounds (24, 248, 40, 24);
+    lAttack1->setBounds (80, 248, 40, 24);
+    lRelease1->setBounds (24, 328, 40, 24);
+    lSustain1->setBounds (80, 328, 40, 24);
+    gASR2Delay->setBounds (176, 216, 40, 40);
+    gASR2Attack->setBounds (232, 216, 40, 40);
+    gASR2Release->setBounds (176, 288, 40, 40);
+    gASR2Sustain->setBounds (232, 288, 40, 40);
+    lDelay2->setBounds (176, 256, 40, 24);
+    lAttack2->setBounds (232, 256, 40, 24);
+    lRelease2->setBounds (176, 328, 40, 24);
+    lSustain2->setBounds (232, 328, 40, 24);
     //[UserResized] Add your own custom resize handling here..
-    for(int count = 0; count < 10; count++)
-        {
-        //greenKnob[count]->setBounds(slider->getScreenX() + (50*(count+1)), slider->getScreenY(), 40, 40);
-        }
     //[/UserResized]
-}
-
-void testKnob::sliderValueChanged (Slider* sliderThatWasMoved)
-{
-    //[UsersliderValueChanged_Pre]
-    //[/UsersliderValueChanged_Pre]
-
-    if (sliderThatWasMoved == slider)
-    {
-        //[UserSliderCode_slider] -- add your slider handling code here..
-        //[/UserSliderCode_slider]
-    }
-
-    //[UsersliderValueChanged_Post]
-    //[/UsersliderValueChanged_Post]
 }
 
 
@@ -138,21 +387,148 @@ void testKnob::sliderValueChanged (Slider* sliderThatWasMoved)
 
 BEGIN_JUCER_METADATA
 
-<JUCER_COMPONENT documentType="Component" className="testKnob" componentName="Test Knob"
-                 parentClasses="public Component" constructorParams="" variableInitialisers=""
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
-                 fixedSize="0" initialWidth="600" initialHeight="400">
-  <BACKGROUND backgroundColour="ffffffff"/>
-  <SLIDER name="new slider" id="1b4049104dd61935" memberName="slider" virtualName=""
-          explicitFocusOrder="0" pos="16 16 40 40" min="0" max="128" int="0"
-          style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="0" textBoxHeight="0" skewFactor="1"/>
-  <GENERICCOMPONENT name="Green Knob" id="1df5eccb3b029d59" memberName="greenKnob2"
-                    virtualName="" explicitFocusOrder="0" pos="0 48 40 40" posRelativeX="1b4049104dd61935"
+<JUCER_COMPONENT documentType="Component" className="KurzProgramTab" componentName="Program Tab"
+                 parentClasses="public Component" constructorParams="KurzProgram &amp;Prog"
+                 variableInitialisers="Program(Prog)" snapPixels="8" snapActive="1"
+                 snapShown="1" overlayOpacity="0.330000013" fixedSize="0" initialWidth="300"
+                 initialHeight="370">
+  <BACKGROUND backgroundColour="ff555555"/>
+  <GROUPCOMPONENT name="gLFO1" id="65867dd2975cf695" memberName="gLFO1grp" virtualName=""
+                  explicitFocusOrder="0" pos="8 8 128 176" title="gLFO1" textpos="36"/>
+  <GROUPCOMPONENT name="gASR2" id="692ad7f6c9d38405" memberName="gASR2grp" virtualName=""
+                  explicitFocusOrder="0" pos="160 184 128 176" title="gASR2" textpos="36"/>
+  <GROUPCOMPONENT name="gASR1" id="dd294df1c8c1ed4f" memberName="gASR1grp" virtualName=""
+                  explicitFocusOrder="0" pos="8 184 128 176" title="gASR1" textpos="36"/>
+  <GROUPCOMPONENT name="gLFO2" id="efd8cb3a65ad821e" memberName="gLFO2grp1" virtualName=""
+                  explicitFocusOrder="0" pos="160 8 128 176" title="gLFO2" textpos="36"/>
+  <GENERICCOMPONENT name="gLFO1 Shape" id="1df5eccb3b029d59" memberName="gLFO1Shape"
+                    virtualName="" explicitFocusOrder="0" pos="24 40 40 40" posRelativeX="1b4049104dd61935"
                     posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
-  <GENERICCOMPONENT name="Green Knob" id="b28de2d08369bb59" memberName="greenKnob3"
-                    virtualName="" explicitFocusOrder="0" pos="16 128 40 40" class="FilmStripKnob"
+  <GENERICCOMPONENT name="gLFO1 Phase" id="b28de2d08369bb59" memberName="gLFO1Phase"
+                    virtualName="" explicitFocusOrder="0" pos="80 40 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gLFO1 Min" id="5211831dec7c5c94" memberName="gLFO1Min"
+                    virtualName="" explicitFocusOrder="0" pos="24 112 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gLFO1 Max" id="12bce62e6142e757" memberName="gLFO1Max"
+                    virtualName="" explicitFocusOrder="0" pos="80 112 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <LABEL name="lShape" id="b8e395f57af69f27" memberName="lShape" virtualName=""
+         explicitFocusOrder="0" pos="24 80 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Shape" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lPhase" id="771e84d9080b6343" memberName="lPhase1" virtualName=""
+         explicitFocusOrder="0" pos="80 80 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Phase" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lMin1" id="6e9fa5df424f4c39" memberName="lMin1" virtualName=""
+         explicitFocusOrder="0" pos="24 152 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Min" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lMax1" id="760df49bfa560e05" memberName="lMax1" virtualName=""
+         explicitFocusOrder="0" pos="80 152 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Max" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <GENERICCOMPONENT name="gLFO2 Shape" id="ff5d30911b8d9105" memberName="gLFO2Shape"
+                    virtualName="" explicitFocusOrder="0" pos="176 40 40 40" posRelativeX="1b4049104dd61935"
+                    posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gLFO2 Phase" id="46e3fb85ecc60311" memberName="gLFO2Phase"
+                    virtualName="" explicitFocusOrder="0" pos="232 40 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gLFO2 Min" id="f7f182398bfd925d" memberName="gLFO2Min"
+                    virtualName="" explicitFocusOrder="0" pos="176 112 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gLFO2 Max" id="66f53cb1729a8b1a" memberName="gLFO2Max"
+                    virtualName="" explicitFocusOrder="0" pos="232 112 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <LABEL name="lShape" id="9d8e9df82deac390" memberName="lShape2" virtualName=""
+         explicitFocusOrder="0" pos="176 80 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Shape" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lPhase" id="ee4c45d97e079fa3" memberName="lPhase2" virtualName=""
+         explicitFocusOrder="0" pos="232 80 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Phase" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lMin1" id="98ab31f6bb19cfa9" memberName="lMin2" virtualName=""
+         explicitFocusOrder="0" pos="176 152 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Min" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lMax1" id="fc6827ab8826f83e" memberName="lMax2" virtualName=""
+         explicitFocusOrder="0" pos="232 152 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Max" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <GENERICCOMPONENT name="gASR1 Delay" id="23ae3b924db42c14" memberName="gASR1Delay"
+                    virtualName="" explicitFocusOrder="0" pos="24 208 40 40" posRelativeX="1b4049104dd61935"
+                    posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gASR1 Attack" id="7a1a95d1cf664369" memberName="gASR1Attack"
+                    virtualName="" explicitFocusOrder="0" pos="80 208 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gASR1 Release" id="adc3a6e635cf1d45" memberName="gASR1Release"
+                    virtualName="" explicitFocusOrder="0" pos="24 288 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gASR1 Sustain" id="465728b145bad61a" memberName="gASR1Sustain"
+                    virtualName="" explicitFocusOrder="0" pos="80 288 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <LABEL name="lDelay" id="e8021a32385ca648" memberName="lDelay1" virtualName=""
+         explicitFocusOrder="0" pos="24 248 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Delay" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lAttack" id="ceb18ba1e41becb3" memberName="lAttack1" virtualName=""
+         explicitFocusOrder="0" pos="80 248 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Attack" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lRelease 1" id="7043747243c63f1e" memberName="lRelease1"
+         virtualName="" explicitFocusOrder="0" pos="24 328 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Release" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lSustain" id="606d30789b9960d9" memberName="lSustain1"
+         virtualName="" explicitFocusOrder="0" pos="80 328 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Sustain" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <GENERICCOMPONENT name="gASR2 Delay" id="b7f4fcc72a274430" memberName="gASR2Delay"
+                    virtualName="" explicitFocusOrder="0" pos="176 216 40 40" posRelativeX="1b4049104dd61935"
+                    posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gASR2 Attack" id="883964a9ff2562e4" memberName="gASR2Attack"
+                    virtualName="" explicitFocusOrder="0" pos="232 216 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gASR2 Release" id="9e940a1a19a06499" memberName="gASR2Release"
+                    virtualName="" explicitFocusOrder="0" pos="176 288 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <GENERICCOMPONENT name="gASR2 Sustain" id="8723ff1bf0b23c2c" memberName="gASR2Sustain"
+                    virtualName="" explicitFocusOrder="0" pos="232 288 40 40" class="FilmStripKnob"
+                    params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
+  <LABEL name="lDelay" id="4392ec9b328f952" memberName="lDelay2" virtualName=""
+         explicitFocusOrder="0" pos="176 256 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Delay" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lAttack" id="365f736f68997e14" memberName="lAttack2" virtualName=""
+         explicitFocusOrder="0" pos="232 256 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Attack" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lRelease 1" id="7e656782df79648f" memberName="lRelease2"
+         virtualName="" explicitFocusOrder="0" pos="176 328 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Release" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <LABEL name="lSustain" id="7da546fa45ea0a96" memberName="lSustain2"
+         virtualName="" explicitFocusOrder="0" pos="232 328 40 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Sustain" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -163,33 +539,33 @@ END_JUCER_METADATA
 // Binary resources - be careful not to edit any of these sections!
 
 // JUCER_RESOURCE: greenWrap40_png, 29795, "../Images/GreenWrap40.png"
-static const unsigned char resource_testKnob_greenWrap40_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,40,0,0,20,0,8,6,0,0,0,244,144,135,235,0,0,0,9,112,72,89,115,0,0,14,196,0,0,14,196,
-1,149,43,14,27,0,0,32,0,73,68,65,84,120,156,236,221,121,124,19,117,254,63,240,215,36,105,122,37,61,105,122,112,180,165,208,114,21,185,21,69,1,21,253,10,120,236,42,138,138,23,174,2,194,122,124,61,119,197,
-213,245,88,244,183,135,34,199,170,43,139,120,236,126,61,214,85,17,215,3,5,143,21,148,75,129,66,185,74,75,75,143,180,165,103,146,54,215,252,254,104,39,228,152,164,109,160,205,199,221,215,219,71,31,164,
-153,36,243,234,103,38,115,124,158,126,102,36,89,150,17,78,73,146,52,25,192,121,0,38,68,69,69,13,51,26,141,3,244,122,125,2,0,216,237,246,230,150,150,150,10,135,195,81,12,96,59,128,175,100,89,222,18,214,
-124,122,18,80,146,164,92,0,183,198,199,199,223,80,80,80,48,200,104,52,118,235,125,45,45,45,56,112,224,192,49,139,197,242,26,128,53,178,44,31,61,173,1,37,73,74,3,176,52,59,59,251,206,156,156,156,238,126,
-182,106,149,150,150,162,172,172,236,249,168,168,168,39,237,118,123,237,41,7,148,36,233,198,148,148,148,229,133,133,133,73,167,148,204,175,14,28,56,208,104,179,217,238,106,108,108,124,53,236,128,146,36,
-45,31,55,110,220,157,221,93,148,61,45,171,213,138,138,138,138,231,43,43,43,239,234,113,64,73,146,222,158,58,117,234,85,106,211,52,26,13,12,6,3,250,245,235,135,236,236,108,164,167,167,3,0,90,91,91,225,
-112,56,160,209,104,96,179,217,96,54,155,97,54,155,209,220,220,12,135,195,129,96,243,170,168,168,120,231,240,225,195,115,186,29,48,84,184,204,204,76,140,28,57,18,58,157,14,22,139,5,85,85,85,112,185,92,
-112,187,221,158,31,151,203,5,167,211,9,183,219,13,131,193,0,173,86,11,135,195,129,250,250,122,216,108,54,213,144,39,78,156,120,103,247,238,221,1,33,3,2,74,146,180,124,234,212,169,119,170,125,200,148,41,
-83,208,175,95,63,148,149,149,193,98,177,0,0,220,110,55,100,89,246,9,167,4,118,58,157,158,31,0,136,143,143,135,195,225,64,67,67,131,106,200,182,182,182,231,183,110,221,234,179,184,125,2,74,146,116,227,
-184,113,227,214,249,175,115,177,177,177,184,248,226,139,81,83,83,227,243,225,222,225,148,127,149,112,46,151,11,14,135,195,211,154,202,143,44,203,48,24,12,104,110,110,14,88,228,178,44,67,163,209,220,180,
-105,211,38,207,23,71,227,21,46,45,37,37,101,185,90,184,25,51,102,160,172,172,12,141,141,141,144,36,9,146,36,41,239,241,60,14,85,202,235,36,73,130,203,229,194,137,19,39,160,215,235,85,95,167,211,233,150,
-207,154,53,43,45,32,32,128,165,106,155,146,139,47,190,24,229,229,229,104,107,107,83,13,231,253,156,44,203,158,86,9,181,117,112,187,221,158,63,214,191,28,14,71,146,94,175,95,234,19,80,146,164,220,236,236,
-236,128,245,110,202,148,41,168,169,169,241,132,243,188,73,163,241,9,167,209,104,60,161,149,0,74,121,135,86,74,146,36,200,178,140,198,198,70,207,98,247,11,121,231,188,121,243,114,61,1,1,220,234,191,135,
-200,204,204,68,191,126,253,2,86,104,37,148,86,171,133,86,171,245,9,235,61,35,255,214,244,255,93,121,125,75,75,11,92,46,151,207,60,90,91,91,161,215,235,111,245,4,140,143,143,191,193,251,5,26,141,6,35,71,
-142,68,89,89,153,207,12,189,91,76,249,87,105,61,255,32,202,183,218,251,57,181,85,192,225,112,160,181,181,53,160,21,221,110,247,13,0,160,145,36,105,114,65,65,193,32,239,137,6,131,193,179,157,243,254,48,
-37,164,210,146,254,211,188,195,169,61,86,251,145,36,9,86,171,53,160,21,107,106,106,6,221,115,207,61,147,53,0,206,243,255,230,166,164,164,4,108,231,212,90,192,127,187,231,255,211,85,104,229,115,236,118,
-59,218,218,218,124,50,216,108,54,232,245,250,243,52,0,38,192,175,114,115,115,81,85,85,165,26,206,127,111,161,4,244,222,56,171,133,245,15,238,253,88,146,36,213,141,183,94,175,159,160,137,138,138,26,230,
-63,33,61,61,29,46,151,75,181,149,148,13,176,247,198,87,173,21,189,67,168,253,238,253,28,0,52,53,53,5,4,4,48,76,103,52,26,7,168,77,81,222,232,189,174,185,221,238,128,223,189,91,208,187,245,130,45,246,96,
-161,219,219,219,3,50,216,108,182,1,58,229,48,221,187,90,91,91,85,3,42,155,6,255,197,173,44,218,80,161,188,167,121,47,13,239,231,252,203,233,116,38,232,212,90,207,225,112,248,172,31,74,64,165,188,3,170,
-173,115,93,181,158,218,31,168,182,231,209,106,181,208,217,237,246,102,0,62,187,56,141,70,3,151,203,229,179,151,240,94,236,106,235,147,90,235,132,250,241,127,141,247,124,148,50,24,12,205,186,150,150,150,
-10,255,128,54,155,13,78,167,19,90,173,54,96,195,234,127,244,162,60,246,95,92,254,33,212,14,197,188,183,6,49,49,49,1,1,211,210,210,42,116,157,167,134,163,188,39,152,205,230,160,205,174,182,77,235,73,43,
-6,155,158,152,152,168,214,130,197,26,116,156,183,250,84,117,117,53,12,6,67,192,118,206,251,139,208,213,34,244,223,4,5,155,238,116,58,225,112,56,144,148,20,120,78,166,211,233,182,235,0,124,213,210,210,
-2,239,189,73,107,107,43,18,19,19,225,116,58,85,15,167,130,125,147,253,23,113,176,63,204,59,188,211,233,132,94,175,71,92,92,156,79,56,147,201,4,157,78,247,149,70,150,229,45,7,14,28,56,230,61,209,225,112,
-192,110,183,3,128,234,6,89,167,211,169,182,146,218,107,131,157,2,40,175,119,56,28,48,26,141,136,138,138,242,9,120,254,249,231,31,155,59,119,238,22,13,0,116,158,241,251,172,103,39,78,156,64,124,124,188,
-207,135,58,157,78,196,198,198,226,169,167,158,130,201,100,10,185,56,189,223,227,189,157,244,94,172,118,187,29,26,141,6,38,147,41,224,224,53,35,35,227,53,224,228,241,224,154,210,210,82,159,23,216,108,54,
-216,237,118,200,178,12,135,195,225,249,89,184,112,33,190,255,254,123,28,59,118,44,32,188,255,143,127,88,255,93,164,221,110,71,86,86,86,192,226,157,50,101,10,180,90,237,26,79,64,89,150,143,150,149,149,
+static const unsigned char resource_KurzProgramTab_greenWrap40_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,40,0,0,20,0,8,6,0,0,0,244,144,135,235,0,0,0,9,112,72,89,115,0,0,14,196,0,0,
+14,196,1,149,43,14,27,0,0,32,0,73,68,65,84,120,156,236,221,121,124,19,117,254,63,240,215,36,105,122,37,61,105,122,112,180,165,208,114,21,185,21,69,1,21,253,10,120,236,42,138,138,23,174,2,194,122,124,61,
+119,197,213,245,88,244,183,135,34,199,170,43,139,120,236,126,61,214,85,17,215,3,5,143,21,148,75,129,66,185,74,75,75,143,180,165,103,146,54,215,252,254,104,39,228,152,164,109,160,205,199,221,215,219,71,
+31,164,153,36,243,234,103,38,115,124,158,126,102,36,89,150,17,78,73,146,52,25,192,121,0,38,68,69,69,13,51,26,141,3,244,122,125,2,0,216,237,246,230,150,150,150,10,135,195,81,12,96,59,128,175,100,89,222,
+18,214,124,122,18,80,146,164,92,0,183,198,199,199,223,80,80,80,48,200,104,52,118,235,125,45,45,45,56,112,224,192,49,139,197,242,26,128,53,178,44,31,61,173,1,37,73,74,3,176,52,59,59,251,206,156,156,156,
+238,126,182,106,149,150,150,162,172,172,236,249,168,168,168,39,237,118,123,237,41,7,148,36,233,198,148,148,148,229,133,133,133,73,167,148,204,175,14,28,56,208,104,179,217,238,106,108,108,124,53,236,128,
+146,36,45,31,55,110,220,157,221,93,148,61,45,171,213,138,138,138,138,231,43,43,43,239,234,113,64,73,146,222,158,58,117,234,85,106,211,52,26,13,12,6,3,250,245,235,135,236,236,108,164,167,167,3,0,90,91,
+91,225,112,56,160,209,104,96,179,217,96,54,155,97,54,155,209,220,220,12,135,195,129,96,243,170,168,168,120,231,240,225,195,115,186,29,48,84,184,204,204,76,140,28,57,18,58,157,14,22,139,5,85,85,85,112,
+185,92,112,187,221,158,31,151,203,5,167,211,9,183,219,13,131,193,0,173,86,11,135,195,129,250,250,122,216,108,54,213,144,39,78,156,120,103,247,238,221,1,33,3,2,74,146,180,124,234,212,169,119,170,125,200,
+148,41,83,208,175,95,63,148,149,149,193,98,177,0,0,220,110,55,100,89,246,9,167,4,118,58,157,158,31,0,136,143,143,135,195,225,64,67,67,131,106,200,182,182,182,231,183,110,221,234,179,184,125,2,74,146,116,
+227,184,113,227,214,249,175,115,177,177,177,184,248,226,139,81,83,83,227,243,225,222,225,148,127,149,112,46,151,11,14,135,195,211,154,202,143,44,203,48,24,12,104,110,110,14,88,228,178,44,67,163,209,220,
+180,105,211,38,207,23,71,227,21,46,45,37,37,101,185,90,184,25,51,102,160,172,172,12,141,141,141,144,36,9,146,36,41,239,241,60,14,85,202,235,36,73,130,203,229,194,137,19,39,160,215,235,85,95,167,211,233,
+150,207,154,53,43,45,32,32,128,165,106,155,146,139,47,190,24,229,229,229,104,107,107,83,13,231,253,156,44,203,158,86,9,181,117,112,187,221,158,63,214,191,28,14,71,146,94,175,95,234,19,80,146,164,220,236,
+236,236,128,245,110,202,148,41,168,169,169,241,132,243,188,73,163,241,9,167,209,104,60,161,149,0,74,121,135,86,74,146,36,200,178,140,198,198,70,207,98,247,11,121,231,188,121,243,114,61,1,1,220,234,191,
+135,200,204,204,68,191,126,253,2,86,104,37,148,86,171,133,86,171,245,9,235,61,35,255,214,244,255,93,121,125,75,75,11,92,46,151,207,60,90,91,91,161,215,235,111,245,4,140,143,143,191,193,251,5,26,141,6,
+35,71,142,68,89,89,153,207,12,189,91,76,249,87,105,61,255,32,202,183,218,251,57,181,85,192,225,112,160,181,181,53,160,21,221,110,247,13,0,160,145,36,105,114,65,65,193,32,239,137,6,131,193,179,157,243,
+254,48,37,164,210,146,254,211,188,195,169,61,86,251,145,36,9,86,171,53,160,21,107,106,106,6,221,115,207,61,147,53,0,206,243,255,230,166,164,164,4,108,231,212,90,192,127,187,231,255,211,85,104,229,115,
+236,118,59,218,218,218,124,50,216,108,54,232,245,250,243,52,0,38,192,175,114,115,115,81,85,85,165,26,206,127,111,161,4,244,222,56,171,133,245,15,238,253,88,146,36,213,141,183,94,175,159,160,137,138,138,
+26,230,63,33,61,61,29,46,151,75,181,149,148,13,176,247,198,87,173,21,189,67,168,253,238,253,28,0,52,53,53,5,4,4,48,76,103,52,26,7,168,77,81,222,232,189,174,185,221,238,128,223,189,91,208,187,245,130,45,
+246,96,161,219,219,219,3,50,216,108,182,1,58,229,48,221,187,90,91,91,85,3,42,155,6,255,197,173,44,218,80,161,188,167,121,47,13,239,231,252,203,233,116,38,232,212,90,207,225,112,248,172,31,74,64,165,188,
+3,170,173,115,93,181,158,218,31,168,182,231,209,106,181,208,217,237,246,102,0,62,187,56,141,70,3,151,203,229,179,151,240,94,236,106,235,147,90,235,132,250,241,127,141,247,124,148,50,24,12,205,186,150,
+150,150,10,255,128,54,155,13,78,167,19,90,173,54,96,195,234,127,244,162,60,246,95,92,254,33,212,14,197,188,183,6,49,49,49,1,1,211,210,210,42,116,157,167,134,163,188,39,152,205,230,160,205,174,182,77,235,
+73,43,6,155,158,152,152,168,214,130,197,26,116,156,183,250,84,117,117,53,12,6,67,192,118,206,251,139,208,213,34,244,223,4,5,155,238,116,58,225,112,56,144,148,20,120,78,166,211,233,182,235,0,124,213,210,
+210,2,239,189,73,107,107,43,18,19,19,225,116,58,85,15,167,130,125,147,253,23,113,176,63,204,59,188,211,233,132,94,175,71,92,92,156,79,56,147,201,4,157,78,247,149,70,150,229,45,7,14,28,56,230,61,209,225,
+112,192,110,183,3,128,234,6,89,167,211,169,182,146,218,107,131,157,2,40,175,119,56,28,48,26,141,136,138,138,242,9,120,254,249,231,31,155,59,119,238,22,13,0,116,158,241,251,172,103,39,78,156,64,124,124,
+188,207,135,58,157,78,196,198,198,226,169,167,158,130,201,100,10,185,56,189,223,227,189,157,244,94,172,118,187,29,26,141,6,38,147,41,224,224,53,35,35,227,53,224,228,241,224,154,210,210,82,159,23,216,108,
+54,216,237,118,200,178,12,135,195,225,249,89,184,112,33,190,255,254,123,28,59,118,44,32,188,255,143,127,88,255,93,164,221,110,71,86,86,86,192,226,157,50,101,10,180,90,237,26,79,64,89,150,143,150,149,149,
 61,239,191,146,54,54,54,34,62,62,222,179,255,125,232,161,135,224,118,187,241,215,191,254,85,117,134,222,191,251,7,83,251,49,153,76,200,204,204,12,104,189,179,207,62,251,249,75,47,189,244,168,119,11,34,
 42,42,234,201,3,7,14,52,250,135,108,105,105,65,76,76,12,230,94,59,23,153,153,153,120,236,177,199,60,51,240,159,185,119,56,255,233,254,175,77,78,78,70,118,118,182,255,236,48,103,206,156,70,73,146,158,84,
 126,247,4,180,219,237,181,54,155,237,46,171,213,234,243,6,89,150,81,180,184,8,205,249,205,88,184,112,33,218,219,219,97,183,219,97,183,219,125,102,238,189,210,219,237,118,213,112,202,113,95,106,106,42,
@@ -690,5 +1066,5 @@ static const unsigned char resource_testKnob_greenWrap40_png[] = { 137,80,78,71,
 175,187,245,211,159,254,20,45,3,90,32,252,70,144,159,79,18,112,221,173,107,238,36,61,122,244,192,238,131,187,189,225,180,234,36,181,197,181,56,254,95,199,61,173,15,77,58,201,153,177,103,208,145,208,129,
 149,89,43,181,235,36,83,102,78,89,61,246,150,177,115,130,61,134,78,18,88,116,18,169,174,149,147,252,31,69,181,62,83,84,86,21,174,0,0,0,0,73,69,78,68,174,66,96,130,0,0};
 
-const char* testKnob::greenWrap40_png = (const char*) resource_testKnob_greenWrap40_png;
-const int testKnob::greenWrap40_pngSize = 29795;
+const char* KurzProgramTab::greenWrap40_png = (const char*) resource_KurzProgramTab_greenWrap40_png;
+const int KurzProgramTab::greenWrap40_pngSize = 29795;
