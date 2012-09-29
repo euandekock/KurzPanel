@@ -1181,27 +1181,20 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == iButton12)
     {
         //[UserButtonCode_iButton12] -- add your button handler code here..
-
-      KurzLFOShapeList lfoDir = progDir.LFOShapes;
-
-      if(lfoDir.List[0x01].Status == KurzDirEntry::KITEM_FULL)
+      if(progDir.LFOShapes.Status == KurzDirList::KDIR_EMPTY)
         {
-        map<uint8, KurzLFOShape>::iterator i;
-
-        i = lfoDir.LFOShapes.find(0x01);
-
-	if(i != lfoDir.LFOShapes.end())
-		{
-		KurzLFOShape &shape = i->second;
-		KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
-		DialogWindow::showModalDialog(String(lfoDir.List[0x01].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
-		delete LFOView;
-		}
+          remoteLink->sendDataPacket(msg_42, 7);
         }
-      else
+      else if (progDir.MasterTable.Status == KurzDirList::KDIR_OK)
         {
-        remoteLink->sendDataPacket(msg_LFO1, 16);
+        progDir.MasterTable.setSysexLink(remoteLink);
+        k_ShowDirList *showDirList = new k_ShowDirList(progDir, (KurzDirList *)&progDir.MasterTable);
+        DialogWindow::showModalDialog(String(progDir.MasterTable.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
+        showDirList->resized();
+
+        delete showDirList;
         }
+
         //[/UserButtonCode_iButton12]
     }
     else if (buttonThatWasClicked == iButton13)
