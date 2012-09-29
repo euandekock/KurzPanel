@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Sep 2012 3:08:17am
+  Creation date:  30 Sep 2012 1:48:08am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,12 +19,12 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_59F32039__
-#define __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_59F32039__
+#ifndef __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_89DCD2B8__
+#define __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_89DCD2B8__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "juce.h"
-#include "k_program.h"
+#include "k_dir.h"
 //[/Headers]
 
 
@@ -41,7 +41,7 @@ class KurzShowProgram  : public Component
 {
 public:
     //==============================================================================
-    KurzShowProgram (KurzProgram &Prog);
+    KurzShowProgram (KurzProgram &Prog, KurzDir &DirObj);
     ~KurzShowProgram();
 
     //==============================================================================
@@ -56,6 +56,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     KurzProgram &Program;
+    KurzDir &Dir;
     Font font;
     //[/UserVariables]
 
@@ -68,4 +69,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_59F32039__
+#endif   // __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_89DCD2B8__

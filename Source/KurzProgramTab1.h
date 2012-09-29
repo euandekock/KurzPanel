@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Sep 2012 3:06:22am
+  Creation date:  30 Sep 2012 1:42:59am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,13 +19,13 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_8FE190AE__
-#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_8FE190AE__
+#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_6E6FC8B1__
+#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_6E6FC8B1__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "juce.h"
 #include "FilmStripKnob.h"
-#include "k_program.h"
+#include "k_dir.h"
 //[/Headers]
 
 
@@ -38,11 +38,12 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class KurzProgramTab  : public Component
+class KurzProgramTab  : public Component,
+                        public ComboBoxListener
 {
 public:
     //==============================================================================
-    KurzProgramTab (KurzProgram &Prog);
+    KurzProgramTab (KurzDir &DirObj);
     ~KurzProgramTab();
 
     //==============================================================================
@@ -51,6 +52,7 @@ public:
 
     void paint (Graphics& g);
     void resized();
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
 
     // Binary resources:
     static const char* greenWrap40_png;
@@ -59,7 +61,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    KurzProgram &Program;
+    KurzDir &Dir;
     //[/UserVariables]
 
     //==============================================================================
@@ -67,7 +69,6 @@ private:
     GroupComponent* gASR2grp;
     GroupComponent* gASR1grp;
     GroupComponent* gLFO2grp1;
-    FilmStripKnob* gLFO1Shape;
     FilmStripKnob* gLFO1Phase;
     FilmStripKnob* gLFO1Min;
     FilmStripKnob* gLFO1Max;
@@ -75,7 +76,6 @@ private:
     Label* lPhase1;
     Label* lMin1;
     Label* lMax1;
-    FilmStripKnob* gLFO2Shape;
     FilmStripKnob* gLFO2Phase;
     FilmStripKnob* gLFO2Min;
     FilmStripKnob* gLFO2Max;
@@ -99,6 +99,8 @@ private:
     Label* lAttack2;
     Label* lRelease2;
     Label* lSustain2;
+    ComboBox* gLFO1Shape;
+    ComboBox* gLFO2Shape;
 
 
     //==============================================================================
@@ -106,4 +108,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_8FE190AE__
+#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_6E6FC8B1__

@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  18 Aug 2012 5:55:41pm
+  Creation date:  30 Sep 2012 1:22:41am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KSHOWDIRLIST_KSHOWDIRLIST_6B20DB6A__
-#define __JUCER_HEADER_KSHOWDIRLIST_KSHOWDIRLIST_6B20DB6A__
+#ifndef __JUCER_HEADER_KSHOWDIRLIST_KSHOWDIRLIST_9A469E7E__
+#define __JUCER_HEADER_KSHOWDIRLIST_KSHOWDIRLIST_9A469E7E__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -29,6 +29,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "k_dir.h"
 #include "k_direntry.h"
 #include "k_dirlist.h"
 #include "k_program.h"
@@ -63,7 +64,7 @@ class k_ShowDirList  : public Component,
 {
 public:
     //==============================================================================
-    k_ShowDirList (KurzDirList *listQ);
+    k_ShowDirList (KurzDir &DirObj, KurzDirList *listQ);
     ~k_ShowDirList();
 
     //==============================================================================
@@ -84,13 +85,11 @@ public:
 
 
 
-    //==============================================================================
-    juce_UseDebuggingNewOperator
-
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     Font font;
     //vector <KurzDirEntry> *internalQ;
+    KurzDir &Dir;
     KurzDirList *internalQ;
     //[/UserVariables]
 
@@ -99,10 +98,8 @@ private:
 
 
     //==============================================================================
-    // (prevent copy constructor and operator= being generated..)
-    k_ShowDirList (const k_ShowDirList&);
-    const k_ShowDirList& operator= (const k_ShowDirList&);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (k_ShowDirList);
 };
 
 
-#endif   // __JUCER_HEADER_KSHOWDIRLIST_KSHOWDIRLIST_6B20DB6A__
+#endif   // __JUCER_HEADER_KSHOWDIRLIST_KSHOWDIRLIST_9A469E7E__

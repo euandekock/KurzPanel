@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  18 Aug 2012 5:55:41pm
+  Creation date:  30 Sep 2012 1:22:41am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -29,12 +29,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-k_ShowDirList::k_ShowDirList (KurzDirList *listQ)
-    : internalQ(listQ),
+k_ShowDirList::k_ShowDirList (KurzDir &DirObj, KurzDirList *listQ)
+    : Dir(DirObj), internalQ(listQ),
       DirTableList (0)
-    {
+{
     addAndMakeVisible (DirTableList = new TableListBox());
-    DirTableList->setName (L"List of Directory Items");
+    DirTableList->setName ("List of Directory Items");
 
 
     //[UserPreSize]
@@ -68,10 +68,10 @@ k_ShowDirList::k_ShowDirList (KurzDirList *listQ)
 
 
     //[/Constructor]
-    }
+}
 
 k_ShowDirList::~k_ShowDirList()
-    {
+{
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
@@ -80,11 +80,11 @@ k_ShowDirList::~k_ShowDirList()
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
-    }
+}
 
 //==============================================================================
 void k_ShowDirList::paint (Graphics& g)
-    {
+{
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
@@ -92,17 +92,17 @@ void k_ShowDirList::paint (Graphics& g)
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
-    }
+}
 
 void k_ShowDirList::resized()
-    {
+{
     DirTableList->setBounds (0, 0, proportionOfWidth (1.0000f), proportionOfHeight (1.0000f));
     //[UserResized] Add your own custom resize handling here..
 
     // position our table with a gap around its edge
     DirTableList->setBoundsInset(BorderSize<int>(8));
     //[/UserResized]
-    }
+}
 
 
 
@@ -281,7 +281,7 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
                         program.Layer[count].LFO[1].display();
                         }
                     }
-                KurzShowProgram *ProgView = new KurzShowProgram(program);
+                KurzShowProgram *ProgView = new KurzShowProgram(program, Dir);
                 DialogWindow::showModalDialog(String(program.programName.c_str()), ProgView, ProgView, Colours::black, false, true, true);
                 delete ProgView;
                 }
@@ -323,10 +323,10 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="k_ShowDirList" componentName=""
-                 parentClasses="public Component, public TableListBoxModel" constructorParams="KurzDirList *listQ"
-                 variableInitialisers="internalQ(listQ)" snapPixels="8" snapActive="1"
-                 snapShown="1" overlayOpacity="0.330000013" fixedSize="0" initialWidth="600"
-                 initialHeight="400">
+                 parentClasses="public Component, public TableListBoxModel" constructorParams="KurzDir &amp;DirObj, KurzDirList *listQ"
+                 variableInitialisers="Dir(DirObj), internalQ(listQ)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
+                 initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ffffffff"/>
   <GENERICCOMPONENT name="List of Directory Items" id="17ee00feb7104e06" memberName="DirTableList"
                     virtualName="" explicitFocusOrder="0" pos="0 0 100% 100%" class="TableListBox"

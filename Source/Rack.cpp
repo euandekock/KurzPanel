@@ -1149,7 +1149,7 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
       else if (progDir.Programs.Status == KurzDirList::KDIR_OK)
         {
         progDir.Programs.setSysexLink(remoteLink);
-        k_ShowDirList *showDirList = new k_ShowDirList((KurzDirList *)&progDir.Programs);
+        k_ShowDirList *showDirList = new k_ShowDirList(progDir, (KurzDirList *)&progDir.Programs);
         DialogWindow::showModalDialog(String(progDir.Programs.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
         showDirList->resized();
 
@@ -1170,7 +1170,7 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
       else if (progDir.LFOShapes.Status == KurzDirList::KDIR_OK)
         {
         progDir.LFOShapes.setSysexLink(remoteLink);
-        k_ShowDirList *showDirList = new k_ShowDirList((KurzDirList *)&progDir.LFOShapes);
+        k_ShowDirList *showDirList = new k_ShowDirList(progDir, (KurzDirList *)&progDir.LFOShapes);
         DialogWindow::showModalDialog(String(progDir.LFOShapes.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
         showDirList->resized();
 

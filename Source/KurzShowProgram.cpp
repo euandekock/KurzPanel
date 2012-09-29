@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  29 Sep 2012 3:08:17am
+  Creation date:  30 Sep 2012 1:48:08am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -31,14 +31,14 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-KurzShowProgram::KurzShowProgram (KurzProgram &Prog)
+KurzShowProgram::KurzShowProgram (KurzProgram &Prog, KurzDir &DirObj)
     : Component ("KurzShowProgram"),
-      Program(Prog),
+      Program(Prog), Dir(DirObj),
       tabbedComponent (0)
 {
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (30);
-    tabbedComponent->addTab ("Program", Colours::darkgrey, new KurzProgramTab (Program), true);
+    tabbedComponent->addTab ("Program", Colours::darkgrey, new KurzProgramTab (Dir), true);
     tabbedComponent->addTab ("Layer 1", Colours::darkgrey, new KurzLayerTab (Program.Layer[0]), true);
     tabbedComponent->setCurrentTabIndex (0);
 
@@ -46,7 +46,7 @@ KurzShowProgram::KurzShowProgram (KurzProgram &Prog)
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (410, 400);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -113,7 +113,7 @@ void KurzShowProgram::paint (Graphics& g)
 
 void KurzShowProgram::resized()
 {
-    tabbedComponent->setBounds (0, 0, proportionOfWidth (1.0000f), proportionOfHeight (1.0000f));
+    tabbedComponent->setBounds (0, 0, proportionOfWidth (1.0405f), proportionOfHeight (1.0000f));
     //[UserResized] Add your own custom resize handling here..
     tabbedComponent->setBoundsInset(BorderSize<int>(2));
     //[/UserResized]
@@ -134,16 +134,16 @@ void KurzShowProgram::resized()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="KurzShowProgram" componentName="KurzShowProgram"
-                 parentClasses="public Component" constructorParams="KurzProgram &amp;Prog"
-                 variableInitialisers="Program(Prog)" snapPixels="8" snapActive="1"
-                 snapShown="1" overlayOpacity="0.330000013" fixedSize="0" initialWidth="600"
-                 initialHeight="400">
+                 parentClasses="public Component" constructorParams="KurzProgram &amp;Prog, KurzDir &amp;DirObj"
+                 variableInitialisers="Program(Prog), Dir(DirObj)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
+                 initialWidth="410" initialHeight="400">
   <BACKGROUND backgroundColour="ff808080"/>
   <TABBEDCOMPONENT name="new tabbed component" id="e34e18e6e5304a7f" memberName="tabbedComponent"
-                   virtualName="" explicitFocusOrder="0" pos="0 0 100% 100%" orientation="top"
-                   tabBarDepth="30" initialTab="0">
+                   virtualName="" explicitFocusOrder="0" pos="0 0 104.053% 100%"
+                   orientation="top" tabBarDepth="30" initialTab="0">
     <TAB name="Program" colour="ff555555" useJucerComp="1" contentClassName="TableListBox"
-         constructorParams="Program" jucerComponentFile="KurzProgramTab1.cpp"/>
+         constructorParams="Dir" jucerComponentFile="KurzProgramTab1.cpp"/>
     <TAB name="Layer 1" colour="ff555555" useJucerComp="1" contentClassName=""
          constructorParams="Program.Layer[0]" jucerComponentFile="KurzLayerTab.cpp"/>
   </TABBEDCOMPONENT>
