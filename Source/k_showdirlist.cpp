@@ -308,6 +308,29 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
                 }
             }
         }
+    if(internalQ->Type == tableType)
+        {
+        KurzDirList *tabDir = (KurzDirList *)internalQ;
+
+        uint8 ID = tabDir->List[rowNumber].ID;
+
+        if(tabDir->getItemStatus(rowNumber, 1) == KurzDirEntry::KITEM_FULL)
+            {
+            map<uint8, KurzLFOShape>::iterator i;
+
+            /*
+            i = lfoDir->LFOShapes.find(ID);
+
+            if(i != lfoDir->LFOShapes.end())
+                {
+                KurzLFOShape &shape = i->second;
+                KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
+                DialogWindow::showModalDialog(String(lfoDir->List[rowNumber].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
+                delete LFOView;
+                }
+            */
+            }
+        }
 
     //internalQ->ShowItem(rowNumber);
     }

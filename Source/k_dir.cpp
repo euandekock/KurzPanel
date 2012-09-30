@@ -2,7 +2,7 @@
 
 
 KurzDir::KurzDir() :
-    MasterTable(progType, "Master Table"),
+    //MasterTable(progType, "Master Table"),
     //LFOShapes(shapeType, "LFO Shapes"),
     SoundBlock(soundType, "Sound Blocks"),
     KBDMap(keymapType, "Keyboard Maps"),
@@ -141,11 +141,29 @@ void KurzDir::decodeMessage(string &msg)
                     loc = msg.size();
                 break;
             case tableType:
-                cout << "Skipping a table Type Segment (" << hex << (int)msg[loc] << ") ID " << dec << (int)ID  << endl;
-                if(size > 0)
-                    loc += size;
-                else
-                    loc = msg.size();
+                {
+                cout << "Creating a new TableType Object here, and adding it to our Directory List." << endl;
+                KurzTable table_item = KurzTable();
+
+                loc = table_item.decode((uint8 *)msg.c_str(), loc);
+                if(table_item.Status == KurzTable::KTAB_MSG_GOOD)
+                    {
+                    cout << "Adding a new Table ID: " << dec << (int)table_item.tabID << endl;
+                    MasterTable.Tables.insert(pair<uint8, KurzTable>(table_item.tabID, table_item));
+
+                    // Lookup our ID as the list order may have changed...
+                    for(int count = 0; count < MasterTable.List.size(); count++)
+                        {
+                        if(table_item.tabID == MasterTable.List[count].ID)
+                            {
+                            MasterTable.List[count].Status = KurzDirEntry::KITEM_FULL;
+                            break;
+                            }
+                        }
+
+                    msgStatus = KMSG_GOOD; // Should really have an override here to allow a status to be set
+                    }
+                }
                 break;
             case shapeType:
                 {

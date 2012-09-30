@@ -1181,7 +1181,7 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == iButton12)
     {
         //[UserButtonCode_iButton12] -- add your button handler code here..
-      if(progDir.LFOShapes.Status == KurzDirList::KDIR_EMPTY)
+      if(progDir.MasterTable.Status == KurzDirList::KDIR_EMPTY)
         {
           remoteLink->sendDataPacket(msg_42, 7);
         }

@@ -1,4 +1,5 @@
 #include "k_dirlist.h"
+#include "k_tablelist.h"
 #include "k_lfoshapelist.h"
 #include "k_programlist.h"
 #include "k_songlist.h"
@@ -39,7 +40,7 @@ class KurzDir
     /*
 	 * Holds a set of classes, one for each allowable Directory Type
 	 */
-	KurzDirList MasterTable;
+    KurzTableList MasterTable;
 	KurzLFOShapeList LFOShapes;
 	KurzDirList SoundBlock;
 	KurzDirList KBDMap;

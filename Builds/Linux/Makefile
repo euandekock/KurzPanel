@@ -43,6 +43,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/k_tablelist_942fdd19.o \
   $(OBJDIR)/KurzProgramTab1_b1495caf.o \
   $(OBJDIR)/testKnob_924e0091.o \
   $(OBJDIR)/KurzLayerTab_19a2f55f.o \
@@ -94,6 +95,11 @@ clean:
 strip:
 	@echo Stripping KurzPanel
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/k_tablelist_942fdd19.o: ../../Source/k_tablelist.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling k_tablelist.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/KurzProgramTab1_b1495caf.o: ../../Source/KurzProgramTab1.cpp
 	-@mkdir -p $(OBJDIR)
