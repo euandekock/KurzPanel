@@ -35,12 +35,32 @@ public:
 
         switch(tabID)
             {
+            case 1:
+                cout << "Processing Control Source enum table Size (" << (int)tabSize << ")" << endl;
+                for(uint count = 0; count < tabSize; count++)
+                    {
+                    cout << setw(5) << (dec) << (int)count << ": " << (isprint(msg[loc+count]) ? (char)msg[loc+count] : '.') << endl;
+                    }
+
+                for(uint count = 4; count < tabSize; count += 4)
+                    {
+
+                    cout << (dec) << setw(5) << count <<
+                            " Type: " << (dec) << setw(5) << (uint)msg[loc] <<
+                            " ID: " << (dec) << setw(5) << (uint)msg[loc + 1] <<
+                            " ID: "
+                            " Offset: " << setw(5) << (int)(msg[loc + 2] << 8 | msg[loc + 3]) << endl;
+                    cout << "Near String: ";
+                    p_hex(&msg[(msg[loc + 2] << 8 | msg[loc + 3]) - 13], 15);
+                    loc+=4;
+                    }
+                break;
             case 4:
                 cout << "Processing LFO rate enum table" << endl;
                 for(uint count = 4; count < tabSize; count += 4)
                     {
-                    cout << "Offset: " << (dec) << (int)(msg[loc] << 8 | msg[loc + 1]) << " Rate: " <<
-                    (int)(msg[loc + 2] << 8 | msg[loc + 3]) << endl;
+                    cout << (dec) << setw(5) << count << " " << "Offset: " << (dec) << setw(5) << (int)(msg[loc] << 8 | msg[loc + 1]) << " Rate: " <<
+                            setw(5) << fixed << setprecision(2) << (double)(msg[loc + 2] << 8 | msg[loc + 3])/100 << endl;
                     loc+=4;
                     }
                 break;
@@ -50,6 +70,19 @@ public:
             loc++;
 
         return loc;
+        }
+    void p_hex(uint8 *msg, uint count)
+        {
+        uint loc;
+
+        for(loc = 0; loc < count; loc++)
+            {
+            if(isprint(msg[loc]))
+                cout << msg[loc];
+            else
+                cout << ".";
+            }
+        cout << endl;
         }
 
     void display()

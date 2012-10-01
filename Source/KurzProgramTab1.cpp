@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  30 Sep 2012 1:42:59am
+  Creation date:  1 Oct 2012 9:11:26pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -86,12 +86,15 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     gLFO2grp1->setTextLabelPosition (Justification::centred);
 
     addAndMakeVisible (gLFO1Phase = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Phase->setExplicitFocusOrder (2);
     gLFO1Phase->setName ("gLFO1 Phase");
 
     addAndMakeVisible (gLFO1Min = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Min->setExplicitFocusOrder (3);
     gLFO1Min->setName ("gLFO1 Min");
 
     addAndMakeVisible (gLFO1Max = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO1Max->setExplicitFocusOrder (4);
     gLFO1Max->setName ("gLFO1 Max");
 
     addAndMakeVisible (lShape = new Label ("lShape",
@@ -127,12 +130,15 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     lMax1->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
     addAndMakeVisible (gLFO2Phase = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Phase->setExplicitFocusOrder (6);
     gLFO2Phase->setName ("gLFO2 Phase");
 
     addAndMakeVisible (gLFO2Min = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Min->setExplicitFocusOrder (7);
     gLFO2Min->setName ("gLFO2 Min");
 
     addAndMakeVisible (gLFO2Max = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gLFO2Max->setExplicitFocusOrder (8);
     gLFO2Max->setName ("gLFO2 Max");
 
     addAndMakeVisible (lShape2 = new Label ("lShape",
@@ -168,15 +174,19 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     lMax2->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
     addAndMakeVisible (gASR1Delay = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Delay->setExplicitFocusOrder (9);
     gASR1Delay->setName ("gASR1 Delay");
 
     addAndMakeVisible (gASR1Attack = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Attack->setExplicitFocusOrder (10);
     gASR1Attack->setName ("gASR1 Attack");
 
     addAndMakeVisible (gASR1Release = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Release->setExplicitFocusOrder (11);
     gASR1Release->setName ("gASR1 Release");
 
     addAndMakeVisible (gASR1Sustain = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR1Sustain->setExplicitFocusOrder (12);
     gASR1Sustain->setName ("gASR1 Sustain");
 
     addAndMakeVisible (lDelay1 = new Label ("lDelay",
@@ -212,15 +222,19 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     lSustain1->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
     addAndMakeVisible (gASR2Delay = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Delay->setExplicitFocusOrder (13);
     gASR2Delay->setName ("gASR2 Delay");
 
     addAndMakeVisible (gASR2Attack = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Attack->setExplicitFocusOrder (14);
     gASR2Attack->setName ("gASR2 Attack");
 
     addAndMakeVisible (gASR2Release = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Release->setExplicitFocusOrder (15);
     gASR2Release->setName ("gASR2 Release");
 
     addAndMakeVisible (gASR2Sustain = new FilmStripKnob (greenWrap40_png, greenWrap40_pngSize, 128, false));
+    gASR2Sustain->setExplicitFocusOrder (16);
     gASR2Sustain->setName ("gASR2 Sustain");
 
     addAndMakeVisible (lDelay2 = new Label ("lDelay",
@@ -256,6 +270,7 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     lSustain2->setColour (TextEditor::backgroundColourId, Colour (0x0));
 
     addAndMakeVisible (gLFO1Shape = new ComboBox ("gLFO1Shape"));
+    gLFO1Shape->setExplicitFocusOrder (1);
     gLFO1Shape->setEditableText (false);
     gLFO1Shape->setJustificationType (Justification::centredLeft);
     gLFO1Shape->setTextWhenNothingSelected (String::empty);
@@ -263,6 +278,7 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     gLFO1Shape->addListener (this);
 
     addAndMakeVisible (gLFO2Shape = new ComboBox ("gLFO2Shape"));
+    gLFO2Shape->setExplicitFocusOrder (5);
     gLFO2Shape->setEditableText (false);
     gLFO2Shape->setJustificationType (Justification::centredLeft);
     gLFO2Shape->setTextWhenNothingSelected (String::empty);
@@ -277,20 +293,21 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
 
 
     //[Constructor] You can add your own custom stuff here..
-    gLFO1Shape->setColour(gLFO1Shape->backgroundColourId, Colours::darkgrey);
+    gLFO1Shape->setColour(gLFO1Shape->backgroundColourId, Colours::grey);
     gLFO1Shape->setColour(gLFO1Shape->arrowColourId, Colours::black);
     gLFO1Shape->setColour(gLFO1Shape->buttonColourId, Colours::darkgrey);
     gLFO1Shape->setColour(gLFO1Shape->outlineColourId, Colours::black);
 
-    gLFO2Shape->setColour(gLFO2Shape->backgroundColourId, Colours::darkgrey);
+    gLFO2Shape->setColour(gLFO2Shape->backgroundColourId, Colours::grey);
     gLFO2Shape->setColour(gLFO2Shape->arrowColourId, Colours::black);
     gLFO2Shape->setColour(gLFO2Shape->buttonColourId, Colours::darkgrey);
     gLFO2Shape->setColour(gLFO2Shape->outlineColourId, Colours::black);
 
-    for(uint count = 0; count < Dir.LFOShapes.List.size(); count++)
+    vector <KurzDirEntry>::const_iterator i;
+    for(i = Dir.LFOShapes.List.begin(); i != Dir.LFOShapes.List.end(); i++)
         {
-        gLFO1Shape->addItem(String(Dir.LFOShapes.List[count].Name.c_str()), count);
-        gLFO2Shape->addItem(String(Dir.LFOShapes.List[count].Name.c_str()), count);
+        gLFO1Shape->addItem(String(i->Name.c_str()), i->ID);
+        gLFO2Shape->addItem(String(i->Name.c_str()), i->ID);
         }
     //[/Constructor]
 }
@@ -357,8 +374,8 @@ void KurzProgramTab::paint (Graphics& g)
 void KurzProgramTab::resized()
 {
     gLFO1grp->setBounds (8, 8, 184, 168);
-    gASR2grp->setBounds (232, 184, 128, 176);
-    gASR1grp->setBounds (32, 184, 128, 176);
+    gASR2grp->setBounds (208, 184, 184, 176);
+    gASR1grp->setBounds (8, 184, 184, 176);
     gLFO2grp1->setBounds (208, 8, 184, 168);
     gLFO1Phase->setBounds (24, 96, 40, 40);
     gLFO1Min->setBounds (80, 96, 40, 40);
@@ -374,22 +391,22 @@ void KurzProgramTab::resized()
     lPhase2->setBounds (224, 136, 40, 24);
     lMin2->setBounds (280, 136, 40, 24);
     lMax2->setBounds (336, 136, 40, 24);
-    gASR1Delay->setBounds (48, 208, 40, 40);
-    gASR1Attack->setBounds (104, 208, 40, 40);
-    gASR1Release->setBounds (48, 288, 40, 40);
-    gASR1Sustain->setBounds (104, 288, 40, 40);
-    lDelay1->setBounds (48, 248, 40, 24);
-    lAttack1->setBounds (104, 248, 40, 24);
-    lRelease1->setBounds (48, 328, 40, 24);
-    lSustain1->setBounds (104, 328, 40, 24);
-    gASR2Delay->setBounds (248, 216, 40, 40);
-    gASR2Attack->setBounds (304, 216, 40, 40);
-    gASR2Release->setBounds (248, 288, 40, 40);
-    gASR2Sustain->setBounds (304, 288, 40, 40);
-    lDelay2->setBounds (248, 256, 40, 24);
-    lAttack2->setBounds (304, 256, 40, 24);
-    lRelease2->setBounds (248, 328, 40, 24);
-    lSustain2->setBounds (304, 328, 40, 24);
+    gASR1Delay->setBounds (32, 208, 40, 40);
+    gASR1Attack->setBounds (128, 208, 40, 40);
+    gASR1Release->setBounds (32, 288, 40, 40);
+    gASR1Sustain->setBounds (128, 288, 40, 40);
+    lDelay1->setBounds (24, 248, 56, 24);
+    lAttack1->setBounds (120, 248, 56, 24);
+    lRelease1->setBounds (24, 328, 56, 24);
+    lSustain1->setBounds (120, 328, 56, 24);
+    gASR2Delay->setBounds (232, 216, 40, 40);
+    gASR2Attack->setBounds (328, 216, 40, 40);
+    gASR2Release->setBounds (232, 288, 40, 40);
+    gASR2Sustain->setBounds (328, 288, 40, 40);
+    lDelay2->setBounds (224, 256, 56, 24);
+    lAttack2->setBounds (320, 256, 56, 24);
+    lRelease2->setBounds (224, 328, 56, 24);
+    lSustain2->setBounds (320, 328, 56, 24);
     gLFO1Shape->setBounds (24, 56, 152, 24);
     gLFO2Shape->setBounds (224, 56, 152, 24);
     //[UserResized] Add your own custom resize handling here..
@@ -439,19 +456,19 @@ BEGIN_JUCER_METADATA
   <GROUPCOMPONENT name="gLFO1" id="65867dd2975cf695" memberName="gLFO1grp" virtualName=""
                   explicitFocusOrder="0" pos="8 8 184 168" title="gLFO1" textpos="36"/>
   <GROUPCOMPONENT name="gASR2" id="692ad7f6c9d38405" memberName="gASR2grp" virtualName=""
-                  explicitFocusOrder="0" pos="232 184 128 176" title="gASR2" textpos="36"/>
+                  explicitFocusOrder="0" pos="208 184 184 176" title="gASR2" textpos="36"/>
   <GROUPCOMPONENT name="gASR1" id="dd294df1c8c1ed4f" memberName="gASR1grp" virtualName=""
-                  explicitFocusOrder="0" pos="32 184 128 176" title="gASR1" textpos="36"/>
+                  explicitFocusOrder="0" pos="8 184 184 176" title="gASR1" textpos="36"/>
   <GROUPCOMPONENT name="gLFO2" id="efd8cb3a65ad821e" memberName="gLFO2grp1" virtualName=""
                   explicitFocusOrder="0" pos="208 8 184 168" title="gLFO2" textpos="36"/>
   <GENERICCOMPONENT name="gLFO1 Phase" id="b28de2d08369bb59" memberName="gLFO1Phase"
-                    virtualName="" explicitFocusOrder="0" pos="24 96 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="2" pos="24 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gLFO1 Min" id="5211831dec7c5c94" memberName="gLFO1Min"
-                    virtualName="" explicitFocusOrder="0" pos="80 96 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="3" pos="80 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gLFO1 Max" id="12bce62e6142e757" memberName="gLFO1Max"
-                    virtualName="" explicitFocusOrder="0" pos="136 96 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="4" pos="136 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <LABEL name="lShape" id="b8e395f57af69f27" memberName="lShape" virtualName=""
          explicitFocusOrder="0" pos="24 32 40 24" edTextCol="ff000000"
@@ -474,13 +491,13 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <GENERICCOMPONENT name="gLFO2 Phase" id="46e3fb85ecc60311" memberName="gLFO2Phase"
-                    virtualName="" explicitFocusOrder="0" pos="224 96 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="6" pos="224 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gLFO2 Min" id="f7f182398bfd925d" memberName="gLFO2Min"
-                    virtualName="" explicitFocusOrder="0" pos="280 96 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="7" pos="280 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gLFO2 Max" id="66f53cb1729a8b1a" memberName="gLFO2Max"
-                    virtualName="" explicitFocusOrder="0" pos="336 96 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="8" pos="336 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <LABEL name="lShape" id="9d8e9df82deac390" memberName="lShape2" virtualName=""
          explicitFocusOrder="0" pos="224 32 40 24" edTextCol="ff000000"
@@ -503,74 +520,74 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <GENERICCOMPONENT name="gASR1 Delay" id="23ae3b924db42c14" memberName="gASR1Delay"
-                    virtualName="" explicitFocusOrder="0" pos="48 208 40 40" posRelativeX="1b4049104dd61935"
+                    virtualName="" explicitFocusOrder="9" pos="32 208 40 40" posRelativeX="1b4049104dd61935"
                     posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR1 Attack" id="7a1a95d1cf664369" memberName="gASR1Attack"
-                    virtualName="" explicitFocusOrder="0" pos="104 208 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="10" pos="128 208 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR1 Release" id="adc3a6e635cf1d45" memberName="gASR1Release"
-                    virtualName="" explicitFocusOrder="0" pos="48 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="11" pos="32 288 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR1 Sustain" id="465728b145bad61a" memberName="gASR1Sustain"
-                    virtualName="" explicitFocusOrder="0" pos="104 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="12" pos="128 288 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <LABEL name="lDelay" id="e8021a32385ca648" memberName="lDelay1" virtualName=""
-         explicitFocusOrder="0" pos="48 248 40 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="24 248 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Delay" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lAttack" id="ceb18ba1e41becb3" memberName="lAttack1" virtualName=""
-         explicitFocusOrder="0" pos="104 248 40 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="120 248 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Attack" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lRelease 1" id="7043747243c63f1e" memberName="lRelease1"
-         virtualName="" explicitFocusOrder="0" pos="48 328 40 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="24 328 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Release" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lSustain" id="606d30789b9960d9" memberName="lSustain1"
-         virtualName="" explicitFocusOrder="0" pos="104 328 40 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="120 328 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Sustain" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <GENERICCOMPONENT name="gASR2 Delay" id="b7f4fcc72a274430" memberName="gASR2Delay"
-                    virtualName="" explicitFocusOrder="0" pos="248 216 40 40" posRelativeX="1b4049104dd61935"
+                    virtualName="" explicitFocusOrder="13" pos="232 216 40 40" posRelativeX="1b4049104dd61935"
                     posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR2 Attack" id="883964a9ff2562e4" memberName="gASR2Attack"
-                    virtualName="" explicitFocusOrder="0" pos="304 216 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="14" pos="328 216 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR2 Release" id="9e940a1a19a06499" memberName="gASR2Release"
-                    virtualName="" explicitFocusOrder="0" pos="248 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="15" pos="232 288 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR2 Sustain" id="8723ff1bf0b23c2c" memberName="gASR2Sustain"
-                    virtualName="" explicitFocusOrder="0" pos="304 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="16" pos="328 288 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <LABEL name="lDelay" id="4392ec9b328f952" memberName="lDelay2" virtualName=""
-         explicitFocusOrder="0" pos="248 256 40 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="224 256 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Delay" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lAttack" id="365f736f68997e14" memberName="lAttack2" virtualName=""
-         explicitFocusOrder="0" pos="304 256 40 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="320 256 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Attack" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lRelease 1" id="7e656782df79648f" memberName="lRelease2"
-         virtualName="" explicitFocusOrder="0" pos="248 328 40 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="224 328 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Release" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lSustain" id="7da546fa45ea0a96" memberName="lSustain2"
-         virtualName="" explicitFocusOrder="0" pos="304 328 40 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="320 328 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Sustain" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <COMBOBOX name="gLFO1Shape" id="ab0b5dbd9c01165" memberName="gLFO1Shape"
-            virtualName="" explicitFocusOrder="0" pos="24 56 152 24" editable="0"
+            virtualName="" explicitFocusOrder="1" pos="24 56 152 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <COMBOBOX name="gLFO2Shape" id="a05f363a129c014c" memberName="gLFO2Shape"
-            virtualName="" explicitFocusOrder="0" pos="224 56 152 24" editable="0"
+            virtualName="" explicitFocusOrder="5" pos="224 56 152 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
 </JUCER_COMPONENT>
 
