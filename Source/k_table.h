@@ -32,26 +32,36 @@ public:
         tabType = msg[loc++];
         tabID = msg[loc++];
         tabSize = (uint8)msg[loc++] << 8 | (uint8)msg[loc++];
+        uint locEnd = loc + tabSize;
 
         switch(tabID)
             {
             case 1:
                 cout << "Processing Control Source enum table Size (" << (int)tabSize << ")" << endl;
+
+                p_hex(&msg[loc], tabSize);
+
                 for(uint count = 0; count < tabSize; count++)
                     {
                     cout << setw(5) << (dec) << (int)count << ": " << (isprint(msg[loc+count]) ? (char)msg[loc+count] : '.') << endl;
                     }
 
-                for(uint count = 4; count < tabSize; count += 4)
+                loc += 4;
+                for(uint count = 0; count < 512; count += 4)
                     {
 
                     cout << (dec) << setw(5) << count <<
                             " Type: " << (dec) << setw(5) << (uint)msg[loc] <<
                             " ID: " << (dec) << setw(5) << (uint)msg[loc + 1] <<
                             " ID: "
-                            " Offset: " << setw(5) << (int)(msg[loc + 2] << 8 | msg[loc + 3]) << endl;
-                    cout << "Near String: ";
-                    p_hex(&msg[(msg[loc + 2] << 8 | msg[loc + 3]) - 13], 15);
+                            " Offset: " << setw(5) << (int)(msg[loc + 2] << 8 | msg[loc + 3]);
+                    if((int)(msg[loc + 2] << 8 | msg[loc + 3]) > 0)
+                        {
+                        cout << " Desc: ";
+                        p_msg(&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2], 15);
+                        }
+                    else
+                        cout << endl;
                     loc+=4;
                     }
                 break;
@@ -69,13 +79,13 @@ public:
         if(loc%2)
             loc++;
 
-        return loc;
+        return locEnd;
         }
-    void p_hex(uint8 *msg, uint count)
+    void p_msg(uint8 *msg, uint count)
         {
         uint loc;
 
-        for(loc = 0; loc < count; loc++)
+        for(loc = 0; msg[loc] && loc < count; loc++)
             {
             if(isprint(msg[loc]))
                 cout << msg[loc];
@@ -83,6 +93,19 @@ public:
                 cout << ".";
             }
         cout << endl;
+        }
+    void p_hex(uint8 *msg, uint count)
+        {
+        uint loc;
+
+        for(loc = 0; loc < count; loc++)
+            {
+            if(loc % 8 == 0)
+                cout << endl;
+
+            cout << (hex) << setw(2) << setfill('0') << (uint)msg[loc] << ' ';
+            }
+        cout << endl << endl;
         }
 
     void display()
