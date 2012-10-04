@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  1 Oct 2012 9:11:26pm
+  Creation date:  4 Oct 2012 9:41:32pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -29,9 +29,9 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
+KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
     : Component ("Program Tab"),
-      Dir(DirObj),
+      Dir(DirObj), Program(Prg),
       gLFO1grp (0),
       gASR2grp (0),
       gASR1grp (0),
@@ -67,7 +67,11 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
       lRelease2 (0),
       lSustain2 (0),
       gLFO1Shape (0),
-      gLFO2Shape (0)
+      gLFO2Shape (0),
+      lRateC (0),
+      gLFO1RateC (0),
+      lRateC2 (0),
+      gLFO2RateC (0)
 {
     addAndMakeVisible (gLFO1grp = new GroupComponent ("gLFO1",
                                                       "gLFO1"));
@@ -285,11 +289,43 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     gLFO2Shape->setTextWhenNoChoicesAvailable ("(no choices)");
     gLFO2Shape->addListener (this);
 
+    addAndMakeVisible (lRateC = new Label ("lRateC",
+                                           "Rate Control"));
+    lRateC->setFont (Font (15.0000f, Font::plain));
+    lRateC->setJustificationType (Justification::centredLeft);
+    lRateC->setEditable (false, false, false);
+    lRateC->setColour (TextEditor::textColourId, Colours::black);
+    lRateC->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (gLFO1RateC = new ComboBox ("gLFO1RateC"));
+    gLFO1RateC->setExplicitFocusOrder (1);
+    gLFO1RateC->setEditableText (false);
+    gLFO1RateC->setJustificationType (Justification::centredLeft);
+    gLFO1RateC->setTextWhenNothingSelected (String::empty);
+    gLFO1RateC->setTextWhenNoChoicesAvailable ("(no choices)");
+    gLFO1RateC->addListener (this);
+
+    addAndMakeVisible (lRateC2 = new Label ("lRateC",
+                                            "Rate Control"));
+    lRateC2->setFont (Font (15.0000f, Font::plain));
+    lRateC2->setJustificationType (Justification::centredLeft);
+    lRateC2->setEditable (false, false, false);
+    lRateC2->setColour (TextEditor::textColourId, Colours::black);
+    lRateC2->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (gLFO2RateC = new ComboBox ("gLFO2RateC"));
+    gLFO2RateC->setExplicitFocusOrder (1);
+    gLFO2RateC->setEditableText (false);
+    gLFO2RateC->setJustificationType (Justification::centredLeft);
+    gLFO2RateC->setTextWhenNothingSelected (String::empty);
+    gLFO2RateC->setTextWhenNoChoicesAvailable ("(no choices)");
+    gLFO2RateC->addListener (this);
+
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (400, 370);
+    setSize (400, 420);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -298,17 +334,74 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj)
     gLFO1Shape->setColour(gLFO1Shape->buttonColourId, Colours::darkgrey);
     gLFO1Shape->setColour(gLFO1Shape->outlineColourId, Colours::black);
 
+    gLFO1RateC->setColour(gLFO1RateC->backgroundColourId, Colours::grey);
+    gLFO1RateC->setColour(gLFO1RateC->arrowColourId, Colours::black);
+    gLFO1RateC->setColour(gLFO1RateC->buttonColourId, Colours::darkgrey);
+    gLFO1RateC->setColour(gLFO1RateC->outlineColourId, Colours::black);
+
+    gLFO1Min->setRange(0, 127, 1);
+    gLFO1Max->setRange(0, 127, 1);
+    gLFO1Phase->setRange(0, 126, 42);
+
     gLFO2Shape->setColour(gLFO2Shape->backgroundColourId, Colours::grey);
     gLFO2Shape->setColour(gLFO2Shape->arrowColourId, Colours::black);
     gLFO2Shape->setColour(gLFO2Shape->buttonColourId, Colours::darkgrey);
     gLFO2Shape->setColour(gLFO2Shape->outlineColourId, Colours::black);
 
+    gLFO2RateC->setColour(gLFO2RateC->backgroundColourId, Colours::grey);
+    gLFO2RateC->setColour(gLFO2RateC->arrowColourId, Colours::black);
+    gLFO2RateC->setColour(gLFO2RateC->buttonColourId, Colours::darkgrey);
+    gLFO2RateC->setColour(gLFO2RateC->outlineColourId, Colours::black);
+
+    gLFO2Min->setRange(0, 127, 1);
+    gLFO2Max->setRange(0, 127, 1);
+    gLFO2Phase->setRange(0, 126, 42);
+
     vector <KurzDirEntry>::const_iterator i;
+
     for(i = Dir.LFOShapes.List.begin(); i != Dir.LFOShapes.List.end(); i++)
         {
         gLFO1Shape->addItem(String(i->Name.c_str()), i->ID);
         gLFO2Shape->addItem(String(i->Name.c_str()), i->ID);
         }
+
+    map <uint8, KurzTable>::iterator tab_i;
+    map <uint8, string>::iterator src_i;
+    if((tab_i = Dir.MasterTable.Tables.find(1)) != Dir.MasterTable.Tables.end())
+        {
+        KurzTable &tablist = tab_i->second;
+        src_i = tablist.Values.begin();
+        while(src_i != tablist.Values.end())
+            {
+            if(src_i->first > 0)
+                {
+                gLFO1RateC->addItem(String(src_i->second.c_str()), src_i->first);
+                gLFO2RateC->addItem(String(src_i->second.c_str()), src_i->first);
+                }
+            src_i++;
+            }
+
+        }
+
+    if(Program.LFO[0].lfobID > 0)
+        {
+        gLFO1Shape->setSelectedId(Program.LFO[0].lfobShape, true);
+        gLFO1RateC->setSelectedId(Program.LFO[0].lfobRtCtl, true);
+        gLFO1Min->setValue(Program.LFO[0].lfobRtMin);
+        gLFO1Max->setValue(Program.LFO[0].lfobRtMax);
+        gLFO1Phase->setValue((Program.LFO[0].lfobFlags & 0x03) * 42); // Phase 0 = 0, 90 = 42, 180 = 84, 270 = 126
+        //gLFO1Max->setValue(127);
+        //gLFO1Phase->setValue(2 * 42); // Phase 0 = 0, 90 = 42, 180 = 84, 270 = 126
+        }
+    if(Program.LFO[1].lfobID > 0)
+        {
+        gLFO2Shape->setSelectedId(Program.LFO[1].lfobShape, true);
+        gLFO2RateC->setSelectedId(Program.LFO[1].lfobRtCtl, true);
+        gLFO2Min->setValue(Program.LFO[1].lfobRtMin);
+        gLFO2Max->setValue(Program.LFO[1].lfobRtMax);
+        gLFO2Phase->setValue((Program.LFO[1].lfobFlags & 0x03) * 42); // Phase 0 = 0, 90 = 42, 180 = 84, 270 = 126
+        }
+
     //[/Constructor]
 }
 
@@ -353,6 +446,10 @@ KurzProgramTab::~KurzProgramTab()
     deleteAndZero (lSustain2);
     deleteAndZero (gLFO1Shape);
     deleteAndZero (gLFO2Shape);
+    deleteAndZero (lRateC);
+    deleteAndZero (gLFO1RateC);
+    deleteAndZero (lRateC2);
+    deleteAndZero (gLFO2RateC);
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -373,10 +470,10 @@ void KurzProgramTab::paint (Graphics& g)
 
 void KurzProgramTab::resized()
 {
-    gLFO1grp->setBounds (8, 8, 184, 168);
-    gASR2grp->setBounds (208, 184, 184, 176);
-    gASR1grp->setBounds (8, 184, 184, 176);
-    gLFO2grp1->setBounds (208, 8, 184, 168);
+    gLFO1grp->setBounds (8, 8, 184, 216);
+    gASR2grp->setBounds (208, 232, 184, 176);
+    gASR1grp->setBounds (8, 232, 184, 176);
+    gLFO2grp1->setBounds (208, 8, 184, 216);
     gLFO1Phase->setBounds (24, 96, 40, 40);
     gLFO1Min->setBounds (80, 96, 40, 40);
     gLFO1Max->setBounds (136, 96, 40, 40);
@@ -391,24 +488,28 @@ void KurzProgramTab::resized()
     lPhase2->setBounds (224, 136, 40, 24);
     lMin2->setBounds (280, 136, 40, 24);
     lMax2->setBounds (336, 136, 40, 24);
-    gASR1Delay->setBounds (32, 208, 40, 40);
-    gASR1Attack->setBounds (128, 208, 40, 40);
-    gASR1Release->setBounds (32, 288, 40, 40);
-    gASR1Sustain->setBounds (128, 288, 40, 40);
-    lDelay1->setBounds (24, 248, 56, 24);
-    lAttack1->setBounds (120, 248, 56, 24);
-    lRelease1->setBounds (24, 328, 56, 24);
-    lSustain1->setBounds (120, 328, 56, 24);
-    gASR2Delay->setBounds (232, 216, 40, 40);
-    gASR2Attack->setBounds (328, 216, 40, 40);
-    gASR2Release->setBounds (232, 288, 40, 40);
-    gASR2Sustain->setBounds (328, 288, 40, 40);
-    lDelay2->setBounds (224, 256, 56, 24);
-    lAttack2->setBounds (320, 256, 56, 24);
-    lRelease2->setBounds (224, 328, 56, 24);
-    lSustain2->setBounds (320, 328, 56, 24);
+    gASR1Delay->setBounds (32, 256, 40, 40);
+    gASR1Attack->setBounds (128, 256, 40, 40);
+    gASR1Release->setBounds (32, 336, 40, 40);
+    gASR1Sustain->setBounds (128, 336, 40, 40);
+    lDelay1->setBounds (24, 296, 56, 24);
+    lAttack1->setBounds (120, 296, 56, 24);
+    lRelease1->setBounds (24, 376, 56, 24);
+    lSustain1->setBounds (120, 376, 56, 24);
+    gASR2Delay->setBounds (232, 264, 40, 40);
+    gASR2Attack->setBounds (328, 264, 40, 40);
+    gASR2Release->setBounds (232, 336, 40, 40);
+    gASR2Sustain->setBounds (328, 336, 40, 40);
+    lDelay2->setBounds (224, 304, 56, 24);
+    lAttack2->setBounds (320, 304, 56, 24);
+    lRelease2->setBounds (224, 376, 56, 24);
+    lSustain2->setBounds (320, 376, 56, 24);
     gLFO1Shape->setBounds (24, 56, 152, 24);
     gLFO2Shape->setBounds (224, 56, 152, 24);
+    lRateC->setBounds (24, 160, 152, 24);
+    gLFO1RateC->setBounds (24, 188, 152, 24);
+    lRateC2->setBounds (224, 160, 152, 24);
+    gLFO2RateC->setBounds (224, 184, 152, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -427,6 +528,16 @@ void KurzProgramTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     {
         //[UserComboBoxCode_gLFO2Shape] -- add your combo box handling code here..
         //[/UserComboBoxCode_gLFO2Shape]
+    }
+    else if (comboBoxThatHasChanged == gLFO1RateC)
+    {
+        //[UserComboBoxCode_gLFO1RateC] -- add your combo box handling code here..
+        //[/UserComboBoxCode_gLFO1RateC]
+    }
+    else if (comboBoxThatHasChanged == gLFO2RateC)
+    {
+        //[UserComboBoxCode_gLFO2RateC] -- add your combo box handling code here..
+        //[/UserComboBoxCode_gLFO2RateC]
     }
 
     //[UsercomboBoxChanged_Post]
@@ -448,19 +559,19 @@ void KurzProgramTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="KurzProgramTab" componentName="Program Tab"
-                 parentClasses="public Component" constructorParams="KurzDir &amp;DirObj"
-                 variableInitialisers="Dir(DirObj)" snapPixels="8" snapActive="1"
-                 snapShown="1" overlayOpacity="0.330000013" fixedSize="0" initialWidth="400"
-                 initialHeight="370">
+                 parentClasses="public Component" constructorParams="KurzDir &amp;DirObj, KurzProgram &amp;Prg"
+                 variableInitialisers="Dir(DirObj), Program(Prg)" snapPixels="8"
+                 snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
+                 initialWidth="400" initialHeight="420">
   <BACKGROUND backgroundColour="ff555555"/>
   <GROUPCOMPONENT name="gLFO1" id="65867dd2975cf695" memberName="gLFO1grp" virtualName=""
-                  explicitFocusOrder="0" pos="8 8 184 168" title="gLFO1" textpos="36"/>
+                  explicitFocusOrder="0" pos="8 8 184 216" title="gLFO1" textpos="36"/>
   <GROUPCOMPONENT name="gASR2" id="692ad7f6c9d38405" memberName="gASR2grp" virtualName=""
-                  explicitFocusOrder="0" pos="208 184 184 176" title="gASR2" textpos="36"/>
+                  explicitFocusOrder="0" pos="208 232 184 176" title="gASR2" textpos="36"/>
   <GROUPCOMPONENT name="gASR1" id="dd294df1c8c1ed4f" memberName="gASR1grp" virtualName=""
-                  explicitFocusOrder="0" pos="8 184 184 176" title="gASR1" textpos="36"/>
+                  explicitFocusOrder="0" pos="8 232 184 176" title="gASR1" textpos="36"/>
   <GROUPCOMPONENT name="gLFO2" id="efd8cb3a65ad821e" memberName="gLFO2grp1" virtualName=""
-                  explicitFocusOrder="0" pos="208 8 184 168" title="gLFO2" textpos="36"/>
+                  explicitFocusOrder="0" pos="208 8 184 216" title="gLFO2" textpos="36"/>
   <GENERICCOMPONENT name="gLFO1 Phase" id="b28de2d08369bb59" memberName="gLFO1Phase"
                     virtualName="" explicitFocusOrder="2" pos="24 96 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
@@ -520,66 +631,66 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <GENERICCOMPONENT name="gASR1 Delay" id="23ae3b924db42c14" memberName="gASR1Delay"
-                    virtualName="" explicitFocusOrder="9" pos="32 208 40 40" posRelativeX="1b4049104dd61935"
+                    virtualName="" explicitFocusOrder="9" pos="32 256 40 40" posRelativeX="1b4049104dd61935"
                     posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR1 Attack" id="7a1a95d1cf664369" memberName="gASR1Attack"
-                    virtualName="" explicitFocusOrder="10" pos="128 208 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="10" pos="128 256 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR1 Release" id="adc3a6e635cf1d45" memberName="gASR1Release"
-                    virtualName="" explicitFocusOrder="11" pos="32 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="11" pos="32 336 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR1 Sustain" id="465728b145bad61a" memberName="gASR1Sustain"
-                    virtualName="" explicitFocusOrder="12" pos="128 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="12" pos="128 336 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <LABEL name="lDelay" id="e8021a32385ca648" memberName="lDelay1" virtualName=""
-         explicitFocusOrder="0" pos="24 248 56 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="24 296 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Delay" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lAttack" id="ceb18ba1e41becb3" memberName="lAttack1" virtualName=""
-         explicitFocusOrder="0" pos="120 248 56 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="120 296 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Attack" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lRelease 1" id="7043747243c63f1e" memberName="lRelease1"
-         virtualName="" explicitFocusOrder="0" pos="24 328 56 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="24 376 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Release" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lSustain" id="606d30789b9960d9" memberName="lSustain1"
-         virtualName="" explicitFocusOrder="0" pos="120 328 56 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="120 376 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Sustain" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <GENERICCOMPONENT name="gASR2 Delay" id="b7f4fcc72a274430" memberName="gASR2Delay"
-                    virtualName="" explicitFocusOrder="13" pos="232 216 40 40" posRelativeX="1b4049104dd61935"
+                    virtualName="" explicitFocusOrder="13" pos="232 264 40 40" posRelativeX="1b4049104dd61935"
                     posRelativeY="1b4049104dd61935" class="FilmStripKnob" params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR2 Attack" id="883964a9ff2562e4" memberName="gASR2Attack"
-                    virtualName="" explicitFocusOrder="14" pos="328 216 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="14" pos="328 264 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR2 Release" id="9e940a1a19a06499" memberName="gASR2Release"
-                    virtualName="" explicitFocusOrder="15" pos="232 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="15" pos="232 336 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <GENERICCOMPONENT name="gASR2 Sustain" id="8723ff1bf0b23c2c" memberName="gASR2Sustain"
-                    virtualName="" explicitFocusOrder="16" pos="328 288 40 40" class="FilmStripKnob"
+                    virtualName="" explicitFocusOrder="16" pos="328 336 40 40" class="FilmStripKnob"
                     params="greenWrap40_png, greenWrap40_pngSize, 128, false"/>
   <LABEL name="lDelay" id="4392ec9b328f952" memberName="lDelay2" virtualName=""
-         explicitFocusOrder="0" pos="224 256 56 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="224 304 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Delay" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lAttack" id="365f736f68997e14" memberName="lAttack2" virtualName=""
-         explicitFocusOrder="0" pos="320 256 56 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="320 304 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Attack" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lRelease 1" id="7e656782df79648f" memberName="lRelease2"
-         virtualName="" explicitFocusOrder="0" pos="224 328 56 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="224 376 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Release" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="lSustain" id="7da546fa45ea0a96" memberName="lSustain2"
-         virtualName="" explicitFocusOrder="0" pos="320 328 56 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="320 376 56 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Sustain" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
@@ -588,6 +699,22 @@ BEGIN_JUCER_METADATA
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <COMBOBOX name="gLFO2Shape" id="a05f363a129c014c" memberName="gLFO2Shape"
             virtualName="" explicitFocusOrder="5" pos="224 56 152 24" editable="0"
+            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <LABEL name="lRateC" id="7fa9dfc4233f8a74" memberName="lRateC" virtualName=""
+         explicitFocusOrder="0" pos="24 160 152 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Rate Control" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="33"/>
+  <COMBOBOX name="gLFO1RateC" id="26f505bf4c5c2a76" memberName="gLFO1RateC"
+            virtualName="" explicitFocusOrder="1" pos="24 188 152 24" editable="0"
+            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <LABEL name="lRateC" id="8f3629a366ba88c9" memberName="lRateC2" virtualName=""
+         explicitFocusOrder="0" pos="224 160 152 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Rate Control" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="33"/>
+  <COMBOBOX name="gLFO2RateC" id="d148445b65670ef1" memberName="gLFO2RateC"
+            virtualName="" explicitFocusOrder="1" pos="224 184 152 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
 </JUCER_COMPONENT>
 

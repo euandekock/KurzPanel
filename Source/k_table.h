@@ -23,6 +23,7 @@ public:
     uint8 tabType;	/* = tableType */
     uint8 tabID;
     int16 tabSize;
+    map<uint8, string> Values;
 
     KurzTable() : tabType(0), tabID(0), tabSize(0)
         {
@@ -33,6 +34,8 @@ public:
         tabID = msg[loc++];
         tabSize = (uint8)msg[loc++] << 8 | (uint8)msg[loc++];
         uint locEnd = loc + tabSize;
+
+        uint ID = 0;
 
         switch(tabID)
             {
@@ -55,10 +58,19 @@ public:
                             " ID: " << (dec) << setw(5) << (uint)msg[loc + 1] <<
                             " ID: "
                             " Offset: " << setw(5) << (int)(msg[loc + 2] << 8 | msg[loc + 3]);
+
+                    ID = msg[loc+1];
+
                     if((int)(msg[loc + 2] << 8 | msg[loc + 3]) > 0)
                         {
                         cout << " Desc: ";
                         p_msg(&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2], 15);
+
+                        string tmpmsg((char *)&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2], 15);
+                        if(tmpmsg.size() > 0)
+                            {
+                            Values.insert(pair<uint8, string>(ID, tmpmsg));
+                            }
                         }
                     else
                         cout << endl;
@@ -79,6 +91,7 @@ public:
         if(loc%2)
             loc++;
 
+        Status = KTAB_MSG_GOOD;
         return locEnd;
         }
     void p_msg(uint8 *msg, uint count)

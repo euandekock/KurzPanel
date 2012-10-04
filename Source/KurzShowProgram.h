@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  30 Sep 2012 1:48:08am
+  Creation date:  4 Oct 2012 10:36:53pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_89DCD2B8__
-#define __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_89DCD2B8__
+#ifndef __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_21649525__
+#define __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_21649525__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "juce.h"
@@ -69,4 +69,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_89DCD2B8__
+#endif   // __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_21649525__

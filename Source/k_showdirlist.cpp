@@ -316,7 +316,7 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
 
         if(tabDir->getItemStatus(rowNumber, 1) == KurzDirEntry::KITEM_FULL)
             {
-            map<uint8, KurzLFOShape>::iterator i;
+            map<uint8, KurzTable>::iterator i;
 
             /*
             i = lfoDir->LFOShapes.find(ID);

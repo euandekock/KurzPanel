@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  30 Sep 2012 1:48:08am
+  Creation date:  4 Oct 2012 10:36:53pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -38,7 +38,7 @@ KurzShowProgram::KurzShowProgram (KurzProgram &Prog, KurzDir &DirObj)
 {
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (30);
-    tabbedComponent->addTab ("Program", Colours::darkgrey, new KurzProgramTab (Dir), true);
+    tabbedComponent->addTab ("Program", Colours::darkgrey, new KurzProgramTab (Dir, Program), true);
     tabbedComponent->addTab ("Layer 1", Colours::darkgrey, new KurzLayerTab (Program.Layer[0]), true);
     tabbedComponent->setCurrentTabIndex (0);
 
@@ -46,7 +46,7 @@ KurzShowProgram::KurzShowProgram (KurzProgram &Prog, KurzDir &DirObj)
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (410, 400);
+    setSize (410, 450);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -137,13 +137,13 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component" constructorParams="KurzProgram &amp;Prog, KurzDir &amp;DirObj"
                  variableInitialisers="Program(Prog), Dir(DirObj)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
-                 initialWidth="410" initialHeight="400">
+                 initialWidth="410" initialHeight="450">
   <BACKGROUND backgroundColour="ff808080"/>
   <TABBEDCOMPONENT name="new tabbed component" id="e34e18e6e5304a7f" memberName="tabbedComponent"
                    virtualName="" explicitFocusOrder="0" pos="0 0 104.053% 100%"
                    orientation="top" tabBarDepth="30" initialTab="0">
     <TAB name="Program" colour="ff555555" useJucerComp="1" contentClassName="TableListBox"
-         constructorParams="Dir" jucerComponentFile="KurzProgramTab1.cpp"/>
+         constructorParams="Dir, Program" jucerComponentFile="KurzProgramTab1.cpp"/>
     <TAB name="Layer 1" colour="ff555555" useJucerComp="1" contentClassName=""
          constructorParams="Program.Layer[0]" jucerComponentFile="KurzLayerTab.cpp"/>
   </TABBEDCOMPONENT>

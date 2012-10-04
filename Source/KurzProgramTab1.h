@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  1 Oct 2012 9:11:26pm
+  Creation date:  4 Oct 2012 9:41:32pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_2578266E__
-#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_2578266E__
+#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_41B4FD83__
+#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_41B4FD83__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "juce.h"
@@ -43,7 +43,7 @@ class KurzProgramTab  : public Component,
 {
 public:
     //==============================================================================
-    KurzProgramTab (KurzDir &DirObj);
+    KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg);
     ~KurzProgramTab();
 
     //==============================================================================
@@ -62,6 +62,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     KurzDir &Dir;
+    KurzProgram &Program;
     //[/UserVariables]
 
     //==============================================================================
@@ -101,6 +102,10 @@ private:
     Label* lSustain2;
     ComboBox* gLFO1Shape;
     ComboBox* gLFO2Shape;
+    Label* lRateC;
+    ComboBox* gLFO1RateC;
+    Label* lRateC2;
+    ComboBox* gLFO2RateC;
 
 
     //==============================================================================
@@ -108,4 +113,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_2578266E__
+#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_41B4FD83__

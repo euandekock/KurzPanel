@@ -1,6 +1,6 @@
 #include "k_tablelist.h"
 
-KurzTableList::KurzTableList() : KurzDirList(shapeType, "Table List")
+KurzTableList::KurzTableList() : KurzDirList(tableType, "Table List")
     {
     }
 KurzTableList::~KurzTableList()
