@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  4 Oct 2012 10:36:53pm
+  Creation date:  13 Oct 2012 1:09:01am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -46,22 +46,22 @@ KurzShowProgram::KurzShowProgram (KurzProgram &Prog, KurzDir &DirObj)
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (410, 450);
+    setSize (410, 500);
 
 
     //[Constructor] You can add your own custom stuff here..
 
     if(Program.Layer[1].ldbID > 0)
         {
-        tabbedComponent->addTab ("Layer 2", Colours::lightgrey, new KurzLayerTab (Program.Layer[1]), true);
+        tabbedComponent->addTab ("Layer 2", Colours::darkgrey, new KurzLayerTab (Program.Layer[1]), true);
         }
     if(Program.Layer[2].ldbID > 0)
         {
-        tabbedComponent->addTab ("Layer 3", Colours::lightgrey, new KurzLayerTab (Program.Layer[2]), true);
+        tabbedComponent->addTab ("Layer 3", Colours::darkgrey, new KurzLayerTab (Program.Layer[2]), true);
         }
     if(Program.Layer[3].ldbID > 0)
         {
-        tabbedComponent->addTab ("Layer 4", Colours::lightgrey, new KurzLayerTab (Program.Layer[3]), true);
+        tabbedComponent->addTab ("Layer 4", Colours::darkgrey, new KurzLayerTab (Program.Layer[3]), true);
         }
 
     tabbedComponent->setCurrentTabIndex (0);
@@ -137,7 +137,7 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component" constructorParams="KurzProgram &amp;Prog, KurzDir &amp;DirObj"
                  variableInitialisers="Program(Prog), Dir(DirObj)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
-                 initialWidth="410" initialHeight="450">
+                 initialWidth="410" initialHeight="500">
   <BACKGROUND backgroundColour="ff808080"/>
   <TABBEDCOMPONENT name="new tabbed component" id="e34e18e6e5304a7f" memberName="tabbedComponent"
                    virtualName="" explicitFocusOrder="0" pos="0 0 104.053% 100%"

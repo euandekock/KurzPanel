@@ -3,6 +3,7 @@
 
 #include "k_object.h"
 #include "k_lfob.h"
+#include "k_asrb.h"
 
 /*
  * Layer Data block LDB
@@ -43,6 +44,7 @@ public:
     uint8 bytes_used;   /* How many bytes of the msg have we consumed */
 
     KurzLFOBlock LFO[2];
+    KurzASRBlock ASR[2];
 
     KurzLayer() : ldbType(0),
                   ldbID(0),

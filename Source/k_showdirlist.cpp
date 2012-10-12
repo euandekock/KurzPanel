@@ -271,6 +271,8 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
                 program.display();
                 program.LFO[0].display();
                 program.LFO[1].display();
+                program.ASR[0].display();
+                program.ASR[1].display();
 
                 for(uint8 count = 0; count < 4; count++)
                     {
@@ -279,6 +281,8 @@ void k_ShowDirList::cellDoubleClicked(int rowNumber, int columnId, const MouseEv
                         {
                         program.Layer[count].LFO[0].display();
                         program.Layer[count].LFO[1].display();
+                        program.Layer[count].ASR[0].display();
+                        program.Layer[count].ASR[1].display();
                         }
                     }
                 KurzShowProgram *ProgView = new KurzShowProgram(program, Dir);

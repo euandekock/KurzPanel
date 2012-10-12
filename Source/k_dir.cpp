@@ -280,8 +280,23 @@ void KurzDir::decodeMessage(string &msg)
                     }
                 break;
             case asrType:
-                cout << "Skipping a asr Type Segment (" << hex << (int)msg[loc] << ") ID " << dec << (int)ID  << endl;
-                loc += 8;
+                if(CurrentProgram)
+                    {
+                    cout << "Processing asrType[" << (int)msg[loc+1] << "] Type Segment (" << hex << (int)msg[loc] << ") Size " << dec << (int)size << endl;
+
+                    if(msg[loc+1] == 1)
+                        loc = CurrentProgram->Layer[CurrentLayer].ASR[0].decode((uint8 *)msg.c_str(), loc);
+                    else if(msg[loc+1] == 2)
+                        loc = CurrentProgram->Layer[CurrentLayer].ASR[1].decode((uint8 *)msg.c_str(), loc);
+                    else if(msg[loc+1] == 9)
+                        loc = CurrentProgram->ASR[0].decode((uint8 *)msg.c_str(), loc);
+                    else if(msg[loc+1] == 10)
+                        loc = CurrentProgram->ASR[1].decode((uint8 *)msg.c_str(), loc);
+                    }
+                else
+                    {
+                    loc += 8;
+                    }
                 break;
             case lfoType:
                 if(CurrentProgram)
@@ -297,8 +312,8 @@ void KurzDir::decodeMessage(string &msg)
                     else if(msg[loc+1] == 10)
                         loc = CurrentProgram->LFO[1].decode((uint8 *)msg.c_str(), loc);
                     }
-        else
-            {
+                else
+                    {
                     loc += 8;
                     }
                 break;

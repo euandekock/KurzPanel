@@ -36,6 +36,7 @@ enum KurzProgramStatus
     string programName;
 
     KurzLFOBlock LFO[2];
+    KurzASRBlock ASR[2];
     KurzLayer Layer[4];
 
     KurzProgram();

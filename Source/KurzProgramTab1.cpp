@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  4 Oct 2012 9:41:32pm
+  Creation date:  13 Oct 2012 12:48:16am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -71,7 +71,11 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
       lRateC (0),
       gLFO1RateC (0),
       lRateC2 (0),
-      gLFO2RateC (0)
+      gLFO2RateC (0),
+      gASR1Trig (0),
+      lRateC3 (0),
+      gASR2Trig (0),
+      lRateC4 (0)
 {
     addAndMakeVisible (gLFO1grp = new GroupComponent ("gLFO1",
                                                       "gLFO1"));
@@ -321,11 +325,43 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
     gLFO2RateC->setTextWhenNoChoicesAvailable ("(no choices)");
     gLFO2RateC->addListener (this);
 
+    addAndMakeVisible (gASR1Trig = new ComboBox ("gASR1Trig"));
+    gASR1Trig->setExplicitFocusOrder (1);
+    gASR1Trig->setEditableText (false);
+    gASR1Trig->setJustificationType (Justification::centredLeft);
+    gASR1Trig->setTextWhenNothingSelected (String::empty);
+    gASR1Trig->setTextWhenNoChoicesAvailable ("(no choices)");
+    gASR1Trig->addListener (this);
+
+    addAndMakeVisible (lRateC3 = new Label ("lRateC",
+                                            "Trigger"));
+    lRateC3->setFont (Font (15.0000f, Font::plain));
+    lRateC3->setJustificationType (Justification::centredLeft);
+    lRateC3->setEditable (false, false, false);
+    lRateC3->setColour (TextEditor::textColourId, Colours::black);
+    lRateC3->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
+    addAndMakeVisible (gASR2Trig = new ComboBox ("gASR2Trig"));
+    gASR2Trig->setExplicitFocusOrder (1);
+    gASR2Trig->setEditableText (false);
+    gASR2Trig->setJustificationType (Justification::centredLeft);
+    gASR2Trig->setTextWhenNothingSelected (String::empty);
+    gASR2Trig->setTextWhenNoChoicesAvailable ("(no choices)");
+    gASR2Trig->addListener (this);
+
+    addAndMakeVisible (lRateC4 = new Label ("lRateC",
+                                            "Trigger"));
+    lRateC4->setFont (Font (15.0000f, Font::plain));
+    lRateC4->setJustificationType (Justification::centredLeft);
+    lRateC4->setEditable (false, false, false);
+    lRateC4->setColour (TextEditor::textColourId, Colours::black);
+    lRateC4->setColour (TextEditor::backgroundColourId, Colour (0x0));
+
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (400, 420);
+    setSize (400, 470);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -339,9 +375,19 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
     gLFO1RateC->setColour(gLFO1RateC->buttonColourId, Colours::darkgrey);
     gLFO1RateC->setColour(gLFO1RateC->outlineColourId, Colours::black);
 
+    gASR1Trig->setColour(gASR1Trig->backgroundColourId, Colours::grey);
+    gASR1Trig->setColour(gASR1Trig->arrowColourId, Colours::black);
+    gASR1Trig->setColour(gASR1Trig->buttonColourId, Colours::darkgrey);
+    gASR1Trig->setColour(gASR1Trig->outlineColourId, Colours::black);
+
     gLFO1Min->setRange(0, 127, 1);
     gLFO1Max->setRange(0, 127, 1);
     gLFO1Phase->setRange(0, 126, 42);
+
+    gASR1Delay->setRange(0, 127, 1);
+    gASR1Attack->setRange(0, 127, 1);
+    gASR1Sustain->setRange(0, 127, 1);
+    gASR1Release->setRange(0, 127, 1);
 
     gLFO2Shape->setColour(gLFO2Shape->backgroundColourId, Colours::grey);
     gLFO2Shape->setColour(gLFO2Shape->arrowColourId, Colours::black);
@@ -353,9 +399,19 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
     gLFO2RateC->setColour(gLFO2RateC->buttonColourId, Colours::darkgrey);
     gLFO2RateC->setColour(gLFO2RateC->outlineColourId, Colours::black);
 
+    gASR2Trig->setColour(gASR1Trig->backgroundColourId, Colours::grey);
+    gASR2Trig->setColour(gASR1Trig->arrowColourId, Colours::black);
+    gASR2Trig->setColour(gASR1Trig->buttonColourId, Colours::darkgrey);
+    gASR2Trig->setColour(gASR1Trig->outlineColourId, Colours::black);
+
     gLFO2Min->setRange(0, 127, 1);
     gLFO2Max->setRange(0, 127, 1);
     gLFO2Phase->setRange(0, 126, 42);
+
+    gASR2Delay->setRange(0, 127, 1);
+    gASR2Attack->setRange(0, 127, 1);
+    gASR2Sustain->setRange(0, 127, 1);
+    gASR2Release->setRange(0, 127, 1);
 
     vector <KurzDirEntry>::const_iterator i;
 
@@ -366,7 +422,7 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
         }
 
     map <uint8, KurzTable>::iterator tab_i;
-    map <uint8, string>::iterator src_i;
+    map <uint, string>::iterator src_i;
     if((tab_i = Dir.MasterTable.Tables.find(1)) != Dir.MasterTable.Tables.end())
         {
         KurzTable &tablist = tab_i->second;
@@ -377,6 +433,9 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
                 {
                 gLFO1RateC->addItem(String(src_i->second.c_str()), src_i->first);
                 gLFO2RateC->addItem(String(src_i->second.c_str()), src_i->first);
+
+                gASR1Trig->addItem(String(src_i->second.c_str()), src_i->first);
+                gASR2Trig->addItem(String(src_i->second.c_str()), src_i->first);
                 }
             src_i++;
             }
@@ -400,6 +459,22 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
         gLFO2Min->setValue(Program.LFO[1].lfobRtMin);
         gLFO2Max->setValue(Program.LFO[1].lfobRtMax);
         gLFO2Phase->setValue((Program.LFO[1].lfobFlags & 0x03) * 42); // Phase 0 = 0, 90 = 42, 180 = 84, 270 = 126
+        }
+    if(Program.ASR[0].asrbID > 0)
+        {
+        gASR1Trig->setSelectedId(Program.ASR[0].asrbTrig, true);
+        gASR1Delay->setValue(Program.ASR[0].asrbDtime);
+        gASR1Attack->setValue(Program.ASR[0].asrbAtime);
+        gASR1Sustain->setValue(Program.ASR[0].asrbStime);
+        gASR1Release->setValue(Program.ASR[0].asrbRtime);
+        }
+    if(Program.ASR[1].asrbID > 0)
+        {
+        gASR2Trig->setSelectedId(Program.ASR[1].asrbTrig, true);
+        gASR2Delay->setValue(Program.ASR[1].asrbDtime);
+        gASR2Attack->setValue(Program.ASR[1].asrbAtime);
+        gASR2Sustain->setValue(Program.ASR[1].asrbStime);
+        gASR2Release->setValue(Program.ASR[1].asrbRtime);
         }
 
     //[/Constructor]
@@ -450,6 +525,10 @@ KurzProgramTab::~KurzProgramTab()
     deleteAndZero (gLFO1RateC);
     deleteAndZero (lRateC2);
     deleteAndZero (gLFO2RateC);
+    deleteAndZero (gASR1Trig);
+    deleteAndZero (lRateC3);
+    deleteAndZero (gASR2Trig);
+    deleteAndZero (lRateC4);
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -471,8 +550,8 @@ void KurzProgramTab::paint (Graphics& g)
 void KurzProgramTab::resized()
 {
     gLFO1grp->setBounds (8, 8, 184, 216);
-    gASR2grp->setBounds (208, 232, 184, 176);
-    gASR1grp->setBounds (8, 232, 184, 176);
+    gASR2grp->setBounds (208, 232, 184, 232);
+    gASR1grp->setBounds (8, 232, 184, 232);
     gLFO2grp1->setBounds (208, 8, 184, 216);
     gLFO1Phase->setBounds (24, 96, 40, 40);
     gLFO1Min->setBounds (80, 96, 40, 40);
@@ -510,6 +589,10 @@ void KurzProgramTab::resized()
     gLFO1RateC->setBounds (24, 188, 152, 24);
     lRateC2->setBounds (224, 160, 152, 24);
     gLFO2RateC->setBounds (224, 184, 152, 24);
+    gASR1Trig->setBounds (24, 424, 152, 24);
+    lRateC3->setBounds (24, 400, 152, 24);
+    gASR2Trig->setBounds (224, 424, 152, 24);
+    lRateC4->setBounds (224, 400, 152, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -539,6 +622,16 @@ void KurzProgramTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         //[UserComboBoxCode_gLFO2RateC] -- add your combo box handling code here..
         //[/UserComboBoxCode_gLFO2RateC]
     }
+    else if (comboBoxThatHasChanged == gASR1Trig)
+    {
+        //[UserComboBoxCode_gASR1Trig] -- add your combo box handling code here..
+        //[/UserComboBoxCode_gASR1Trig]
+    }
+    else if (comboBoxThatHasChanged == gASR2Trig)
+    {
+        //[UserComboBoxCode_gASR2Trig] -- add your combo box handling code here..
+        //[/UserComboBoxCode_gASR2Trig]
+    }
 
     //[UsercomboBoxChanged_Post]
     //[/UsercomboBoxChanged_Post]
@@ -562,14 +655,14 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component" constructorParams="KurzDir &amp;DirObj, KurzProgram &amp;Prg"
                  variableInitialisers="Dir(DirObj), Program(Prg)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330000013" fixedSize="0"
-                 initialWidth="400" initialHeight="420">
+                 initialWidth="400" initialHeight="470">
   <BACKGROUND backgroundColour="ff555555"/>
   <GROUPCOMPONENT name="gLFO1" id="65867dd2975cf695" memberName="gLFO1grp" virtualName=""
                   explicitFocusOrder="0" pos="8 8 184 216" title="gLFO1" textpos="36"/>
   <GROUPCOMPONENT name="gASR2" id="692ad7f6c9d38405" memberName="gASR2grp" virtualName=""
-                  explicitFocusOrder="0" pos="208 232 184 176" title="gASR2" textpos="36"/>
+                  explicitFocusOrder="0" pos="208 232 184 232" title="gASR2" textpos="36"/>
   <GROUPCOMPONENT name="gASR1" id="dd294df1c8c1ed4f" memberName="gASR1grp" virtualName=""
-                  explicitFocusOrder="0" pos="8 232 184 176" title="gASR1" textpos="36"/>
+                  explicitFocusOrder="0" pos="8 232 184 232" title="gASR1" textpos="36"/>
   <GROUPCOMPONENT name="gLFO2" id="efd8cb3a65ad821e" memberName="gLFO2grp1" virtualName=""
                   explicitFocusOrder="0" pos="208 8 184 216" title="gLFO2" textpos="36"/>
   <GENERICCOMPONENT name="gLFO1 Phase" id="b28de2d08369bb59" memberName="gLFO1Phase"
@@ -716,6 +809,22 @@ BEGIN_JUCER_METADATA
   <COMBOBOX name="gLFO2RateC" id="d148445b65670ef1" memberName="gLFO2RateC"
             virtualName="" explicitFocusOrder="1" pos="224 184 152 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <COMBOBOX name="gASR1Trig" id="953683e2961a99f9" memberName="gASR1Trig"
+            virtualName="" explicitFocusOrder="1" pos="24 424 152 24" editable="0"
+            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <LABEL name="lRateC" id="29cb232a12361987" memberName="lRateC3" virtualName=""
+         explicitFocusOrder="0" pos="24 400 152 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Trigger" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
+  <COMBOBOX name="gASR2Trig" id="7c41251ef346deec" memberName="gASR2Trig"
+            virtualName="" explicitFocusOrder="1" pos="224 424 152 24" editable="0"
+            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
+  <LABEL name="lRateC" id="725919d2622dab1e" memberName="lRateC4" virtualName=""
+         explicitFocusOrder="0" pos="224 400 152 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Trigger" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
+         bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

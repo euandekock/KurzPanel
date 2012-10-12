@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  4 Oct 2012 9:41:32pm
+  Creation date:  13 Oct 2012 12:48:16am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_41B4FD83__
-#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_41B4FD83__
+#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_447DB2CF__
+#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_447DB2CF__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "juce.h"
@@ -106,6 +106,10 @@ private:
     ComboBox* gLFO1RateC;
     Label* lRateC2;
     ComboBox* gLFO2RateC;
+    ComboBox* gASR1Trig;
+    Label* lRateC3;
+    ComboBox* gASR2Trig;
+    Label* lRateC4;
 
 
     //==============================================================================
@@ -113,4 +117,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_41B4FD83__
+#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_447DB2CF__

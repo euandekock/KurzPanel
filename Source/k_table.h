@@ -1,6 +1,7 @@
 #ifndef K_TABLE_H
 #define K_TABLE_H
 
+#include <cstring>
 #include "juce.h"
 #include "k_object.h"
 
@@ -23,7 +24,7 @@ public:
     uint8 tabType;	/* = tableType */
     uint8 tabID;
     int16 tabSize;
-    map<uint8, string> Values;
+    map<uint, string> Values;
 
     KurzTable() : tabType(0), tabID(0), tabSize(0)
         {
@@ -35,7 +36,7 @@ public:
         tabSize = (uint8)msg[loc++] << 8 | (uint8)msg[loc++];
         uint locEnd = loc + tabSize;
 
-        uint ID = 0;
+        uint8 ID = 0;
 
         switch(tabID)
             {
@@ -53,23 +54,32 @@ public:
                 for(uint count = 0; count < 512; count += 4)
                     {
 
+                    ID = msg[loc+1];
+
                     cout << (dec) << setw(5) << count <<
                             " Type: " << (dec) << setw(5) << (uint)msg[loc] <<
                             " ID: " << (dec) << setw(5) << (uint)msg[loc + 1] <<
-                            " ID: "
+                            " ListID: " << (uint)count/4 <<
                             " Offset: " << setw(5) << (int)(msg[loc + 2] << 8 | msg[loc + 3]);
-
-                    ID = msg[loc+1];
 
                     if((int)(msg[loc + 2] << 8 | msg[loc + 3]) > 0)
                         {
                         cout << " Desc: ";
                         p_msg(&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2], 15);
 
-                        string tmpmsg((char *)&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2], 15);
+                        //string tmpmsg((char *)&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2], 15);
+                        string tmpmsg((char *)&msg[(msg[loc + 2] << 8 | msg[loc + 3]) + loc + 2]);
                         if(tmpmsg.size() > 0)
                             {
-                            Values.insert(pair<uint8, string>(ID, tmpmsg));
+                            if(tmpmsg.find('%', 0) != string::npos)
+                                {
+                                char newmsg[50];
+                                sprintf(newmsg, tmpmsg.c_str(), ID);
+                                tmpmsg = string((char *)newmsg);
+                                }
+
+                            Values.insert(pair<uint, string>((uint)count/4, tmpmsg));
+                            cout << "Added: " << (uint)count/4 << " - " << tmpmsg << endl;
                             }
                         }
                     else
