@@ -215,13 +215,13 @@ class PopupMenu::Window  : public Component,
                            private Timer
 {
 public:
-    Window (const PopupMenu& menu, Window* const window,
+    Window (const PopupMenu& menu, Window* const parentWindow,
             const Options& opts,
             const bool alignToRectangle,
             const bool shouldDismissOnMouseUp,
             ApplicationCommandManager** const manager)
        : Component ("menu"),
-         owner (window),
+         owner (parentWindow),
          options (opts),
          activeSubMenu (nullptr),
          managerOfChosenCommand (manager),
@@ -247,8 +247,11 @@ public:
         setMouseClickGrabsKeyboardFocus (false);
         setAlwaysOnTop (true);
 
-        setLookAndFeel (menu.lookAndFeel);
-        setOpaque (getLookAndFeel().findColour (PopupMenu::backgroundColourId).isOpaque() || ! Desktop::canUseSemiTransparentWindows());
+        setLookAndFeel (owner != nullptr ? &(owner->getLookAndFeel())
+                                         : menu.lookAndFeel);
+
+        setOpaque (getLookAndFeel().findColour (PopupMenu::backgroundColourId).isOpaque()
+                     || ! Desktop::canUseSemiTransparentWindows());
 
         for (int i = 0; i < menu.items.size(); ++i)
         {
@@ -1190,9 +1193,7 @@ void PopupMenu::addCommandItem (ApplicationCommandManager* commandManager,
 {
     jassert (commandManager != nullptr && commandID != 0);
 
-    const ApplicationCommandInfo* const registeredInfo = commandManager->getCommandForID (commandID);
-
-    if (registeredInfo != nullptr)
+    if (const ApplicationCommandInfo* const registeredInfo = commandManager->getCommandForID (commandID))
     {
         ApplicationCommandInfo info (*registeredInfo);
         ApplicationCommandTarget* const target = commandManager->getTargetForCommand (commandID, info);
@@ -1679,4 +1680,12 @@ bool PopupMenu::MenuItemIterator::next()
     commandManager  = item->commandManager;
 
     return true;
+}
+
+void PopupMenu::MenuItemIterator::addItemTo (PopupMenu& targetMenu)
+{
+    targetMenu.items.add (new Item (itemId, itemName, isEnabled, isTicked, customImage,
+                                    customColour != nullptr ? *customColour : Colours::black, customColour != nullptr,
+                                    nullptr,
+                                    subMenu, commandManager));
 }

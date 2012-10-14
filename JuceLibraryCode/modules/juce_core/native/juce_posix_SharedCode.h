@@ -205,7 +205,7 @@ File File::getCurrentWorkingDirectory()
 
     char localBuffer [1024];
     char* cwd = getcwd (localBuffer, sizeof (localBuffer) - 1);
-    int bufferSize = 4096;
+    size_t bufferSize = 4096;
 
     while (cwd == nullptr && errno == ERANGE)
     {
@@ -500,7 +500,7 @@ int FileOutputStream::writeInternal (const void* const data, const int numBytes)
 
     if (fileHandle != 0)
     {
-        result = ::write (getFD (fileHandle), data, numBytes);
+        result = ::write (getFD (fileHandle), data, (size_t) numBytes);
 
         if (result == -1)
             status = getResultForErrno();
@@ -701,7 +701,7 @@ String juce_getOutputFromCommand (const String& command)
 class InterProcessLock::Pimpl
 {
 public:
-    Pimpl (const String& name, const int timeOutMillisecs)
+    Pimpl (const String& lockName, const int timeOutMillisecs)
         : handle (0), refCount (1)
     {
        #if JUCE_IOS
@@ -718,7 +718,7 @@ public:
              tempFolder = "/tmp";
         #endif
 
-        const File temp (tempFolder.getChildFile (name));
+        const File temp (tempFolder.getChildFile (lockName));
 
         temp.create();
         handle = open (temp.getFullPathName().toUTF8(), O_RDWR);
@@ -1000,7 +1000,8 @@ public:
 
                 Array<char*> argv;
                 for (int i = 0; i < arguments.size(); ++i)
-                    argv.add (arguments[i].toUTF8().getAddress());
+                    if (arguments[i].isNotEmpty())
+                        argv.add (arguments[i].toUTF8().getAddress());
 
                 argv.add (nullptr);
 
@@ -1046,7 +1047,7 @@ public:
             readHandle = fdopen (pipeHandle, "r");
 
         if (readHandle != 0)
-            return fread (dest, 1, numBytes, readHandle);
+            return (int) fread (dest, 1, (size_t) numBytes, readHandle);
 
         return 0;
     }
@@ -1069,12 +1070,15 @@ bool ChildProcess::start (const String& command)
 {
     StringArray tokens;
     tokens.addTokens (command, true);
-    tokens.removeEmptyStrings (true);
+    return start (tokens);
+}
 
-    if (tokens.size() == 0)
+bool ChildProcess::start (const StringArray& args)
+{
+    if (args.size() == 0)
         return false;
 
-    activeProcess = new ActiveProcess (tokens);
+    activeProcess = new ActiveProcess (args);
 
     if (activeProcess->childPID == 0)
         activeProcess = nullptr;

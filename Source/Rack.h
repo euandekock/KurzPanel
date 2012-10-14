@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  16 Sep 2012 7:03:21pm
+  Creation date:  14 Oct 2012 10:59:14pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_RACK_RACK_E16DB38A__
-#define __JUCER_HEADER_RACK_RACK_E16DB38A__
+#ifndef __JUCER_HEADER_RACK_RACK_D8D57F44__
+#define __JUCER_HEADER_RACK_RACK_D8D57F44__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -85,10 +85,11 @@ public:
     static const int buttonDnS_pngSize;
     static const char* buttonUpS_png;
     static const int buttonUpS_pngSize;
+    static const char* optButtDn_png;
+    static const int optButtDn_pngSize;
+    static const char* optButtUp_png;
+    static const int optButtUp_pngSize;
 
-
-    //==============================================================================
-    juce_UseDebuggingNewOperator
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
@@ -174,7 +175,6 @@ private:
     Label* label21;
     Label* label22;
     Label* label23;
-    TextButton* textButtonOptions;
     ImageButton* iButton10;
     ImageButton* iButton11;
     ImageButton* iButton12;
@@ -198,13 +198,12 @@ private:
     ImageButton* iButtonChanDD;
     ImageButton* iButtonProgDD;
     ImageButton* iButtonValDD;
+    ImageButton* iButtonLoad;
 
 
     //==============================================================================
-    // (prevent copy constructor and operator= being generated..)
-    Rack (const Rack&);
-    const Rack& operator= (const Rack&);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Rack);
 };
 
 
-#endif   // __JUCER_HEADER_RACK_RACK_E16DB38A__
+#endif   // __JUCER_HEADER_RACK_RACK_D8D57F44__

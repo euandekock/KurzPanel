@@ -122,13 +122,19 @@
  #ifdef __INTEL_COMPILER
   #pragma warning (disable: 1125) // (virtual override warning)
  #endif
-#elif defined (JUCE_DLL_BUILD)
+#elif defined (JUCE_DLL) || defined (JUCE_DLL_BUILD)
  #define JUCE_API __attribute__ ((visibility("default")))
 #endif
 
 //==============================================================================
 #ifndef JUCE_API
  #define JUCE_API   /**< This macro is added to all juce public class declarations. */
+#endif
+
+#if JUCE_MSVC && JUCE_DLL_BUILD
+ #define JUCE_PUBLIC_IN_DLL_BUILD(declaration)  public: declaration; private:
+#else
+ #define JUCE_PUBLIC_IN_DLL_BUILD(declaration)  declaration;
 #endif
 
 /** This macro is added to all juce public function declarations. */

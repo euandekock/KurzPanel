@@ -211,7 +211,7 @@ LookAndFeel::LookAndFeel()
     };
 
     for (int i = 0; i < numElementsInArray (standardColours); i += 2)
-        setColour (standardColours [i], Colour ((uint32) standardColours [i + 1]));
+        setColour ((int) standardColours [i], Colour ((uint32) standardColours [i + 1]));
 
     juce_getTypefaceForFont = LookAndFeelHelpers::getTypefaceForFontFromLookAndFeel;
 }
@@ -1789,7 +1789,7 @@ void LookAndFeel::drawDocumentWindowTitleBar (DocumentWindow& window,
     }
 
     if (window.isColourSpecified (DocumentWindow::textColourId) || isColourSpecified (DocumentWindow::textColourId))
-        g.setColour (findColour (DocumentWindow::textColourId));
+        g.setColour (window.findColour (DocumentWindow::textColourId));
     else
         g.setColour (window.getBackgroundColour().contrasting (isActive ? 0.7f : 0.4f));
 

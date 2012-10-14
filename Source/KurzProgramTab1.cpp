@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  13 Oct 2012 12:48:16am
+  Creation date:  14 Oct 2012 11:02:51pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -586,7 +586,7 @@ void KurzProgramTab::resized()
     gLFO1Shape->setBounds (24, 56, 152, 24);
     gLFO2Shape->setBounds (224, 56, 152, 24);
     lRateC->setBounds (24, 160, 152, 24);
-    gLFO1RateC->setBounds (24, 188, 152, 24);
+    gLFO1RateC->setBounds (24, 184, 152, 24);
     lRateC2->setBounds (224, 160, 152, 24);
     gLFO2RateC->setBounds (224, 184, 152, 24);
     gASR1Trig->setBounds (24, 424, 152, 24);
@@ -799,7 +799,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="gLFO1RateC" id="26f505bf4c5c2a76" memberName="gLFO1RateC"
-            virtualName="" explicitFocusOrder="1" pos="24 188 152 24" editable="0"
+            virtualName="" explicitFocusOrder="1" pos="24 184 152 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="lRateC" id="8f3629a366ba88c9" memberName="lRateC2" virtualName=""
          explicitFocusOrder="0" pos="224 160 152 24" edTextCol="ff000000"
