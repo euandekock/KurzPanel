@@ -732,9 +732,13 @@ Rack::Rack ()
     StringArray all_devs = MidiOutput::getDevices();
     for(int i = 0; i < all_devs.size(); i++)
         {
-        std::cout << "Device [" << i << "] = " << all_devs[i] << "\n";
-        if(all_devs[i] == "USB Midi")
+        std::cout << "Device [" << i << "] = " << all_devs[i] << endl;
+        if(all_devs[i].startsWith("USB Midi"))
+            {
             default_dev = i;
+            cout << "Assigning Default to " << all_devs[i] << endl;
+            break;
+            }
         }
     //midiOutput = MidiOutput::createNewDevice("KurzPanel");
     midiOutput = MidiOutput::openDevice(default_dev);
@@ -746,8 +750,12 @@ Rack::Rack ()
     for (int i = 0; i < all_devs.size(); i++)
         {
         std::cout << "Device [" << i << "] = " << all_devs[i] << "\n";
-        if (all_devs[i] == "USB Midi")
+        if(all_devs[i].startsWith("USB Midi"))
+            {
             default_dev = i;
+            cout << "Assigning Default to " << all_devs[i] << endl;
+            break;
+            }
         }
     //midiInput = MidiInput::createNewDevice("KurzPanel", this);
     midiInput = MidiInput::openDevice(default_dev, this);
