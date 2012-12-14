@@ -25,6 +25,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "audioComponent.h"
+#include "MidiList.h"
 #include "k_dir.h"
 #include "kurz_connection.h"
 #include "kurz_view_lfo_shape.h" //Temporary won't be needed eventually.

@@ -727,41 +727,20 @@ Rack::Rack ()
 
     //[Constructor] You can add your own custom stuff here..
     midiBuffer = new MidiBuffer();
-    int default_dev = MidiOutput::getDefaultDeviceIndex();
 
-    StringArray all_devs = MidiOutput::getDevices();
-    for(int i = 0; i < all_devs.size(); i++)
-        {
-        std::cout << "Device [" << i << "] = " << all_devs[i] << endl;
-        if(all_devs[i].startsWith("USB Midi"))
-            {
-            default_dev = i;
-            cout << "Assigning Default to " << all_devs[i] << endl;
-            break;
-            }
-        }
-    //midiOutput = MidiOutput::createNewDevice("KurzPanel");
-    midiOutput = MidiOutput::openDevice(default_dev);
-    //midiOutput->openDevice(default_dev);
+    int output_dev = MidiOutput::getDefaultDeviceIndex();
+    int input_dev = MidiInput::getDefaultDeviceIndex();
 
-    default_dev = MidiInput::getDefaultDeviceIndex();
+    MidiList *midiList = new MidiList(output_dev, input_dev);
+    DialogWindow::showModalDialog("Select MIDI Device", midiList, midiList, Colours::black, true, true, true);
+    //DialogWindow::showDialog("Select MIDI Device", midiList, midiList, Colours::black, true, true, true);
 
-    all_devs = MidiInput::getDevices();
-    for (int i = 0; i < all_devs.size(); i++)
-        {
-        std::cout << "Device [" << i << "] = " << all_devs[i] << "\n";
-        if(all_devs[i].startsWith("USB Midi"))
-            {
-            default_dev = i;
-            cout << "Assigning Default to " << all_devs[i] << endl;
-            break;
-            }
-        }
-    //midiInput = MidiInput::createNewDevice("KurzPanel", this);
-    midiInput = MidiInput::openDevice(default_dev, this);
+    delete midiList;
 
-    //midiInput = MidiInput::openDevice(default_dev, this);
-    //midiInput->setName("KurzPanel");
+
+
+    midiOutput = MidiOutput::openDevice(output_dev);
+    midiInput = MidiInput::openDevice(input_dev, this);
 
     labelLCD->setText(L"Initialize", true);
     midiInput->start();
