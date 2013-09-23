@@ -731,15 +731,17 @@ Rack::Rack ()
     int output_dev = MidiOutput::getDefaultDeviceIndex();
     int input_dev = MidiInput::getDefaultDeviceIndex();
 
-    MidiList *midiList = new MidiList(output_dev, input_dev);
+    MidiList *midiList = new MidiList(input_dev, output_dev);
     DialogWindow::showModalDialog("Select MIDI Device", midiList, midiList, Colours::black, true, true, true);
     //DialogWindow::showDialog("Select MIDI Device", midiList, midiList, Colours::black, true, true, true);
 
     delete midiList;
 
 
-
+    std::cout << "Connecting Output to Device [" << output_dev << "]" << endl;
     midiOutput = MidiOutput::openDevice(output_dev);
+
+    std::cout << "Connecting Input to Device [" << input_dev << "]" << endl;
     midiInput = MidiInput::openDevice(input_dev, this);
 
     labelLCD->setText(L"Initialize", true);

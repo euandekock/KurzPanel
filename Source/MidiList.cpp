@@ -99,6 +99,7 @@ MidiList::MidiList (int &inSelection, int &outSelection)
         if(output_devlist[i].startsWith("USB Midi") && *outSel == 0)
             {
             *outSel = i;
+            break;
             }
         }
         cbOutput->setSelectedId(*outSel+1);
@@ -107,11 +108,12 @@ MidiList::MidiList (int &inSelection, int &outSelection)
 
     for(int i = 0; i < input_devlist.size(); i++)
         {
-        std::cout << "Device [" << i << "] = " << input_devlist[i] << "\n";
+        std::cout << "Device [" << i << "] = " << input_devlist[i] << endl;
         cbInput->addItem(String(input_devlist[i]), i+1);
         if(input_devlist[i].startsWith("USB Midi") && *inSel == 0)
             {
             *inSel = i;
+            break;
             }
         }
         cbInput->setSelectedId(*inSel+1);
