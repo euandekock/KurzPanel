@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -121,11 +120,12 @@ public:
 
         actualBufferSize = preferredBufferSize;
 
-        inputBuffer.setSize (jmax (1, numInputChannels), actualBufferSize);
+        inputBuffer.setSize  (jmax (1, numInputChannels),  actualBufferSize);
         outputBuffer.setSize (jmax (1, numOutputChannels), actualBufferSize);
+        outputBuffer.clear();
 
-        recorder = engine.createRecorder (numInputChannels, sampleRate);
-        player   = engine.createPlayer (numOutputChannels, sampleRate);
+        recorder = engine.createRecorder (numInputChannels,  sampleRate);
+        player   = engine.createPlayer   (numOutputChannels, sampleRate);
 
         startThread (8);
 
@@ -168,44 +168,34 @@ public:
 
     void stop()
     {
-        AudioIODeviceCallback* const oldCallback = setCallback (nullptr);
-
-        if (oldCallback != nullptr)
+        if (AudioIODeviceCallback* const oldCallback = setCallback (nullptr))
             oldCallback->audioDeviceStopped();
     }
 
-    void run()
+    void run() override
     {
         if (recorder != nullptr)    recorder->start();
         if (player != nullptr)      player->start();
 
         while (! threadShouldExit())
         {
-            if (player != nullptr && ! threadShouldExit())
-                player->writeBuffer (outputBuffer, *this);
+            if (player != nullptr)      player->writeBuffer (outputBuffer, *this);
+            if (recorder != nullptr)    recorder->readNextBlock (inputBuffer, *this);
 
-            if (recorder != nullptr)
-                recorder->readNextBlock (inputBuffer, *this);
+            const ScopedLock sl (callbackLock);
 
-            invokeCallback();
-        }
-    }
-
-    void invokeCallback()
-    {
-        const ScopedLock sl (callbackLock);
-
-        if (callback != nullptr)
-        {
-            callback->audioDeviceIOCallback (numInputChannels > 0 ? (const float**) inputBuffer.getArrayOfChannels() : nullptr,
-                                             numInputChannels,
-                                             numOutputChannels > 0 ? outputBuffer.getArrayOfChannels() : nullptr,
-                                             numOutputChannels,
-                                             actualBufferSize);
-        }
-        else
-        {
-            outputBuffer.clear();
+            if (callback != nullptr)
+            {
+                callback->audioDeviceIOCallback (numInputChannels > 0 ? (const float**) inputBuffer.getArrayOfChannels() : nullptr,
+                                                 numInputChannels,
+                                                 numOutputChannels > 0 ? outputBuffer.getArrayOfChannels() : nullptr,
+                                                 numOutputChannels,
+                                                 actualBufferSize);
+            }
+            else
+            {
+                outputBuffer.clear();
+            }
         }
     }
 
@@ -240,9 +230,8 @@ private:
             if (library.open ("libOpenSLES.so"))
             {
                 typedef SLresult (*CreateEngineFunc) (SLObjectItf*, SLuint32, const SLEngineOption*, SLuint32, const SLInterfaceID*, const SLboolean*);
-                CreateEngineFunc createEngine = (CreateEngineFunc) library.getFunction ("slCreateEngine");
 
-                if (createEngine != nullptr)
+                if (CreateEngineFunc createEngine = (CreateEngineFunc) library.getFunction ("slCreateEngine"))
                 {
                     check (createEngine (&engineObject, 0, nullptr, 0, nullptr, nullptr));
 
@@ -295,7 +284,7 @@ private:
     private:
         DynamicLibrary library;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Engine);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Engine)
     };
 
     //==================================================================================================
@@ -447,7 +436,7 @@ private:
             static_cast <Player*> (context)->bufferList.bufferReturned();
         }
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Player);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Player)
     };
 
     //==================================================================================================
@@ -571,7 +560,7 @@ private:
             static_cast <Recorder*> (context)->bufferList.bufferReturned();
         }
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Recorder);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Recorder)
     };
 
 
@@ -588,7 +577,7 @@ private:
         return result == SL_RESULT_SUCCESS;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OpenSLAudioIODevice);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OpenSLAudioIODevice)
 };
 
 
@@ -622,7 +611,7 @@ public:
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OpenSLAudioDeviceType);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OpenSLAudioDeviceType)
 };
 
 

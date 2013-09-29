@@ -1,24 +1,27 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the juce_core module of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission to use, copy, modify, and/or distribute this software for any purpose with
+   or without fee is hereby granted, provided that the above copyright notice and this
+   permission notice appear in all copies.
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
+   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
+   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   ------------------------------------------------------------------------------
 
-  ------------------------------------------------------------------------------
+   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
+   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
+   using any other modules, be sure to check that you also comply with their license.
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   For more details, visit www.juce.com
 
   ==============================================================================
 */
@@ -110,7 +113,7 @@ namespace
 {
     File juce_readlink (const String& file, const File& defaultFile)
     {
-        const int size = 8192;
+        const size_t size = 8192;
         HeapBlock<char> buffer;
         buffer.malloc (size + 4);
 
@@ -129,6 +132,30 @@ File File::getLinkedTarget() const
 }
 
 //==============================================================================
+static File resolveXDGFolder (const char* const type, const char* const fallbackFolder)
+{
+    StringArray confLines;
+    File ("~/.config/user-dirs.dirs").readLines (confLines);
+
+    for (int i = 0; i < confLines.size(); ++i)
+    {
+        const String line (confLines[i].trimStart());
+
+        if (line.startsWith (type))
+        {
+            // eg. resolve XDG_MUSIC_DIR="$HOME/Music" to /home/user/Music
+            const File f (line.replace ("$HOME", File ("~").getFullPathName())
+                              .fromFirstOccurrenceOf ("=", false, false)
+                              .trim().unquoted());
+
+            if (f.isDirectory())
+                return f;
+        }
+    }
+
+    return File (fallbackFolder);
+}
+
 const char* const* juce_argv = nullptr;
 int juce_argc = 0;
 
@@ -136,65 +163,57 @@ File File::getSpecialLocation (const SpecialLocationType type)
 {
     switch (type)
     {
-    case userHomeDirectory:
-    {
-        const char* homeDir = getenv ("HOME");
-
-        if (homeDir == nullptr)
+        case userHomeDirectory:
         {
-            struct passwd* const pw = getpwuid (getuid());
-            if (pw != nullptr)
-                homeDir = pw->pw_dir;
+            if (const char* homeDir = getenv ("HOME"))
+                return File (CharPointer_UTF8 (homeDir));
+
+            if (struct passwd* const pw = getpwuid (getuid()))
+                return File (CharPointer_UTF8 (pw->pw_dir));
+
+            return File::nonexistent;
         }
 
-        return File (CharPointer_UTF8 (homeDir));
-    }
+        case userDocumentsDirectory:          return resolveXDGFolder ("XDG_DOCUMENTS_DIR", "~");
+        case userMusicDirectory:              return resolveXDGFolder ("XDG_MUSIC_DIR",     "~");
+        case userMoviesDirectory:             return resolveXDGFolder ("XDG_VIDEOS_DIR",    "~");
+        case userPicturesDirectory:           return resolveXDGFolder ("XDG_PICTURES_DIR",  "~");
+        case userDesktopDirectory:            return resolveXDGFolder ("XDG_DESKTOP_DIR",   "~/Desktop");
+        case userApplicationDataDirectory:    return resolveXDGFolder ("XDG_CONFIG_HOME",   "~");
+        case commonDocumentsDirectory:
+        case commonApplicationDataDirectory:  return File ("/var");
+        case globalApplicationsDirectory:     return File ("/usr");
 
-    case userDocumentsDirectory:
-    case userMusicDirectory:
-    case userMoviesDirectory:
-    case userApplicationDataDirectory:
-        return File ("~");
-
-    case userDesktopDirectory:
-        return File ("~/Desktop");
-
-    case commonApplicationDataDirectory:
-        return File ("/var");
-
-    case globalApplicationsDirectory:
-        return File ("/usr");
-
-    case tempDirectory:
-    {
-        File tmp ("/var/tmp");
-
-        if (! tmp.isDirectory())
+        case tempDirectory:
         {
-            tmp = "/tmp";
+            File tmp ("/var/tmp");
 
             if (! tmp.isDirectory())
-                tmp = File::getCurrentWorkingDirectory();
+            {
+                tmp = "/tmp";
+
+                if (! tmp.isDirectory())
+                    tmp = File::getCurrentWorkingDirectory();
+            }
+
+            return tmp;
         }
 
-        return tmp;
-    }
+        case invokedExecutableFile:
+            if (juce_argv != nullptr && juce_argc > 0)
+                return File (CharPointer_UTF8 (juce_argv[0]));
+            // deliberate fall-through...
 
-    case invokedExecutableFile:
-        if (juce_argv != nullptr && juce_argc > 0)
-            return File (CharPointer_UTF8 (juce_argv[0]));
-        // deliberate fall-through...
+        case currentExecutableFile:
+        case currentApplicationFile:
+            return juce_getExecutableFile();
 
-    case currentExecutableFile:
-    case currentApplicationFile:
-        return juce_getExecutableFile();
+        case hostApplicationPath:
+            return juce_readlink ("/proc/self/exe", juce_getExecutableFile());
 
-    case hostApplicationPath:
-        return juce_readlink ("/proc/self/exe", juce_getExecutableFile());
-
-    default:
-        jassertfalse; // unknown type?
-        break;
+        default:
+            jassertfalse; // unknown type?
+            break;
     }
 
     return File::nonexistent;
@@ -228,10 +247,9 @@ bool File::moveToTrash() const
 class DirectoryIterator::NativeIterator::Pimpl
 {
 public:
-    Pimpl (const File& directory, const String& wildCard_)
+    Pimpl (const File& directory, const String& wc)
         : parentDir (File::addTrailingSeparator (directory.getFullPathName())),
-          wildCard (wildCard_),
-          dir (opendir (directory.getFullPathName().toUTF8()))
+          wildCard (wc), dir (opendir (directory.getFullPathName().toUTF8()))
     {
     }
 
@@ -280,7 +298,7 @@ private:
     String parentDir, wildCard;
     DIR* dir;
 
-    JUCE_DECLARE_NON_COPYABLE (Pimpl);
+    JUCE_DECLARE_NON_COPYABLE (Pimpl)
 };
 
 DirectoryIterator::NativeIterator::NativeIterator (const File& directory, const String& wildCard)

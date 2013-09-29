@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -75,11 +74,11 @@ void AudioSourcePlayer::audioDeviceIOCallback (const float** inputChannelData,
 
     if (source != nullptr)
     {
-        int i, numActiveChans = 0, numInputs = 0, numOutputs = 0;
+        int numActiveChans = 0, numInputs = 0, numOutputs = 0;
 
         // messy stuff needed to compact the channels down into an array
         // of non-zero pointers..
-        for (i = 0; i < totalNumInputChannels; ++i)
+        for (int i = 0; i < totalNumInputChannels; ++i)
         {
             if (inputChannelData[i] != nullptr)
             {
@@ -89,7 +88,7 @@ void AudioSourcePlayer::audioDeviceIOCallback (const float** inputChannelData,
             }
         }
 
-        for (i = 0; i < totalNumOutputChannels; ++i)
+        for (int i = 0; i < totalNumOutputChannels; ++i)
         {
             if (outputChannelData[i] != nullptr)
             {
@@ -107,14 +106,14 @@ void AudioSourcePlayer::audioDeviceIOCallback (const float** inputChannelData,
             tempBuffer.setSize (numInputs - numOutputs, numSamples,
                                 false, false, true);
 
-            for (i = 0; i < numOutputs; ++i)
+            for (int i = 0; i < numOutputs; ++i)
             {
                 channels[numActiveChans] = outputChans[i];
                 memcpy (channels[numActiveChans], inputChans[i], sizeof (float) * (size_t) numSamples);
                 ++numActiveChans;
             }
 
-            for (i = numOutputs; i < numInputs; ++i)
+            for (int i = numOutputs; i < numInputs; ++i)
             {
                 channels[numActiveChans] = tempBuffer.getSampleData (i - numOutputs, 0);
                 memcpy (channels[numActiveChans], inputChans[i], sizeof (float) * (size_t) numSamples);
@@ -123,14 +122,14 @@ void AudioSourcePlayer::audioDeviceIOCallback (const float** inputChannelData,
         }
         else
         {
-            for (i = 0; i < numInputs; ++i)
+            for (int i = 0; i < numInputs; ++i)
             {
                 channels[numActiveChans] = outputChans[i];
                 memcpy (channels[numActiveChans], inputChans[i], sizeof (float) * (size_t) numSamples);
                 ++numActiveChans;
             }
 
-            for (i = numInputs; i < numOutputs; ++i)
+            for (int i = numInputs; i < numOutputs; ++i)
             {
                 channels[numActiveChans] = outputChans[i];
                 zeromem (channels[numActiveChans], sizeof (float) * (size_t) numSamples);
@@ -143,7 +142,7 @@ void AudioSourcePlayer::audioDeviceIOCallback (const float** inputChannelData,
         AudioSourceChannelInfo info (&buffer, 0, numSamples);
         source->getNextAudioBlock (info);
 
-        for (i = info.buffer->getNumChannels(); --i >= 0;)
+        for (int i = info.buffer->getNumChannels(); --i >= 0;)
             buffer.applyGainRamp (i, info.startSample, info.numSamples, lastGain, gain);
 
         lastGain = gain;
@@ -158,8 +157,14 @@ void AudioSourcePlayer::audioDeviceIOCallback (const float** inputChannelData,
 
 void AudioSourcePlayer::audioDeviceAboutToStart (AudioIODevice* device)
 {
-    sampleRate = device->getCurrentSampleRate();
-    bufferSize = device->getCurrentBufferSizeSamples();
+    prepareToPlay (device->getCurrentSampleRate(),
+                   device->getCurrentBufferSizeSamples());
+}
+
+void AudioSourcePlayer::prepareToPlay (double newSampleRate, int newBufferSize)
+{
+    sampleRate = newSampleRate;
+    bufferSize = newBufferSize;
     zeromem (channels, sizeof (channels));
 
     if (source != nullptr)

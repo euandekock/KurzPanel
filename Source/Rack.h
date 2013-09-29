@@ -1,26 +1,24 @@
 /*
   ==============================================================================
 
-  This is an automatically generated file created by the Jucer!
-
-  Creation date:  14 Oct 2012 10:59:14pm
+  This is an automatically generated GUI class created by the Introjucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Jucer version: 1.12
+  Created with Introjucer version: 3.1.0
 
   ------------------------------------------------------------------------------
 
-  The Jucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-6 by Raw Material Software ltd.
+  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
+  Copyright 2004-13 by Raw Material Software Ltd.
 
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_RACK_RACK_D8D57F44__
-#define __JUCER_HEADER_RACK_RACK_D8D57F44__
+#ifndef __JUCE_HEADER_EB50EF9FAF097FF2__
+#define __JUCE_HEADER_EB50EF9FAF097FF2__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -129,82 +127,64 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    Label* labelLCD;
-    GroupComponent* groupComponent;
-    ImageButton* iButtonA;
-    ImageButton* iButtonB;
-    ImageButton* iButtonC;
-    ImageButton* iButtonPlay;
-    ImageButton* iButtonMode;
-    ImageButton* iButton0;
-    ImageButton* iButton1;
-    ImageButton* iButton2;
-    ImageButton* iButton3;
-    ImageButton* iButton4;
-    ImageButton* iButton5;
-    ImageButton* iButton6;
-    ImageButton* iButton7;
-    ImageButton* iButton8;
-    ImageButton* iButton9;
-    ImageButton* iButtonChanUP;
-    ImageButton* iButtonChanDN;
-    ImageButton* iButtonProgUP;
-    ImageButton* iButtonProgDN;
-    ImageButton* iButtonValUP;
-    ImageButton* iButtonValDN;
-    ImageButton* iButtonEnter;
-    ImageButton* iButtonStore;
-    Label* label2;
-    Label* label3;
-    Label* label4;
-    Label* label5;
-    Label* label6;
-    Label* label7;
-    Label* label8;
-    Label* label9;
-    Label* label10;
-    Label* label11;
-    Label* label12;
-    Label* label13;
-    Label* label14;
-    Label* label15;
-    Label* label16;
-    Label* label17;
-    Label* label18;
-    Label* label19;
-    Label* label20;
-    Label* label21;
-    Label* label22;
-    Label* label23;
-    ImageButton* iButton10;
-    ImageButton* iButton11;
-    ImageButton* iButton12;
-    ImageButton* iButton13;
-    ImageButton* iButton14;
-    ImageButton* iButton15;
-    ImageButton* iButton16;
-    ImageButton* iButton17;
-    ImageButton* iButton18;
-    ImageButton* iButton19;
-    Label* label24;
-    Label* label25;
-    Label* label26;
-    Label* label27;
-    Label* label28;
-    Label* label29;
-    Label* label30;
-    Label* label31;
-    Label* label32;
-    Label* label33;
-    ImageButton* iButtonChanDD;
-    ImageButton* iButtonProgDD;
-    ImageButton* iButtonValDD;
-    ImageButton* iButtonLoad;
+    ScopedPointer<Label> labelLCD;
+    ScopedPointer<GroupComponent> groupComponent;
+    ScopedPointer<ImageButton> iButtonA;
+    ScopedPointer<ImageButton> iButtonB;
+    ScopedPointer<ImageButton> iButtonC;
+    ScopedPointer<ImageButton> iButtonPlay;
+    ScopedPointer<ImageButton> iButtonMode;
+    ScopedPointer<ImageButton> iButton0;
+    ScopedPointer<ImageButton> iButton1;
+    ScopedPointer<ImageButton> iButton2;
+    ScopedPointer<ImageButton> iButton3;
+    ScopedPointer<ImageButton> iButton4;
+    ScopedPointer<ImageButton> iButton5;
+    ScopedPointer<ImageButton> iButton6;
+    ScopedPointer<ImageButton> iButton7;
+    ScopedPointer<ImageButton> iButton8;
+    ScopedPointer<ImageButton> iButton9;
+    ScopedPointer<ImageButton> iButtonChanUP;
+    ScopedPointer<ImageButton> iButtonChanDN;
+    ScopedPointer<ImageButton> iButtonProgUP;
+    ScopedPointer<ImageButton> iButtonProgDN;
+    ScopedPointer<ImageButton> iButtonValUP;
+    ScopedPointer<ImageButton> iButtonValDN;
+    ScopedPointer<ImageButton> iButtonEnter;
+    ScopedPointer<ImageButton> iButtonStore;
+    ScopedPointer<Label> label2;
+    ScopedPointer<Label> label3;
+    ScopedPointer<Label> label4;
+    ScopedPointer<Label> label5;
+    ScopedPointer<Label> label6;
+    ScopedPointer<Label> label7;
+    ScopedPointer<Label> label8;
+    ScopedPointer<Label> label9;
+    ScopedPointer<Label> label10;
+    ScopedPointer<Label> label11;
+    ScopedPointer<Label> label12;
+    ScopedPointer<Label> label13;
+    ScopedPointer<Label> label14;
+    ScopedPointer<Label> label15;
+    ScopedPointer<Label> label16;
+    ScopedPointer<Label> label17;
+    ScopedPointer<Label> label18;
+    ScopedPointer<Label> label19;
+    ScopedPointer<Label> label20;
+    ScopedPointer<Label> label21;
+    ScopedPointer<Label> label22;
+    ScopedPointer<Label> label23;
+    ScopedPointer<ImageButton> iButtonChanDD;
+    ScopedPointer<ImageButton> iButtonProgDD;
+    ScopedPointer<ImageButton> iButtonValDD;
+    ScopedPointer<ImageButton> iButtonLoad;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Rack);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Rack)
 };
 
+//[EndFile] You can add extra defines here...
+//[/EndFile]
 
-#endif   // __JUCER_HEADER_RACK_RACK_D8D57F44__
+#endif   // __JUCE_HEADER_EB50EF9FAF097FF2__

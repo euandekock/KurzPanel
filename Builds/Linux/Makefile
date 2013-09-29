@@ -1,26 +1,27 @@
 # Automatically generated makefile, created by the Introjucer
 # Don't edit this file! Your changes will be overwritten when you re-save the Introjucer project!
 
+# (this disables dependency generation if multiple architectures are set)
+DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
+
 ifndef CONFIG
   CONFIG=Debug
 endif
-
-ifeq ($(TARGET_ARCH),)
-  TARGET_ARCH := -march=native
-endif
-
-# (this disables dependency generation if multiple architectures are set)
-DEPFLAGS := $(if $(word 2, $(TARGET_ARCH)), , -MMD)
 
 ifeq ($(CONFIG),Debug)
   BINDIR := build
   LIBDIR := build
   OBJDIR := build/intermediate/Debug
   OUTDIR := build
+
+  ifeq ($(TARGET_ARCH),)
+    TARGET_ARCH := -march=native
+  endif
+
   CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D JUCE_ALSA_MIDI_INPUT_NAME="\"KurzPanel Input\"" -D JUCE_ALSA_MIDI_OUTPUT_NAME="\"KurzPanel Output\"" -D JUCE_ALSA_MIDI_INPUT_PORT_NAME="\"KurzPanel In\"" -D JUCE_ALSA_MIDI_OUTPUT_PORT_NAME="\"KurzPanel Out\"" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -O0
-  CXXFLAGS += $(CFLAGS) 
-  LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
+  CXXFLAGS += $(CFLAGS)
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
   LDDEPS :=
   RESFLAGS :=  -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D JUCE_ALSA_MIDI_INPUT_NAME="\"KurzPanel Input\"" -D JUCE_ALSA_MIDI_OUTPUT_NAME="\"KurzPanel Output\"" -D JUCE_ALSA_MIDI_INPUT_PORT_NAME="\"KurzPanel In\"" -D JUCE_ALSA_MIDI_OUTPUT_PORT_NAME="\"KurzPanel Out\"" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode
   TARGET := KurzPanel
@@ -32,10 +33,15 @@ ifeq ($(CONFIG),Release)
   LIBDIR := build
   OBJDIR := build/intermediate/Release
   OUTDIR := build
+
+  ifeq ($(TARGET_ARCH),)
+    TARGET_ARCH := -march=native
+  endif
+
   CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D JUCE_ALSA_MIDI_INPUT_NAME="\"KurzPanel Input\"" -D JUCE_ALSA_MIDI_OUTPUT_NAME="\"KurzPanel Output\"" -D JUCE_ALSA_MIDI_INPUT_PORT_NAME="\"KurzPanel In\"" -D JUCE_ALSA_MIDI_OUTPUT_PORT_NAME="\"KurzPanel Out\"" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -Os
-  CXXFLAGS += $(CFLAGS) 
-  LDFLAGS += -L$(BINDIR) -L$(LIBDIR) -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
+  CXXFLAGS += $(CFLAGS)
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
   LDDEPS :=
   RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D JUCE_ALSA_MIDI_INPUT_NAME="\"KurzPanel Input\"" -D JUCE_ALSA_MIDI_OUTPUT_NAME="\"KurzPanel Output\"" -D JUCE_ALSA_MIDI_INPUT_PORT_NAME="\"KurzPanel In\"" -D JUCE_ALSA_MIDI_OUTPUT_PORT_NAME="\"KurzPanel Out\"" -D "JUCER_LINUX_MAKE_7346DA2A=1" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode
   TARGET := KurzPanel

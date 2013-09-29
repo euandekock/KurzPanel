@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="X45052" name="KurzPanel" projectType="guiapp" version="2.0.0"
-              bundleIdentifier="com.gekkotek.KurzPanel" jucerVersion="3.0.0"
-              companyName="GekkoTek" defines="JUCE_ALSA_MIDI_INPUT_NAME=&quot;\&quot;KurzPanel\ Input\&quot;&quot; JUCE_ALSA_MIDI_OUTPUT_NAME=&quot;\&quot;KurzPanel\ Output\&quot;&quot; JUCE_ALSA_MIDI_INPUT_PORT_NAME=&quot;\&quot;KurzPanel\ In\&quot;&quot; JUCE_ALSA_MIDI_OUTPUT_PORT_NAME=&quot;\&quot;KurzPanel\ Out\&quot;&quot;">
+              bundleIdentifier="com.gekkotek.KurzPanel" jucerVersion="3.1.0"
+              companyName="GekkoTek" defines="JUCE_ALSA_MIDI_INPUT_NAME=&quot;\&quot;KurzPanel\ Input\&quot;&quot; JUCE_ALSA_MIDI_OUTPUT_NAME=&quot;\&quot;KurzPanel\ Output\&quot;&quot; JUCE_ALSA_MIDI_INPUT_PORT_NAME=&quot;\&quot;KurzPanel\ In\&quot;&quot; JUCE_ALSA_MIDI_OUTPUT_PORT_NAME=&quot;\&quot;KurzPanel\ Out\&quot;&quot;"
+              includeBinaryInAppConfig="1">
   <MAINGROUP id="u1DoVG" name="KurzPanel">
     <GROUP id="{5F0A26A0-98E1-029D-4DDD-3FCC2B8A446E}" name="Images">
       <FILE id="ShzBIV" name="klogo128x128.png" compile="0" resource="1"
@@ -106,6 +107,22 @@
                        targetName="KurzPanel"/>
       </CONFIGURATIONS>
     </LINUX_MAKE>
+    <XCODE_MAC targetFolder="Builds/MacOSX" juceFolder="../juce/modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="KurzPanel"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="0" optimisation="2" targetName="KurzPanel"/>
+      </CONFIGURATIONS>
+    </XCODE_MAC>
+    <VS2010 targetFolder="Builds/VisualStudio2010" juceFolder="../juce/modules">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="KurzPanel"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="KurzPanel"/>
+      </CONFIGURATIONS>
+    </VS2010>
   </EXPORTFORMATS>
   <JUCEOPTIONS JUCE_JACK="enabled"/>
 </JUCERPROJECT>

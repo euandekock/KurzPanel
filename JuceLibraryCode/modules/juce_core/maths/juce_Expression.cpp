@@ -1,24 +1,27 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the juce_core module of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission to use, copy, modify, and/or distribute this software for any purpose with
+   or without fee is hereby granted, provided that the above copyright notice and this
+   permission notice appear in all copies.
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD
+   TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN
+   NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+   DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+   IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
-   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+   ------------------------------------------------------------------------------
 
-  ------------------------------------------------------------------------------
+   NOTE! This permissive ISC license applies ONLY to files within the juce_core module!
+   All other JUCE modules are covered by a dual GPL/commercial license, so if you are
+   using any other modules, be sure to check that you also comply with their license.
 
-   To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   For more details, visit www.juce.com
 
   ==============================================================================
 */
@@ -73,7 +76,7 @@ public:
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE (Term);
+    JUCE_DECLARE_NON_COPYABLE (Term)
 };
 
 
@@ -360,7 +363,7 @@ struct Expression::Helpers
             const int recursionCount;
 
         private:
-            JUCE_DECLARE_NON_COPYABLE (EvaluationVisitor);
+            JUCE_DECLARE_NON_COPYABLE (EvaluationVisitor)
         };
 
         class SymbolVisitingVisitor  : public Scope::Visitor
@@ -376,7 +379,7 @@ struct Expression::Helpers
             SymbolVisitor& visitor;
             const int recursionCount;
 
-            JUCE_DECLARE_NON_COPYABLE (SymbolVisitingVisitor);
+            JUCE_DECLARE_NON_COPYABLE (SymbolVisitingVisitor)
         };
 
         class SymbolRenamingVisitor   : public Scope::Visitor
@@ -393,12 +396,12 @@ struct Expression::Helpers
             const String newName;
             const int recursionCount;
 
-            JUCE_DECLARE_NON_COPYABLE (SymbolRenamingVisitor);
+            JUCE_DECLARE_NON_COPYABLE (SymbolRenamingVisitor)
         };
 
         SymbolTerm* getSymbol() const  { return static_cast <SymbolTerm*> (left.get()); }
 
-        JUCE_DECLARE_NON_COPYABLE (DotOperator);
+        JUCE_DECLARE_NON_COPYABLE (DotOperator)
     };
 
     //==============================================================================
@@ -439,8 +442,8 @@ struct Expression::Helpers
         {
             if (input->getOperatorPrecedence() > 0)
                 return "-(" + input->toString() + ")";
-            else
-                return "-" + input->toString();
+
+            return "-" + input->toString();
         }
 
     private:
@@ -469,7 +472,7 @@ struct Expression::Helpers
         }
 
     private:
-        JUCE_DECLARE_NON_COPYABLE (Add);
+        JUCE_DECLARE_NON_COPYABLE (Add)
     };
 
     //==============================================================================
@@ -492,12 +495,12 @@ struct Expression::Helpers
 
             if (input == left)
                 return new Add (newDest, right->clone());
-            else
-                return new Subtract (left->clone(), newDest);
+
+            return new Subtract (left->clone(), newDest);
         }
 
     private:
-        JUCE_DECLARE_NON_COPYABLE (Subtract);
+        JUCE_DECLARE_NON_COPYABLE (Subtract)
     };
 
     //==============================================================================
@@ -522,7 +525,7 @@ struct Expression::Helpers
         }
 
     private:
-        JUCE_DECLARE_NON_COPYABLE (Multiply);
+        JUCE_DECLARE_NON_COPYABLE (Multiply)
     };
 
     //==============================================================================
@@ -545,12 +548,12 @@ struct Expression::Helpers
 
             if (input == left)
                 return new Multiply (newDest, right->clone());
-            else
-                return new Divide (left->clone(), newDest);
+
+            return new Divide (left->clone(), newDest);
         }
 
     private:
-        JUCE_DECLARE_NON_COPYABLE (Divide);
+        JUCE_DECLARE_NON_COPYABLE (Divide)
     };
 
     //==============================================================================
@@ -634,7 +637,7 @@ struct Expression::Helpers
     private:
         const Symbol& symbol;
 
-        JUCE_DECLARE_NON_COPYABLE (SymbolCheckVisitor);
+        JUCE_DECLARE_NON_COPYABLE (SymbolCheckVisitor)
     };
 
     //==============================================================================
@@ -647,7 +650,7 @@ struct Expression::Helpers
     private:
         Array<Symbol>& list;
 
-        JUCE_DECLARE_NON_COPYABLE (SymbolListVisitor);
+        JUCE_DECLARE_NON_COPYABLE (SymbolListVisitor)
     };
 
     //==============================================================================
@@ -877,7 +880,8 @@ struct Expression::Helpers
 
                     throw ParseError ("Expected \")\"");
                 }
-                else if (readOperator ("."))
+
+                if (readOperator ("."))
                 {
                     TermPtr rhs (readSymbolOrFunction());
 
@@ -889,11 +893,10 @@ struct Expression::Helpers
 
                     return new DotOperator (new SymbolTerm (identifier), rhs);
                 }
-                else // just a symbol..
-                {
-                    jassert (identifier.trim() == identifier);
-                    return new SymbolTerm (identifier);
-                }
+
+                // just a symbol..
+                jassert (identifier.trim() == identifier);
+                return new SymbolTerm (identifier);
             }
 
             return TermPtr();
@@ -911,7 +914,7 @@ struct Expression::Helpers
             return e;
         }
 
-        JUCE_DECLARE_NON_COPYABLE (Parser);
+        JUCE_DECLARE_NON_COPYABLE (Parser)
     };
 };
 
@@ -1131,7 +1134,10 @@ Expression::Scope::~Scope() {}
 
 Expression Expression::Scope::getSymbolValue (const String& symbol) const
 {
-    throw Helpers::EvaluationError ("Unknown symbol: " + symbol);
+    if (symbol.isNotEmpty())
+        throw Helpers::EvaluationError ("Unknown symbol: " + symbol);
+
+    return Expression();
 }
 
 double Expression::Scope::evaluateFunction (const String& functionName, const double* parameters, int numParams) const
@@ -1146,7 +1152,8 @@ double Expression::Scope::evaluateFunction (const String& functionName, const do
 
             return v;
         }
-        else if (functionName == "max")
+
+        if (functionName == "max")
         {
             double v = parameters[0];
             for (int i = 1; i < numParams; ++i)
@@ -1154,12 +1161,13 @@ double Expression::Scope::evaluateFunction (const String& functionName, const do
 
             return v;
         }
-        else if (numParams == 1)
+
+        if (numParams == 1)
         {
-            if      (functionName == "sin")     return sin (parameters[0]);
-            else if (functionName == "cos")     return cos (parameters[0]);
-            else if (functionName == "tan")     return tan (parameters[0]);
-            else if (functionName == "abs")     return std::abs (parameters[0]);
+            if (functionName == "sin")  return sin (parameters[0]);
+            if (functionName == "cos")  return cos (parameters[0]);
+            if (functionName == "tan")  return tan (parameters[0]);
+            if (functionName == "abs")  return std::abs (parameters[0]);
         }
     }
 

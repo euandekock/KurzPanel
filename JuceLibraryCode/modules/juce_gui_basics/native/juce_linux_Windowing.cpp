@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -58,16 +57,22 @@ struct Atoms
         XdndTypeList                    = getCreating ("XdndTypeList");
         XdndActionList                  = getCreating ("XdndActionList");
         XdndActionCopy                  = getCreating ("XdndActionCopy");
+        XdndActionPrivate               = getCreating ("XdndActionPrivate");
         XdndActionDescription           = getCreating ("XdndActionDescription");
 
-        allowedMimeTypes[0]             = getCreating ("text/plain");
-        allowedMimeTypes[1]             = getCreating ("text/uri-list");
+        allowedMimeTypes[0]             = getCreating ("UTF8_STRING");
+        allowedMimeTypes[1]             = getCreating ("text/plain;charset=utf-8");
+        allowedMimeTypes[2]             = getCreating ("text/plain");
+        allowedMimeTypes[3]             = getCreating ("text/uri-list");
+
+        externalAllowedFileMimeTypes[0] = getCreating ("text/uri-list");
+        externalAllowedTextMimeTypes[0] = getCreating ("text/plain");
 
         allowedActions[0]               = getCreating ("XdndActionMove");
         allowedActions[1]               = XdndActionCopy;
         allowedActions[2]               = getCreating ("XdndActionLink");
         allowedActions[3]               = getCreating ("XdndActionAsk");
-        allowedActions[4]               = getCreating ("XdndActionPrivate");
+        allowedActions[4]               = XdndActionPrivate;
     }
 
     static const Atoms& get()
@@ -87,14 +92,26 @@ struct Atoms
          ActiveWin, Pid, WindowType, WindowState,
          XdndAware, XdndEnter, XdndLeave, XdndPosition, XdndStatus,
          XdndDrop, XdndFinished, XdndSelection, XdndTypeList, XdndActionList,
-         XdndActionDescription, XdndActionCopy,
+         XdndActionDescription, XdndActionCopy, XdndActionPrivate,
          allowedActions[5],
-         allowedMimeTypes[2];
+         allowedMimeTypes[4],
+         externalAllowedFileMimeTypes[1],
+         externalAllowedTextMimeTypes[1];
 
     static const unsigned long DndVersion;
 
     static Atom getIfExists (const char* name)    { return XInternAtom (display, name, True); }
     static Atom getCreating (const char* name)    { return XInternAtom (display, name, False); }
+
+    static String getName (const Atom atom)
+    {
+        if (atom == None)
+            return "None";
+
+        return String (XGetAtomName (display, atom));
+    }
+
+    static bool isMimeTypeFile (const Atom atom)  { return getName (atom).equalsIgnoreCase ("text/uri-list"); }
 };
 
 const unsigned long Atoms::DndVersion = 3;
@@ -204,7 +221,9 @@ namespace XSHMHelpers
                 trappedErrorCode = 0;
                 XErrorHandler oldHandler = XSetErrorHandler (errorTrapHandler);
 
-                XShmSegmentInfo segmentInfo = { 0 };
+                XShmSegmentInfo segmentInfo;
+                zerostruct (segmentInfo);
+
                 XImage* xImage = XShmCreateImage (display, DefaultVisual (display, DefaultScreen (display)),
                                                   24, ZPixmap, 0, &segmentInfo, 50, 50);
 
@@ -596,12 +615,12 @@ public:
         }
     }
 
-    LowLevelGraphicsContext* createLowLevelContext()
+    LowLevelGraphicsContext* createLowLevelContext() override
     {
         return new LowLevelGraphicsSoftwareRenderer (Image (this));
     }
 
-    void initialiseBitmapData (Image::BitmapData& bitmap, int x, int y, Image::BitmapData::ReadWriteMode)
+    void initialiseBitmapData (Image::BitmapData& bitmap, int x, int y, Image::BitmapData::ReadWriteMode) override
     {
         bitmap.data = imageData + x * pixelStride + y * lineStride;
         bitmap.pixelFormat = pixelFormat;
@@ -609,13 +628,13 @@ public:
         bitmap.pixelStride = pixelStride;
     }
 
-    ImagePixelData* clone()
+    ImagePixelData* clone() override
     {
         jassertfalse;
         return nullptr;
     }
 
-    ImageType* createType() const     { return new NativeImageType(); }
+    ImageType* createType() const override     { return new NativeImageType(); }
 
     void blitToWindow (Window window, int dx, int dy, int dw, int dh, int sx, int sy)
     {
@@ -701,7 +720,7 @@ private:
         return 0;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XBitmapImage);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (XBitmapImage)
 };
 
 //==============================================================================
@@ -762,6 +781,23 @@ namespace PixmapHelpers
     }
 }
 
+static void* createDraggingHandCursor()
+{
+    static unsigned char dragHandData[] = { 71,73,70,56,57,97,16,0,16,0,145,2,0,0,0,0,255,255,255,0,
+      0,0,0,0,0,33,249,4,1,0,0,2,0,44,0,0,0,0,16,0, 16,0,0,2,52,148,47,0,200,185,16,130,90,12,74,139,107,84,123,39,
+      132,117,151,116,132,146,248,60,209,138,98,22,203,114,34,236,37,52,77,217, 247,154,191,119,110,240,193,128,193,95,163,56,60,234,98,135,2,0,59 };
+    const int dragHandDataSize = 99;
+
+    return CustomMouseCursorInfo (ImageFileFormat::loadFrom (dragHandData, dragHandDataSize), 8, 7).create();
+}
+
+//==============================================================================
+static int numAlwaysOnTopPeers = 0;
+
+bool juce_areThereAnyAlwaysOnTopWindows()
+{
+    return numAlwaysOnTopPeers > 0;
+}
 
 //==============================================================================
 class LinuxComponentPeer  : public ComponentPeer
@@ -771,13 +807,17 @@ public:
         : ComponentPeer (comp, windowStyleFlags),
           windowH (0), parentWindow (0),
           fullScreen (false), mapped (false),
-          visual (nullptr), depth (0)
+          visual (nullptr), depth (0),
+          isAlwaysOnTop (comp.isAlwaysOnTop())
     {
         // it's dangerous to create a window on a thread other than the message thread..
         jassert (MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
         dispatchWindowMessage = windowMessageReceive;
-        repainter = new LinuxRepaintManager (this);
+        repainter = new LinuxRepaintManager (*this);
+
+        if (isAlwaysOnTop)
+            ++numAlwaysOnTopPeers;
 
         createWindow (parentToAddTo);
 
@@ -792,6 +832,9 @@ public:
         deleteIconPixmaps();
         destroyWindow();
         windowH = 0;
+
+        if (isAlwaysOnTop)
+            --numAlwaysOnTopPeers;
     }
 
     // (this callback is hooked up in the messaging code)
@@ -810,7 +853,7 @@ public:
     }
 
     //==============================================================================
-    void* getNativeHandle() const
+    void* getNativeHandle() const override
     {
         return (void*) windowH;
     }
@@ -827,7 +870,7 @@ public:
         return reinterpret_cast <LinuxComponentPeer*> (peer);
     }
 
-    void setVisible (bool shouldBeVisible)
+    void setVisible (bool shouldBeVisible) override
     {
         ScopedXLock xlock;
         if (shouldBeVisible)
@@ -836,10 +879,10 @@ public:
             XUnmapWindow (display, windowH);
     }
 
-    void setTitle (const String& title)
+    void setTitle (const String& title) override
     {
         XTextProperty nameProperty;
-        char* strings[] = { const_cast <char*> (title.toUTF8().getAddress()) };
+        char* strings[] = { const_cast <char*> (title.toRawUTF8()) };
         ScopedXLock xlock;
 
         if (XStringListToTextProperty (strings, 1, &nameProperty))
@@ -851,7 +894,7 @@ public:
         }
     }
 
-    void setBounds (int x, int y, int w, int h, bool isNowFullScreen)
+    void setBounds (const Rectangle<int>& newBounds, bool isNowFullScreen) override
     {
         if (fullScreen && ! isNowFullScreen)
         {
@@ -885,7 +928,8 @@ public:
 
         if (windowH != 0)
         {
-            bounds.setBounds (x, y, jmax (1, w), jmax (1, h));
+            bounds = newBounds.withSize (jmax (1, newBounds.getWidth()),
+                                         jmax (1, newBounds.getHeight()));
 
             WeakReference<Component> deletionChecker (&component);
             ScopedXLock xlock;
@@ -921,27 +965,29 @@ public:
         }
     }
 
-    void setPosition (int x, int y)           { setBounds (x, y, bounds.getWidth(), bounds.getHeight(), false); }
-    void setSize (int w, int h)               { setBounds (bounds.getX(), bounds.getY(), w, h, false); }
-    Rectangle<int> getBounds() const          { return bounds; }
-    Point<int> getScreenPosition() const      { return bounds.getPosition(); }
+    Rectangle<int> getBounds() const override          { return bounds; }
 
-    Point<int> localToGlobal (const Point<int>& relativePosition)
+    Point<int> localToGlobal (Point<int> relativePosition) override
     {
-        return relativePosition + getScreenPosition();
+        return relativePosition + bounds.getPosition();
     }
 
-    Point<int> globalToLocal (const Point<int>& screenPosition)
+    Point<int> globalToLocal (Point<int> screenPosition) override
     {
-        return screenPosition - getScreenPosition();
+        return screenPosition - bounds.getPosition();
     }
 
-    void setAlpha (float newAlpha)
+    void setAlpha (float /* newAlpha */) override
     {
         //xxx todo!
     }
 
-    void setMinimised (bool shouldBeMinimised)
+    StringArray getAvailableRenderingEngines() override
+    {
+        return StringArray ("Software Renderer");
+    }
+
+    void setMinimised (bool shouldBeMinimised) override
     {
         if (shouldBeMinimised)
         {
@@ -964,7 +1010,7 @@ public:
         }
     }
 
-    bool isMinimised() const
+    bool isMinimised() const override
     {
         ScopedXLock xlock;
         const Atoms& atoms = Atoms::get();
@@ -977,7 +1023,7 @@ public:
                 && ((unsigned long*) prop.data)[0] == IconicState;
     }
 
-    void setFullScreen (const bool shouldBeFullScreen)
+    void setFullScreen (const bool shouldBeFullScreen) override
     {
         Rectangle<int> r (lastNonFullscreenBounds); // (get a copy of this before de-minimising)
 
@@ -989,13 +1035,13 @@ public:
                 r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
 
             if (! r.isEmpty())
-                setBounds (r.getX(), r.getY(), r.getWidth(), r.getHeight(), shouldBeFullScreen);
+                setBounds (r, shouldBeFullScreen);
 
             component.repaint();
         }
     }
 
-    bool isFullScreen() const
+    bool isFullScreen() const override
     {
         return fullScreen;
     }
@@ -1047,9 +1093,9 @@ public:
         return result;
     }
 
-    bool contains (const Point<int>& position, bool trueIfInAChildWindow) const
+    bool contains (Point<int> localPos, bool trueIfInAChildWindow) const override
     {
-        if (! bounds.withZeroOrigin().contains (position))
+        if (! bounds.withZeroOrigin().contains (localPos))
             return false;
 
         for (int i = Desktop::getInstance().getNumComponents(); --i >= 0;)
@@ -1059,7 +1105,8 @@ public:
             if (c == &component)
                 break;
 
-            if (c->contains (position + bounds.getPosition() - c->getScreenPosition()))
+            // TODO: needs scaling correctly
+            if (c->contains (localPos + bounds.getPosition() - c->getScreenPosition()))
                 return false;
         }
 
@@ -1073,21 +1120,21 @@ public:
         ScopedXLock xlock;
 
         return XGetGeometry (display, (::Drawable) windowH, &root, &wx, &wy, &ww, &wh, &bw, &depth)
-                && XTranslateCoordinates (display, windowH, windowH, position.getX(), position.getY(), &wx, &wy, &child)
+                && XTranslateCoordinates (display, windowH, windowH, localPos.getX(), localPos.getY(), &wx, &wy, &child)
                 && child == None;
     }
 
-    BorderSize<int> getFrameSize() const
+    BorderSize<int> getFrameSize() const override
     {
         return BorderSize<int>();
     }
 
-    bool setAlwaysOnTop (bool alwaysOnTop)
+    bool setAlwaysOnTop (bool /* alwaysOnTop */) override
     {
         return false;
     }
 
-    void toFront (bool makeActive)
+    void toFront (bool makeActive) override
     {
         if (makeActive)
         {
@@ -1125,7 +1172,7 @@ public:
         handleBroughtToFront();
     }
 
-    void toBehind (ComponentPeer* other)
+    void toBehind (ComponentPeer* other) override
     {
         LinuxComponentPeer* const otherPeer = dynamic_cast <LinuxComponentPeer*> (other);
         jassert (otherPeer != nullptr); // wrong type of window?
@@ -1141,7 +1188,7 @@ public:
         }
     }
 
-    bool isFocused() const
+    bool isFocused() const override
     {
         int revert = 0;
         Window focusedWindow = 0;
@@ -1151,7 +1198,7 @@ public:
         return focusedWindow == windowH;
     }
 
-    void grabFocus()
+    void grabFocus() override
     {
         XWindowAttributes atts;
         ScopedXLock xlock;
@@ -1166,21 +1213,19 @@ public:
         }
     }
 
-    void textInputRequired (const Point<int>&)
-    {
-    }
+    void textInputRequired (const Point<int>&) override {}
 
-    void repaint (const Rectangle<int>& area)
+    void repaint (const Rectangle<int>& area) override
     {
         repainter->repaint (area.getIntersection (component.getLocalBounds()));
     }
 
-    void performAnyPendingRepaintsNow()
+    void performAnyPendingRepaintsNow() override
     {
         repainter->performAnyPendingRepaintsNow();
     }
 
-    void setIcon (const Image& newIcon)
+    void setIcon (const Image& newIcon) override
     {
         const int dataSize = newIcon.getWidth() * newIcon.getHeight() + 2;
         HeapBlock <unsigned long> data (dataSize);
@@ -1258,6 +1303,8 @@ public:
             case ConfigureNotify:       handleConfigureNotifyEvent (event.xconfigure); break;
             case ReparentNotify:        handleReparentNotifyEvent(); break;
             case GravityNotify:         handleGravityNotify(); break;
+            case SelectionClear:        handleExternalSelectionClear(); break;
+            case SelectionRequest:      handleExternalSelectionRequest (event); break;
 
             case CirculateNotify:
             case CreateNotify:
@@ -1272,10 +1319,6 @@ public:
 
             case UnmapNotify:
                 mapped = false;
-                break;
-
-            case SelectionClear:
-            case SelectionRequest:
                 break;
 
             default:
@@ -1302,10 +1345,12 @@ public:
             ScopedXLock xlock;
             updateKeyStates (keyEvent.keycode, true);
 
-            const char* oldLocale = ::setlocale (LC_ALL, 0);
+            String oldLocale (::setlocale (LC_ALL, 0));
             ::setlocale (LC_ALL, "");
             XLookupString (&keyEvent, utf8, sizeof (utf8), &sym, 0);
-            ::setlocale (LC_ALL, oldLocale);
+
+            if (oldLocale.isNotEmpty())
+                ::setlocale (LC_ALL, oldLocale.toRawUTF8());
 
             unicodeChar = *CharPointer_UTF8 (utf8);
             keyCode = (int) unicodeChar;
@@ -1323,26 +1368,38 @@ public:
         {
             switch (sym)  // Translate keypad
             {
+                case XK_KP_Add:         keyCode = XK_plus; break;
+                case XK_KP_Subtract:    keyCode = XK_hyphen; break;
                 case XK_KP_Divide:      keyCode = XK_slash; break;
                 case XK_KP_Multiply:    keyCode = XK_asterisk; break;
-                case XK_KP_Subtract:    keyCode = XK_hyphen; break;
-                case XK_KP_Add:         keyCode = XK_plus; break;
                 case XK_KP_Enter:       keyCode = XK_Return; break;
-                case XK_KP_Decimal:     keyCode = Keys::numLock ? XK_period : XK_Delete; break;
-                case XK_KP_0:           keyCode = Keys::numLock ? XK_0 : XK_Insert; break;
-                case XK_KP_1:           keyCode = Keys::numLock ? XK_1 : XK_End; break;
-                case XK_KP_2:           keyCode = Keys::numLock ? XK_2 : XK_Down; break;
-                case XK_KP_3:           keyCode = Keys::numLock ? XK_3 : XK_Page_Down; break;
-                case XK_KP_4:           keyCode = Keys::numLock ? XK_4 : XK_Left; break;
+                case XK_KP_Insert:      keyCode = XK_Insert; break;
+                case XK_Delete:
+                case XK_KP_Delete:      keyCode = XK_Delete; break;
+                case XK_KP_Left:        keyCode = XK_Left; break;
+                case XK_KP_Right:       keyCode = XK_Right; break;
+                case XK_KP_Up:          keyCode = XK_Up; break;
+                case XK_KP_Down:        keyCode = XK_Down; break;
+                case XK_KP_Home:        keyCode = XK_Home; break;
+                case XK_KP_End:         keyCode = XK_End; break;
+                case XK_KP_Page_Down:   keyCode = XK_Page_Down; break;
+                case XK_KP_Page_Up:     keyCode = XK_Page_Up; break;
+
+                case XK_KP_0:           keyCode = XK_0; break;
+                case XK_KP_1:           keyCode = XK_1; break;
+                case XK_KP_2:           keyCode = XK_2; break;
+                case XK_KP_3:           keyCode = XK_3; break;
+                case XK_KP_4:           keyCode = XK_4; break;
                 case XK_KP_5:           keyCode = XK_5; break;
-                case XK_KP_6:           keyCode = Keys::numLock ? XK_6 : XK_Right; break;
-                case XK_KP_7:           keyCode = Keys::numLock ? XK_7 : XK_Home; break;
-                case XK_KP_8:           keyCode = Keys::numLock ? XK_8 : XK_Up; break;
-                case XK_KP_9:           keyCode = Keys::numLock ? XK_9 : XK_Page_Up; break;
+                case XK_KP_6:           keyCode = XK_6; break;
+                case XK_KP_7:           keyCode = XK_7; break;
+                case XK_KP_8:           keyCode = XK_8; break;
+                case XK_KP_9:           keyCode = XK_9; break;
+
                 default:                break;
             }
 
-            switch (sym)
+            switch (keyCode)
             {
                 case XK_Left:
                 case XK_Right:
@@ -1355,7 +1412,7 @@ public:
                 case XK_Delete:
                 case XK_Insert:
                     keyPressed = true;
-                    keyCode = (sym & 0xff) | Keys::extendedKeyModifier;
+                    keyCode = (keyCode & 0xff) | Keys::extendedKeyModifier;
                     break;
 
                 case XK_Tab:
@@ -1473,6 +1530,9 @@ public:
     {
         updateKeyModifiers (buttonRelEvent.state);
 
+        if (parentWindow != 0)
+            updateWindowBounds();
+
         switch (pointerMap [buttonRelEvent.button - Button1])
         {
             case Keys::LeftButton:      currentModifiers = currentModifiers.withoutFlags (ModifierKeys::leftButtonModifier); break;
@@ -1480,6 +1540,9 @@ public:
             case Keys::MiddleButton:    currentModifiers = currentModifiers.withoutFlags (ModifierKeys::middleButtonModifier); break;
             default: break;
         }
+
+        if (dragState.dragging)
+            handleExternalDragButtonReleaseEvent();
 
         handleMouseEvent (0, getMousePos (buttonRelEvent), currentModifiers, getEventTime (buttonRelEvent));
 
@@ -1489,42 +1552,20 @@ public:
     void handleMotionNotifyEvent (const XPointerMovedEvent& movedEvent)
     {
         updateKeyModifiers (movedEvent.state);
-        const Point<int> mousePos (movedEvent.x_root, movedEvent.y_root);
 
-        if (lastMousePos != mousePos)
-        {
-            lastMousePos = mousePos;
+        lastMousePos = Point<int> (movedEvent.x_root, movedEvent.y_root);
 
-            if (parentWindow != 0 && (styleFlags & windowHasTitleBar) == 0)
-            {
-                Window wRoot = 0, wParent = 0;
+        if (dragState.dragging)
+            handleExternalDragMotionNotify();
 
-                {
-                    ScopedXLock xlock;
-                    unsigned int numChildren;
-                    Window* wChild = nullptr;
-                    XQueryTree (display, windowH, &wRoot, &wParent, &wChild, &numChildren);
-                }
-
-                if (wParent != 0
-                     && wParent != windowH
-                     && wParent != wRoot)
-                {
-                    parentWindow = wParent;
-                    updateBounds();
-                }
-                else
-                {
-                    parentWindow = 0;
-                }
-            }
-
-            handleMouseEvent (0, mousePos - getScreenPosition(), currentModifiers, getEventTime (movedEvent));
-        }
+        handleMouseEvent (0, getMousePos (movedEvent), currentModifiers, getEventTime (movedEvent));
     }
 
     void handleEnterNotifyEvent (const XEnterWindowEvent& enterEvent)
     {
+        if (parentWindow != 0)
+            updateWindowBounds();
+
         clearLastMousePos();
 
         if (! currentModifiers.isAnyMouseButtonDown())
@@ -1593,7 +1634,7 @@ public:
 
     void handleConfigureNotifyEvent (XConfigureEvent& confEvent)
     {
-        updateBounds();
+        updateWindowBounds();
         updateBorderSize();
         handleMovedOrResized();
 
@@ -1601,9 +1642,7 @@ public:
         if ((styleFlags & windowHasTitleBar) != 0
               && component.isCurrentlyBlockedByAnotherModalComponent())
         {
-            Component* const currentModalComp = Component::getCurrentlyModalComponent();
-
-            if (currentModalComp != 0)
+            if (Component* const currentModalComp = Component::getCurrentlyModalComponent())
                 currentModalComp->inputAttemptWhenModal();
         }
 
@@ -1635,7 +1674,7 @@ public:
 
     void handleGravityNotify()
     {
-        updateBounds();
+        updateWindowBounds();
         updateBorderSize();
         handleMovedOrResized();
     }
@@ -1694,6 +1733,7 @@ public:
         }
         else if (clientMsg.message_type == atoms.XdndLeave)
         {
+            handleDragExit (dragInfo);
             resetDragAndDrop();
         }
         else if (clientMsg.message_type == atoms.XdndPosition)
@@ -1706,12 +1746,40 @@ public:
         }
         else if (clientMsg.message_type == atoms.XdndStatus)
         {
-            handleDragAndDropStatus (clientMsg);
+            handleExternalDragAndDropStatus (clientMsg);
         }
         else if (clientMsg.message_type == atoms.XdndFinished)
         {
-            resetDragAndDrop();
+            externalResetDragAndDrop();
         }
+    }
+
+    bool externalDragTextInit (const String& text)
+    {
+        if (dragState.dragging)
+            return false;
+
+        return externalDragInit (true, text);
+    }
+
+    bool externalDragFileInit (const StringArray& files, bool /*canMoveFiles*/)
+    {
+        if (dragState.dragging)
+            return false;
+
+        StringArray uriList;
+
+        for (int i = 0; i < files.size(); ++i)
+        {
+            const String& f = files[i];
+
+            if (f.matchesWildcard ("?*://*", false))
+                uriList.add (f);
+            else
+                uriList.add ("file://" + f);
+        }
+
+        return externalDragInit (false, uriList.joinIntoString ("\r\n"));
     }
 
     //==============================================================================
@@ -1729,15 +1797,14 @@ public:
 
 private:
     //==============================================================================
-    class LinuxRepaintManager : public Timer
+    class LinuxRepaintManager   : public Timer
     {
     public:
-        LinuxRepaintManager (LinuxComponentPeer* const peer_)
-            : peer (peer_),
-              lastTimeImageUsed (0)
+        LinuxRepaintManager (LinuxComponentPeer& p)
+            : peer (p), lastTimeImageUsed (0)
         {
            #if JUCE_USE_XSHM
-            shmCompletedDrawing = true;
+            shmPaintsPending = 0;
 
             useARGBImagesForRendering = XSHMHelpers::isShmAvailable();
 
@@ -1756,12 +1823,13 @@ private:
            #endif
         }
 
-        void timerCallback()
+        void timerCallback() override
         {
            #if JUCE_USE_XSHM
-            if (! shmCompletedDrawing)
+            if (shmPaintsPending != 0)
                 return;
            #endif
+
             if (! regionsNeedingRepaint.isEmpty())
             {
                 stopTimer();
@@ -1785,16 +1853,14 @@ private:
         void performAnyPendingRepaintsNow()
         {
            #if JUCE_USE_XSHM
-            if (! shmCompletedDrawing)
+            if (shmPaintsPending != 0)
             {
                 startTimer (repaintTimerPeriod);
                 return;
             }
            #endif
 
-            peer->clearMaskedRegion();
-
-            RectangleList originalRepaintRegion (regionsNeedingRepaint);
+            RectangleList<int>  originalRepaintRegion (regionsNeedingRepaint);
             regionsNeedingRepaint.clear();
             const Rectangle<int> totalArea (originalRepaintRegion.getBounds());
 
@@ -1809,44 +1875,36 @@ private:
                    #else
                     image = Image (new XBitmapImage (Image::RGB,
                    #endif
-                                                     (totalArea.getWidth() + 31) & ~31,
+                                                     (totalArea.getWidth()  + 31) & ~31,
                                                      (totalArea.getHeight() + 31) & ~31,
-                                                     false, peer->depth, peer->visual));
+                                                     false, peer.depth, peer.visual));
                 }
 
                 startTimer (repaintTimerPeriod);
 
-                RectangleList adjustedList (originalRepaintRegion);
+                RectangleList<int> adjustedList (originalRepaintRegion);
                 adjustedList.offsetAll (-totalArea.getX(), -totalArea.getY());
 
-                if (peer->depth == 32)
-                {
-                    RectangleList::Iterator i (originalRepaintRegion);
-
-                    while (i.next())
-                        image.clear (*i.getRectangle() - totalArea.getPosition());
-                }
+                if (peer.depth == 32)
+                    for (const Rectangle<int>* i = originalRepaintRegion.begin(), * const e = originalRepaintRegion.end(); i != e; ++i)
+                        image.clear (*i - totalArea.getPosition());
 
                 {
-                    ScopedPointer<LowLevelGraphicsContext> context (peer->getComponent().getLookAndFeel()
+                    ScopedPointer<LowLevelGraphicsContext> context (peer.getComponent().getLookAndFeel()
                                                                       .createGraphicsContext (image, -totalArea.getPosition(), adjustedList));
-                    peer->handlePaint (*context);
+                    peer.handlePaint (*context);
                 }
 
-                if (! peer->maskedRegion.isEmpty())
-                    originalRepaintRegion.subtract (peer->maskedRegion);
-
-                for (RectangleList::Iterator i (originalRepaintRegion); i.next();)
+                for (const Rectangle<int>* i = originalRepaintRegion.begin(), * const e = originalRepaintRegion.end(); i != e; ++i)
                 {
                    #if JUCE_USE_XSHM
-                    shmCompletedDrawing = false;
+                    ++shmPaintsPending;
                    #endif
-                    const Rectangle<int>& r = *i.getRectangle();
 
                     static_cast<XBitmapImage*> (image.getPixelData())
-                        ->blitToWindow (peer->windowH,
-                                        r.getX(), r.getY(), r.getWidth(), r.getHeight(),
-                                        r.getX() - totalArea.getX(), r.getY() - totalArea.getY());
+                        ->blitToWindow (peer.windowH,
+                                        i->getX(), i->getY(), i->getWidth(), i->getHeight(),
+                                        i->getX() - totalArea.getX(), i->getY() - totalArea.getY());
                 }
             }
 
@@ -1855,21 +1913,22 @@ private:
         }
 
        #if JUCE_USE_XSHM
-        void notifyPaintCompleted()                 { shmCompletedDrawing = true; }
+        void notifyPaintCompleted() noexcept        { --shmPaintsPending; }
        #endif
 
     private:
         enum { repaintTimerPeriod = 1000 / 100 };
 
-        LinuxComponentPeer* const peer;
+        LinuxComponentPeer& peer;
         Image image;
         uint32 lastTimeImageUsed;
-        RectangleList regionsNeedingRepaint;
+        RectangleList<int> regionsNeedingRepaint;
 
        #if JUCE_USE_XSHM
-        bool useARGBImagesForRendering, shmCompletedDrawing;
+        bool useARGBImagesForRendering;
+        int shmPaintsPending;
        #endif
-        JUCE_DECLARE_NON_COPYABLE (LinuxRepaintManager);
+        JUCE_DECLARE_NON_COPYABLE (LinuxRepaintManager)
     };
 
     ScopedPointer <LinuxRepaintManager> repainter;
@@ -1882,6 +1941,7 @@ private:
     Visual* visual;
     int depth;
     BorderSize<int> windowBorder;
+    bool isAlwaysOnTop;
     enum { KeyPressEventType = 2 };
 
     struct MotifWmHints
@@ -1997,7 +2057,9 @@ private:
 
         if (hints != None)
         {
-            MotifWmHints motifHints = { 0 };
+            MotifWmHints motifHints;
+            zerostruct (motifHints);
+
             motifHints.flags = 2; /* MWM_HINTS_DECORATIONS */
             motifHints.decorations = 0;
 
@@ -2033,7 +2095,9 @@ private:
 
         if (hints != None)
         {
-            MotifWmHints motifHints = { 0 };
+            MotifWmHints motifHints;
+            zerostruct (motifHints);
+
             motifHints.flags = 1 | 2; /* MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS */
             motifHints.decorations = 2 /* MWM_DECOR_BORDER */ | 8 /* MWM_DECOR_TITLE */ | 16; /* MWM_DECOR_MENU */
 
@@ -2276,7 +2340,7 @@ private:
         }
     }
 
-    void updateBounds()
+    void updateWindowBounds()
     {
         jassert (windowH != 0);
         if (windowH != 0)
@@ -2296,14 +2360,53 @@ private:
     }
 
     //==============================================================================
+    struct DragState
+    {
+        DragState() noexcept
+           : isText (false), dragging (false), expectingStatus (false),
+             canDrop (false), targetWindow (None), xdndVersion (-1)
+        {
+        }
+
+        bool isText;
+        bool dragging;         // currently performing outgoing external dnd as Xdnd source, have grabbed mouse
+        bool expectingStatus;  // XdndPosition sent, waiting for XdndStatus
+        bool canDrop;          // target window signals it will accept the drop
+        Window targetWindow;   // potential drop target
+        int xdndVersion;       // negotiated version with target
+        Rectangle<int> silentRect;
+        String textOrFiles;
+
+        const Atom* getMimeTypes() const noexcept   { return isText ? Atoms::get().externalAllowedTextMimeTypes
+                                                                    : Atoms::get().externalAllowedFileMimeTypes; }
+
+        int getNumMimeTypes() const noexcept { return isText ? numElementsInArray (Atoms::get().externalAllowedTextMimeTypes)
+                                                             : numElementsInArray (Atoms::get().externalAllowedFileMimeTypes); }
+
+        bool matchesTarget (Atom targetType) const
+        {
+            for (int i = getNumMimeTypes(); --i >= 0;)
+                if (getMimeTypes()[i] == targetType)
+                    return true;
+
+            return false;
+        }
+    };
+
+    //==============================================================================
     void resetDragAndDrop()
     {
-        dragInfo.files.clear();
-        dragInfo.text = String::empty;
+        dragInfo.clear();
         dragInfo.position = Point<int> (-1, -1);
         dragAndDropCurrentMimeType = 0;
         dragAndDropSourceWindow = 0;
         srcMimeTypeAtomList.clear();
+        finishAfterDropDataReceived = false;
+    }
+
+    void resetExternalDragState()
+    {
+        dragState = DragState();
     }
 
     void sendDragAndDropMessage (XClientMessageEvent& msg)
@@ -2318,9 +2421,72 @@ private:
         XSendEvent (display, dragAndDropSourceWindow, False, 0, (XEvent*) &msg);
     }
 
+    bool sendExternalDragAndDropMessage (XClientMessageEvent& msg, const Window targetWindow)
+    {
+        msg.type      = ClientMessage;
+        msg.display   = display;
+        msg.window    = targetWindow;
+        msg.format    = 32;
+        msg.data.l[0] = windowH;
+
+        ScopedXLock xlock;
+        return XSendEvent (display, targetWindow, False, 0, (XEvent*) &msg) != 0;
+    }
+
+    void sendExternalDragAndDropDrop (const Window targetWindow)
+    {
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
+        msg.message_type = Atoms::get().XdndDrop;
+        msg.data.l[2] = CurrentTime;
+
+        sendExternalDragAndDropMessage (msg, targetWindow);
+    }
+
+    void sendExternalDragAndDropEnter (const Window targetWindow)
+    {
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
+        msg.message_type = Atoms::get().XdndEnter;
+
+        const Atom* mimeTypes  = dragState.getMimeTypes();
+        const int numMimeTypes = dragState.getNumMimeTypes();
+
+        msg.data.l[1] = (dragState.xdndVersion << 24) | (numMimeTypes > 3);
+        msg.data.l[2] = numMimeTypes > 0 ? mimeTypes[0] : 0;
+        msg.data.l[3] = numMimeTypes > 1 ? mimeTypes[1] : 0;
+        msg.data.l[4] = numMimeTypes > 2 ? mimeTypes[2] : 0;
+
+        sendExternalDragAndDropMessage (msg, targetWindow);
+    }
+
+    void sendExternalDragAndDropPosition (const Window targetWindow)
+    {
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
+        msg.message_type = Atoms::get().XdndPosition;
+
+        const Point<int> mousePos (Desktop::getInstance().getMousePosition());
+
+        if (dragState.silentRect.contains (mousePos)) // we've been asked to keep silent
+            return;
+
+        msg.data.l[1] = 0;
+        msg.data.l[2] = (mousePos.x << 16) | mousePos.y;
+        msg.data.l[3] = CurrentTime;
+        msg.data.l[4] = Atoms::get().XdndActionCopy; // this is all JUCE currently supports
+
+        dragState.expectingStatus = sendExternalDragAndDropMessage (msg, targetWindow);
+    }
+
     void sendDragAndDropStatus (const bool acceptDrop, Atom dropAction)
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndStatus;
         msg.data.l[1] = (acceptDrop ? 1 : 0) | 2; // 2 indicates that we want to receive position messages
         msg.data.l[4] = dropAction;
@@ -2328,31 +2494,132 @@ private:
         sendDragAndDropMessage (msg);
     }
 
-    void sendDragAndDropLeave()
+    void sendExternalDragAndDropLeave (const Window targetWindow)
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndLeave;
-        sendDragAndDropMessage (msg);
+        sendExternalDragAndDropMessage (msg, targetWindow);
     }
 
     void sendDragAndDropFinish()
     {
-        XClientMessageEvent msg = { 0 };
+        XClientMessageEvent msg;
+        zerostruct (msg);
+
         msg.message_type = Atoms::get().XdndFinished;
         sendDragAndDropMessage (msg);
     }
 
-    void handleDragAndDropStatus (const XClientMessageEvent& clientMsg)
+    void handleExternalSelectionClear()
     {
-        if ((clientMsg.data.l[1] & 1) == 0)
+        if (dragState.dragging)
+            externalResetDragAndDrop();
+    }
+
+    void handleExternalSelectionRequest (const XEvent& evt)
+    {
+        Atom targetType = evt.xselectionrequest.target;
+
+        XEvent s;
+        s.xselection.type = SelectionNotify;
+        s.xselection.requestor = evt.xselectionrequest.requestor;
+        s.xselection.selection = evt.xselectionrequest.selection;
+        s.xselection.target = targetType;
+        s.xselection.property = None;
+        s.xselection.time = evt.xselectionrequest.time;
+
+        if (dragState.matchesTarget (targetType))
         {
-            sendDragAndDropLeave();
+            s.xselection.property = evt.xselectionrequest.property;
 
-            if (dragInfo.files.size() > 0)
-                handleDragExit (dragInfo);
-
-            dragInfo.files.clear();
+            xchangeProperty (evt.xselectionrequest.requestor,
+                             evt.xselectionrequest.property,
+                             targetType, 8,
+                             dragState.textOrFiles.toRawUTF8(),
+                             dragState.textOrFiles.getNumBytesAsUTF8());
         }
+
+        XSendEvent (display, evt.xselectionrequest.requestor, True, 0, &s);
+    }
+
+    void handleExternalDragAndDropStatus (const XClientMessageEvent& clientMsg)
+    {
+        if (dragState.expectingStatus)
+        {
+            dragState.expectingStatus = false;
+            dragState.canDrop = false;
+            dragState.silentRect = Rectangle<int>();
+
+            if ((clientMsg.data.l[1] & 1) != 0
+                 && ((Atom) clientMsg.data.l[4] == Atoms::get().XdndActionCopy
+                      || (Atom) clientMsg.data.l[4] == Atoms::get().XdndActionPrivate))
+            {
+                if ((clientMsg.data.l[1] & 2) == 0) // target requests silent rectangle
+                    dragState.silentRect.setBounds (clientMsg.data.l[2] >> 16,
+                                                    clientMsg.data.l[2] & 0xffff,
+                                                    clientMsg.data.l[3] >> 16,
+                                                    clientMsg.data.l[3] & 0xffff);
+
+                dragState.canDrop = true;
+            }
+        }
+    }
+
+    void handleExternalDragButtonReleaseEvent()
+    {
+        if (dragState.dragging)
+            XUngrabPointer (display, CurrentTime);
+
+        if (dragState.canDrop)
+        {
+            sendExternalDragAndDropDrop (dragState.targetWindow);
+        }
+        else
+        {
+            sendExternalDragAndDropLeave (dragState.targetWindow);
+            externalResetDragAndDrop();
+        }
+    }
+
+    void handleExternalDragMotionNotify()
+    {
+        Window targetWindow = externalFindDragTargetWindow (RootWindow (display, DefaultScreen (display)));
+
+        if (dragState.targetWindow != targetWindow)
+        {
+            if (dragState.targetWindow != None)
+                sendExternalDragAndDropLeave (dragState.targetWindow);
+
+            dragState.canDrop = false;
+            dragState.silentRect = Rectangle<int>();
+
+            if (targetWindow == None)
+                return;
+
+            GetXProperty prop (targetWindow, Atoms::get().XdndAware,
+                               0, 2, false, AnyPropertyType);
+
+            if (prop.success
+                 && prop.data != None
+                 && prop.actualFormat == 32
+                 && prop.numItems == 1)
+            {
+                dragState.xdndVersion = jmin ((int) prop.data[0], (int) Atoms::DndVersion);
+            }
+            else
+            {
+                dragState.xdndVersion = -1;
+                return;
+            }
+
+            sendExternalDragAndDropEnter (targetWindow);
+            dragState.targetWindow = targetWindow;
+        }
+
+        if (! dragState.expectingStatus)
+            sendExternalDragAndDropPosition (targetWindow);
     }
 
     void handleDragAndDropPosition (const XClientMessageEvent& clientMsg)
@@ -2364,51 +2631,62 @@ private:
 
         Point<int> dropPos ((int) clientMsg.data.l[2] >> 16,
                             (int) clientMsg.data.l[2] & 0xffff);
-        dropPos -= getScreenPosition();
+        dropPos -= bounds.getPosition();
+
+        const Atoms& atoms = Atoms::get();
+        Atom targetAction = atoms.XdndActionCopy;
+
+        for (int i = numElementsInArray (atoms.allowedActions); --i >= 0;)
+        {
+            if ((Atom) clientMsg.data.l[4] == atoms.allowedActions[i])
+            {
+                targetAction = atoms.allowedActions[i];
+                break;
+            }
+        }
+
+        sendDragAndDropStatus (true, targetAction);
 
         if (dragInfo.position != dropPos)
         {
             dragInfo.position = dropPos;
 
-            const Atoms& atoms = Atoms::get();
-            Atom targetAction = atoms.XdndActionCopy;
-
-            for (int i = numElementsInArray (atoms.allowedActions); --i >= 0;)
-            {
-                if ((Atom) clientMsg.data.l[4] == atoms.allowedActions[i])
-                {
-                    targetAction = atoms.allowedActions[i];
-                    break;
-                }
-            }
-
-            sendDragAndDropStatus (true, targetAction);
-
-            if (dragInfo.files.size() == 0)
+            if (dragInfo.isEmpty())
                 updateDraggedFileList (clientMsg);
 
-            if (dragInfo.files.size() > 0)
+            if (! dragInfo.isEmpty())
                 handleDragMove (dragInfo);
         }
     }
 
     void handleDragAndDropDrop (const XClientMessageEvent& clientMsg)
     {
-        if (dragInfo.files.size() == 0)
+        if (dragInfo.isEmpty())
+        {
+            // no data, transaction finished in handleDragAndDropSelection()
+            finishAfterDropDataReceived = true;
             updateDraggedFileList (clientMsg);
+        }
+        else
+        {
+            handleDragAndDropDataReceived();  // data was already received
+        }
+    }
 
+    void handleDragAndDropDataReceived()
+    {
         DragInfo dragInfoCopy (dragInfo);
 
         sendDragAndDropFinish();
         resetDragAndDrop();
 
-        if (dragInfoCopy.files.size() > 0)
+        if (! dragInfoCopy.isEmpty())
             handleDragDrop (dragInfoCopy);
     }
 
     void handleDragAndDropEnter (const XClientMessageEvent& clientMsg)
     {
-        dragInfo.files.clear();
+        dragInfo.clear();
         srcMimeTypeAtomList.clear();
 
         dragAndDropCurrentMimeType = 0;
@@ -2464,9 +2742,9 @@ private:
 
     void handleDragAndDropSelection (const XEvent& evt)
     {
-        dragInfo.files.clear();
+        dragInfo.clear();
 
-        if (evt.xselection.property != 0)
+        if (evt.xselection.property != None)
         {
             StringArray lines;
 
@@ -2476,7 +2754,7 @@ private:
                 for (;;)
                 {
                     GetXProperty prop (evt.xany.window, evt.xselection.property,
-                                       dropData.getSize() / 4, 65536, true, AnyPropertyType);
+                                       dropData.getSize() / 4, 65536, false, AnyPropertyType);
 
                     if (! prop.success)
                         break;
@@ -2490,20 +2768,30 @@ private:
                 lines.addLines (dropData.toString());
             }
 
-            for (int i = 0; i < lines.size(); ++i)
-                dragInfo.files.add (URL::removeEscapeChars (lines[i].fromFirstOccurrenceOf ("file://", false, true)));
+            if (Atoms::isMimeTypeFile (dragAndDropCurrentMimeType))
+            {
+                for (int i = 0; i < lines.size(); ++i)
+                    dragInfo.files.add (URL::removeEscapeChars (lines[i].replace ("file://", String::empty, true)));
 
-            dragInfo.files.trim();
-            dragInfo.files.removeEmptyStrings();
+                dragInfo.files.trim();
+                dragInfo.files.removeEmptyStrings();
+            }
+            else
+            {
+                dragInfo.text = lines.joinIntoString ("\n");
+            }
+
+            if (finishAfterDropDataReceived)
+                handleDragAndDropDataReceived();
         }
     }
 
     void updateDraggedFileList (const XClientMessageEvent& clientMsg)
     {
-        dragInfo.files.clear();
+        jassert (dragInfo.isEmpty());
 
         if (dragAndDropSourceWindow != None
-             && dragAndDropCurrentMimeType != 0)
+             && dragAndDropCurrentMimeType != None)
         {
             ScopedXLock xlock;
             XConvertSelection (display,
@@ -2515,9 +2803,89 @@ private:
         }
     }
 
+    static bool isWindowDnDAware (Window w)
+    {
+        int numProperties = 0;
+        Atom* const atoms = XListProperties (display, w, &numProperties);
+
+        bool dndAwarePropFound = false;
+        for (int i = 0; i < numProperties; ++i)
+            if (atoms[i] == Atoms::get().XdndAware)
+                dndAwarePropFound = true;
+
+        if (atoms != nullptr)
+            XFree (atoms);
+
+        return dndAwarePropFound;
+    }
+
+    Window externalFindDragTargetWindow (Window targetWindow)
+    {
+        if (targetWindow == None)
+            return None;
+
+        if (isWindowDnDAware (targetWindow))
+            return targetWindow;
+
+        Window child, phonyWin;
+        int phony;
+        unsigned int uphony;
+
+        XQueryPointer (display, targetWindow, &phonyWin, &child,
+                       &phony, &phony, &phony, &phony, &uphony);
+
+        return externalFindDragTargetWindow (child);
+    }
+
+    bool externalDragInit (bool isText, const String& textOrFiles)
+    {
+        ScopedXLock xlock;
+
+        resetExternalDragState();
+        dragState.isText = isText;
+        dragState.textOrFiles = textOrFiles;
+        dragState.targetWindow = windowH;
+
+        const int pointerGrabMask = Button1MotionMask | ButtonReleaseMask;
+
+        if (XGrabPointer (display, windowH, True, pointerGrabMask,
+                          GrabModeAsync, GrabModeAsync, None, None, CurrentTime) == GrabSuccess)
+        {
+            // No other method of changing the pointer seems to work, this call is needed from this very context
+            XChangeActivePointerGrab (display, pointerGrabMask, (Cursor) createDraggingHandCursor(), CurrentTime);
+
+            const Atoms& atoms = Atoms::get();
+            XSetSelectionOwner (display, atoms.XdndSelection, windowH, CurrentTime);
+
+            // save the available types to XdndTypeList
+            xchangeProperty (windowH, atoms.XdndTypeList, XA_ATOM, 32,
+                             dragState.getMimeTypes(),
+                             dragState.getNumMimeTypes());
+
+            dragState.dragging = true;
+            handleExternalDragMotionNotify();
+            return true;
+        }
+
+        return false;
+    }
+
+    void externalResetDragAndDrop()
+    {
+        if (dragState.dragging)
+        {
+            ScopedXLock xlock;
+            XUngrabPointer (display, CurrentTime);
+        }
+
+        resetExternalDragState();
+    }
+
+    DragState dragState;
     DragInfo dragInfo;
     Atom dragAndDropCurrentMimeType;
     Window dragAndDropSourceWindow;
+    bool finishAfterDropDataReceived;
 
     Array <Atom> srcMimeTypeAtomList;
 
@@ -2554,7 +2922,7 @@ private:
         lastMousePos = Point<int> (0x100000, 0x100000);
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LinuxComponentPeer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LinuxComponentPeer)
 };
 
 ModifierKeys LinuxComponentPeer::currentModifiers;
@@ -2562,14 +2930,14 @@ bool LinuxComponentPeer::isActiveApplication = false;
 Point<int> LinuxComponentPeer::lastMousePos;
 
 //==============================================================================
-bool Process::isForegroundProcess()
+JUCE_API bool JUCE_CALLTYPE Process::isForegroundProcess()
 {
     return LinuxComponentPeer::isActiveApplication;
 }
 
-void Process::makeForegroundProcess()
-{
-}
+// N/A on Linux as far as I know.
+JUCE_API void JUCE_CALLTYPE Process::makeForegroundProcess() {}
+JUCE_API void JUCE_CALLTYPE Process::hide() {}
 
 //==============================================================================
 void ModifierKeys::updateCurrentModifiers() noexcept
@@ -2600,10 +2968,10 @@ ModifierKeys ModifierKeys::getCurrentModifiersRealtime() noexcept
 
 
 //==============================================================================
-void Desktop::setKioskComponent (Component* kioskModeComponent, bool enableOrDisable, bool allowMenusAndBars)
+void Desktop::setKioskComponent (Component* kioskModeComponent, bool enableOrDisable, bool /* allowMenusAndBars */)
 {
     if (enableOrDisable)
-        kioskModeComponent->setBounds (Desktop::getInstance().getDisplays().getMainDisplay().totalArea);
+        kioskModeComponent->setBounds (getDisplays().getMainDisplay().totalArea);
 }
 
 //==============================================================================
@@ -2613,7 +2981,14 @@ ComponentPeer* Component::createNewPeer (int styleFlags, void* nativeWindowToAtt
 }
 
 //==============================================================================
-void Desktop::Displays::findDisplays()
+static double getDisplayDPI (int index)
+{
+    double dpiX = (DisplayWidth  (display, index) * 25.4) / DisplayWidthMM  (display, index);
+    double dpiY = (DisplayHeight (display, index) * 25.4) / DisplayHeightMM (display, index);
+    return (dpiX + dpiY) / 2.0;
+}
+
+void Desktop::Displays::findDisplays (float masterScale)
 {
     if (display == 0)
         return;
@@ -2663,9 +3038,10 @@ void Desktop::Displays::findDisplays()
                             d.userArea = d.totalArea = Rectangle<int> (screens[j].x_org,
                                                                        screens[j].y_org,
                                                                        screens[j].width,
-                                                                       screens[j].height);
+                                                                       screens[j].height) * masterScale;
                             d.isMain = (index == 0);
-                            d.scale = 1.0;
+                            d.scale = masterScale;
+                            d.dpi = getDisplayDPI (index);
 
                             displays.add (d);
                         }
@@ -2696,9 +3072,10 @@ void Desktop::Displays::findDisplays()
 
                     Display d;
                     d.userArea = d.totalArea = Rectangle<int> (position[0], position[1],
-                                                               position[2], position[3]);
+                                                               position[2], position[3]) / masterScale;
                     d.isMain = (displays.size() == 0);
-                    d.scale = 1.0;
+                    d.scale = masterScale;
+                    d.dpi = getDisplayDPI (i);
 
                     displays.add (d);
                 }
@@ -2708,10 +3085,11 @@ void Desktop::Displays::findDisplays()
         if (displays.size() == 0)
         {
             Display d;
-            d.userArea = d.totalArea = Rectangle<int> (DisplayWidth (display, DefaultScreen (display)),
-                                                       DisplayHeight (display, DefaultScreen (display)));
+            d.userArea = d.totalArea = Rectangle<int> (DisplayWidth  (display, DefaultScreen (display)),
+                                                       DisplayHeight (display, DefaultScreen (display))) * masterScale;
             d.isMain = true;
-            d.scale = 1.0;
+            d.scale = masterScale;
+            d.dpi = getDisplayDPI (0);
 
             displays.add (d);
         }
@@ -2719,9 +3097,15 @@ void Desktop::Displays::findDisplays()
 }
 
 //==============================================================================
-void Desktop::createMouseInputSources()
+bool MouseInputSource::SourceList::addSource()
 {
-    mouseSources.add (new MouseInputSource (0, true));
+    if (sources.size() == 0)
+    {
+        addSource (0, true);
+        return true;
+    }
+
+    return false;
 }
 
 bool Desktop::canUseSemiTransparentWindows() noexcept
@@ -2733,7 +3117,7 @@ bool Desktop::canUseSemiTransparentWindows() noexcept
              && (matchedDepth == desiredDepth);
 }
 
-Point<int> MouseInputSource::getCurrentMousePosition()
+Point<int> MouseInputSource::getCurrentRawMousePosition()
 {
     Window root, child;
     int x, y, winx, winy;
@@ -2753,11 +3137,16 @@ Point<int> MouseInputSource::getCurrentMousePosition()
     return Point<int> (x, y);
 }
 
-void Desktop::setMousePosition (const Point<int>& newPosition)
+void MouseInputSource::setRawMousePosition (Point<int> newPosition)
 {
     ScopedXLock xlock;
     Window root = RootWindow (display, DefaultScreen (display));
     XWarpPointer (display, None, root, 0, 0, 0, 0, newPosition.getX(), newPosition.getY());
+}
+
+double Desktop::getDefaultMasterScale()
+{
+    return 1.0;
 }
 
 Desktop::DisplayOrientation Desktop::getCurrentOrientation() const
@@ -2947,16 +3336,7 @@ void* MouseCursor::createStandardMouseCursor (MouseCursor::StandardCursorType ty
         case BottomLeftCornerResizeCursor:  shape = XC_bottom_left_corner; break;
         case BottomRightCornerResizeCursor: shape = XC_bottom_right_corner; break;
         case CrosshairCursor:               shape = XC_crosshair; break;
-
-        case DraggingHandCursor:
-        {
-            static unsigned char dragHandData[] = { 71,73,70,56,57,97,16,0,16,0,145,2,0,0,0,0,255,255,255,0,
-              0,0,0,0,0,33,249,4,1,0,0,2,0,44,0,0,0,0,16,0, 16,0,0,2,52,148,47,0,200,185,16,130,90,12,74,139,107,84,123,39,
-              132,117,151,116,132,146,248,60,209,138,98,22,203,114,34,236,37,52,77,217, 247,154,191,119,110,240,193,128,193,95,163,56,60,234,98,135,2,0,59 };
-            const int dragHandDataSize = 99;
-
-            return CustomMouseCursorInfo (ImageFileFormat::loadFrom (dragHandData, dragHandDataSize), 8, 7).create();
-        }
+        case DraggingHandCursor:            return createDraggingHandCursor();
 
         case CopyingCursor:
         {
@@ -2991,7 +3371,7 @@ void MouseCursor::showInAllWindows() const
 }
 
 //==============================================================================
-Image juce_createIconForFile (const File& file)
+Image juce_createIconForFile (const File& /* file */)
 {
     return Image::null;
 }
@@ -2999,13 +3379,31 @@ Image juce_createIconForFile (const File& file)
 //==============================================================================
 bool DragAndDropContainer::performExternalDragDropOfFiles (const StringArray& files, const bool canMoveFiles)
 {
-    jassertfalse;    // not implemented!
+    if (files.size() == 0)
+        return false;
+
+    if (MouseInputSource* draggingSource = Desktop::getInstance().getDraggingMouseSource(0))
+        if (Component* sourceComp = draggingSource->getComponentUnderMouse())
+            if (LinuxComponentPeer* const lp = dynamic_cast <LinuxComponentPeer*> (sourceComp->getPeer()))
+                return lp->externalDragFileInit (files, canMoveFiles);
+
+    // This method must be called in response to a component's mouseDown or mouseDrag event!
+    jassertfalse;
     return false;
 }
 
 bool DragAndDropContainer::performExternalDragDropOfText (const String& text)
 {
-    jassertfalse;    // not implemented!
+    if (text.isEmpty())
+        return false;
+
+    if (MouseInputSource* draggingSource = Desktop::getInstance().getDraggingMouseSource(0))
+        if (Component* sourceComp = draggingSource->getComponentUnderMouse())
+            if (LinuxComponentPeer* const lp = dynamic_cast <LinuxComponentPeer*> (sourceComp->getPeer()))
+                return lp->externalDragTextInit (text);
+
+    // This method must be called in response to a component's mouseDown or mouseDrag event!
+    jassertfalse;
     return false;
 }
 
@@ -3017,18 +3415,21 @@ void LookAndFeel::playAlertSound()
 
 
 //==============================================================================
+#if JUCE_MODAL_LOOPS_PERMITTED
 void JUCE_CALLTYPE NativeMessageBox::showMessageBox (AlertWindow::AlertIconType iconType,
                                                      const String& title, const String& message,
-                                                     Component* associatedComponent)
+                                                     Component* /* associatedComponent */)
 {
-    AlertWindow::showMessageBox (AlertWindow::NoIcon, title, message);
+    AlertWindow::showMessageBox (iconType, title, message);
 }
+#endif
 
 void JUCE_CALLTYPE NativeMessageBox::showMessageBoxAsync (AlertWindow::AlertIconType iconType,
                                                           const String& title, const String& message,
-                                                          Component* associatedComponent)
+                                                          Component* associatedComponent,
+                                                          ModalComponentManager::Callback* callback)
 {
-    AlertWindow::showMessageBoxAsync (AlertWindow::NoIcon, title, message);
+    AlertWindow::showMessageBoxAsync (iconType, title, message, String::empty, associatedComponent, callback);
 }
 
 bool JUCE_CALLTYPE NativeMessageBox::showOkCancelBox (AlertWindow::AlertIconType iconType,

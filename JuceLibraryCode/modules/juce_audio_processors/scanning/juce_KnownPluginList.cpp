@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -68,7 +67,7 @@ bool KnownPluginList::addType (const PluginDescription& type)
         }
     }
 
-    types.add (new PluginDescription (type));
+    types.insert (0, new PluginDescription (type));
     sendChangeMessage();
     return true;
 }
@@ -79,27 +78,10 @@ void KnownPluginList::removeType (const int index)
     sendChangeMessage();
 }
 
-namespace
+bool KnownPluginList::isListingUpToDate (const String& fileOrIdentifier,
+                                         AudioPluginFormat& formatToUse) const
 {
-    Time getPluginFileModTime (const String& fileOrIdentifier)
-    {
-        if (fileOrIdentifier.startsWithChar ('/') || fileOrIdentifier[1] == ':')
-            return File (fileOrIdentifier).getLastModificationTime();
-
-        return Time();
-    }
-
-    bool timesAreDifferent (const Time& t1, const Time& t2) noexcept
-    {
-        return t1 != t2 || t1 == Time();
-    }
-
-    enum { menuIdBase = 0x324503f4 };
-}
-
-bool KnownPluginList::isListingUpToDate (const String& fileOrIdentifier) const
-{
-    if (getTypeForFile (fileOrIdentifier) == 0)
+    if (getTypeForFile (fileOrIdentifier) == nullptr)
         return false;
 
     for (int i = types.size(); --i >= 0;)
@@ -107,13 +89,16 @@ bool KnownPluginList::isListingUpToDate (const String& fileOrIdentifier) const
         const PluginDescription* const d = types.getUnchecked(i);
 
         if (d->fileOrIdentifier == fileOrIdentifier
-             && timesAreDifferent (d->lastFileModTime, getPluginFileModTime (fileOrIdentifier)))
-        {
+             && formatToUse.pluginNeedsRescanning (*d))
             return false;
-        }
     }
 
     return true;
+}
+
+void KnownPluginList::setCustomScanner (CustomScanner* newScanner)
+{
+    scanner = newScanner;
 }
 
 bool KnownPluginList::scanAndAddFile (const String& fileOrIdentifier,
@@ -121,7 +106,7 @@ bool KnownPluginList::scanAndAddFile (const String& fileOrIdentifier,
                                       OwnedArray <PluginDescription>& typesFound,
                                       AudioPluginFormat& format)
 {
-    bool addedOne = false;
+    const ScopedLock sl (scanLock);
 
     if (dontRescanIfAlreadyInList
          && getTypeForFile (fileOrIdentifier) != nullptr)
@@ -134,7 +119,7 @@ bool KnownPluginList::scanAndAddFile (const String& fileOrIdentifier,
 
             if (d->fileOrIdentifier == fileOrIdentifier && d->pluginFormatName == format.getName())
             {
-                if (timesAreDifferent (d->lastFileModTime, getPluginFileModTime (fileOrIdentifier)))
+                if (format.pluginNeedsRescanning (*d))
                     needsRescanning = true;
                 else
                     typesFound.add (new PluginDescription (*d));
@@ -145,22 +130,35 @@ bool KnownPluginList::scanAndAddFile (const String& fileOrIdentifier,
             return false;
     }
 
+    if (blacklist.contains (fileOrIdentifier))
+        return false;
+
     OwnedArray <PluginDescription> found;
-    format.findAllTypesForFile (found, fileOrIdentifier);
+
+    {
+        const ScopedUnlock sl2 (scanLock);
+
+        if (scanner != nullptr)
+        {
+            if (! scanner->findPluginTypesFor (format, found, fileOrIdentifier))
+                addToBlacklist (fileOrIdentifier);
+        }
+        else
+        {
+            format.findAllTypesForFile (found, fileOrIdentifier);
+        }
+    }
 
     for (int i = 0; i < found.size(); ++i)
     {
         PluginDescription* const desc = found.getUnchecked(i);
         jassert (desc != nullptr);
 
-        if (addType (*desc))
-        {
-            addedOne = true;
-            typesFound.add (new PluginDescription (*desc));
-        }
+        addType (*desc);
+        typesFound.add (new PluginDescription (*desc));
     }
 
-    return addedOne;
+    return found.size() > 0;
 }
 
 void KnownPluginList::scanAndAddDragAndDroppedFiles (AudioPluginFormatManager& formatManager,
@@ -169,37 +167,81 @@ void KnownPluginList::scanAndAddDragAndDroppedFiles (AudioPluginFormatManager& f
 {
     for (int i = 0; i < files.size(); ++i)
     {
+        const String filenameOrID (files[i]);
+        bool found = false;
+
         for (int j = 0; j < formatManager.getNumFormats(); ++j)
         {
             AudioPluginFormat* const format = formatManager.getFormat (j);
 
-            if (scanAndAddFile (files[i], true, typesFound, *format))
-                return;
-        }
-
-        const File f (files[i]);
-
-        if (f.isDirectory())
-        {
-            StringArray s;
-
+            if (format->fileMightContainThisPluginType (filenameOrID)
+                 && scanAndAddFile (filenameOrID, true, typesFound, *format))
             {
-                Array<File> subFiles;
-                f.findChildFiles (subFiles, File::findFilesAndDirectories, false);
-
-                for (int j = 0; j < subFiles.size(); ++j)
-                    s.add (subFiles.getReference(j).getFullPathName());
+                found = true;
+                break;
             }
-
-            scanAndAddDragAndDroppedFiles (formatManager, s, typesFound);
         }
+
+        if (! found)
+        {
+            const File f (filenameOrID);
+
+            if (f.isDirectory())
+            {
+                StringArray s;
+
+                {
+                    Array<File> subFiles;
+                    f.findChildFiles (subFiles, File::findFilesAndDirectories, false);
+
+                    for (int j = 0; j < subFiles.size(); ++j)
+                        s.add (subFiles.getReference(j).getFullPathName());
+                }
+
+                scanAndAddDragAndDroppedFiles (formatManager, s, typesFound);
+            }
+        }
+    }
+}
+
+const StringArray& KnownPluginList::getBlacklistedFiles() const
+{
+    return blacklist;
+}
+
+void KnownPluginList::addToBlacklist (const String& pluginID)
+{
+    if (! blacklist.contains (pluginID))
+    {
+        blacklist.add (pluginID);
+        sendChangeMessage();
+    }
+}
+
+void KnownPluginList::removeFromBlacklist (const String& pluginID)
+{
+    const int index = blacklist.indexOf (pluginID);
+
+    if (index >= 0)
+    {
+        blacklist.remove (index);
+        sendChangeMessage();
+    }
+}
+
+void KnownPluginList::clearBlacklistedFiles()
+{
+    if (blacklist.size() > 0)
+    {
+        blacklist.clear();
+        sendChangeMessage();
     }
 }
 
 //==============================================================================
 struct PluginSorter
 {
-    PluginSorter (KnownPluginList::SortMethod method_) noexcept  : method (method_) {}
+    PluginSorter (KnownPluginList::SortMethod sortMethod) noexcept  : method (sortMethod) {}
 
     int compareElements (const PluginDescription* const first,
                          const PluginDescription* const second) const
@@ -248,12 +290,16 @@ XmlElement* KnownPluginList::createXml() const
     for (int i = 0; i < types.size(); ++i)
         e->addChildElement (types.getUnchecked(i)->createXml());
 
+    for (int i = 0; i < blacklist.size(); ++i)
+        e->createNewChildElement ("BLACKLISTED")->setAttribute ("id", blacklist[i]);
+
     return e;
 }
 
 void KnownPluginList::recreateFromXml (const XmlElement& xml)
 {
     clear();
+    clearBlacklistedFiles();
 
     if (xml.hasTagName ("KNOWNPLUGINS"))
     {
@@ -261,7 +307,9 @@ void KnownPluginList::recreateFromXml (const XmlElement& xml)
         {
             PluginDescription info;
 
-            if (info.loadFromXml (*e))
+            if (e->hasTagName ("BLACKLISTED"))
+                blacklist.add (e->getStringAttribute ("id"));
+            else if (info.loadFromXml (*e))
                 addType (info);
         }
     }
@@ -270,6 +318,8 @@ void KnownPluginList::recreateFromXml (const XmlElement& xml)
 //==============================================================================
 struct PluginTreeUtils
 {
+    enum { menuIdBase = 0x324503f4 };
+
     static void buildTreeByFolder (KnownPluginList::PluginTree& tree, const Array <PluginDescription*>& allPlugins)
     {
         for (int i = 0; i < allPlugins.size(); ++i)
@@ -285,7 +335,32 @@ struct PluginTreeUtils
             addPlugin (tree, pd, path);
         }
 
-        optimise (tree);
+        optimiseFolders (tree, false);
+    }
+
+    static void optimiseFolders (KnownPluginList::PluginTree& tree, bool concatenateName)
+    {
+        for (int i = tree.subFolders.size(); --i >= 0;)
+        {
+            KnownPluginList::PluginTree& sub = *tree.subFolders.getUnchecked(i);
+            optimiseFolders (sub, concatenateName || (tree.subFolders.size() > 1));
+
+            if (sub.plugins.size() == 0)
+            {
+                for (int j = 0; j < sub.subFolders.size(); ++j)
+                {
+                    KnownPluginList::PluginTree* const s = sub.subFolders.getUnchecked(j);
+
+                    if (concatenateName)
+                        s->folder = sub.folder + "/" + s->folder;
+
+                    tree.subFolders.add (s);
+                }
+
+                sub.subFolders.clear (false);
+                tree.subFolders.remove (i);
+            }
+        }
     }
 
     static void buildTreeByCategory (KnownPluginList::PluginTree& tree,
@@ -360,25 +435,6 @@ struct PluginTreeUtils
         }
     }
 
-    // removes any deeply nested folders that don't contain any actual plugins
-    static void optimise (KnownPluginList::PluginTree& tree)
-    {
-        for (int i = tree.subFolders.size(); --i >= 0;)
-        {
-            KnownPluginList::PluginTree& sub = *tree.subFolders.getUnchecked(i);
-            optimise (sub);
-
-            if (sub.plugins.size() == 0)
-            {
-                for (int j = 0; j < sub.subFolders.size(); ++j)
-                    tree.subFolders.add (sub.subFolders.getUnchecked(j));
-
-                sub.subFolders.clear (false);
-                tree.subFolders.remove (i);
-            }
-        }
-    }
-
     static void addToMenu (const KnownPluginList::PluginTree& tree, PopupMenu& m, const OwnedArray <PluginDescription>& allPlugins)
     {
         for (int i = 0; i < tree.subFolders.size(); ++i)
@@ -438,6 +494,10 @@ void KnownPluginList::addToMenu (PopupMenu& menu, const SortMethod sortMethod) c
 
 int KnownPluginList::getIndexChosenByMenu (const int menuResultCode) const
 {
-    const int i = menuResultCode - menuIdBase;
+    const int i = menuResultCode - PluginTreeUtils::menuIdBase;
     return isPositiveAndBelow (i, types.size()) ? i : -1;
 }
+
+//==============================================================================
+KnownPluginList::CustomScanner::CustomScanner() {}
+KnownPluginList::CustomScanner::~CustomScanner() {}

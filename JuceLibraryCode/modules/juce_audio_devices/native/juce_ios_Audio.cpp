@@ -1,32 +1,31 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-class IPhoneAudioIODevice  : public AudioIODevice
+class iOSAudioIODevice  : public AudioIODevice
 {
 public:
-    IPhoneAudioIODevice (const String& deviceName)
+    iOSAudioIODevice (const String& deviceName)
         : AudioIODevice (deviceName, "Audio"),
           actualBufferSize (0),
           isRunning (false),
@@ -43,7 +42,7 @@ public:
         updateDeviceInfo();
     }
 
-    ~IPhoneAudioIODevice()
+    ~iOSAudioIODevice()
     {
         getSessionHolder().activeDevices.removeFirstMatchingValue (this);
         close();
@@ -77,8 +76,7 @@ public:
 
     String open (const BigInteger& inputChannels,
                  const BigInteger& outputChannels,
-                 double sampleRate,
-                 int bufferSize)
+                 double sampleRate, int bufferSize)
     {
         close();
 
@@ -99,18 +97,16 @@ public:
 
         AudioSessionSetActive (true);
 
-        UInt32 audioCategory = kAudioSessionCategory_MediaPlayback;
-
         if (numInputChannels > 0 && audioInputIsAvailable)
         {
-            audioCategory = kAudioSessionCategory_PlayAndRecord;
-
-            UInt32 allowBluetoothInput = 1;
-            AudioSessionSetProperty (kAudioSessionProperty_OverrideCategoryEnableBluetoothInput,
-                                     sizeof (allowBluetoothInput), &allowBluetoothInput);
+            setSessionUInt32Property (kAudioSessionProperty_AudioCategory, kAudioSessionCategory_PlayAndRecord);
+            setSessionUInt32Property (kAudioSessionProperty_OverrideCategoryEnableBluetoothInput, 1);
+        }
+        else
+        {
+            setSessionUInt32Property (kAudioSessionProperty_AudioCategory, kAudioSessionCategory_MediaPlayback);
         }
 
-        AudioSessionSetProperty (kAudioSessionProperty_AudioCategory, sizeof (audioCategory), &audioCategory);
         AudioSessionAddPropertyListener (kAudioSessionProperty_AudioRouteChange, routingChangedStatic, this);
 
         fixAudioRouteIfSetToReceiver();
@@ -120,7 +116,7 @@ public:
         AudioSessionSetProperty (kAudioSessionProperty_PreferredHardwareIOBufferDuration, sizeof (bufferDuration), &bufferDuration);
         actualBufferSize = preferredBufferSize;
 
-        prepareFloatBuffers();
+        prepareFloatBuffers (actualBufferSize);
 
         isRunning = true;
         routingChanged (nullptr);  // creates and starts the AU
@@ -134,6 +130,9 @@ public:
         if (isRunning)
         {
             isRunning = false;
+
+            setSessionUInt32Property (kAudioSessionProperty_AudioCategory, kAudioSessionCategory_MediaPlayback);
+
             AudioSessionRemovePropertyListenerWithUserData (kAudioSessionProperty_AudioRouteChange, routingChangedStatic, this);
             AudioSessionSetActive (false);
 
@@ -157,15 +156,15 @@ public:
     int getOutputLatencyInSamples()               { return 0; } //xxx
     int getInputLatencyInSamples()                { return 0; } //xxx
 
-    void start (AudioIODeviceCallback* callback_)
+    void start (AudioIODeviceCallback* newCallback)
     {
-        if (isRunning && callback != callback_)
+        if (isRunning && callback != newCallback)
         {
-            if (callback_ != nullptr)
-                callback_->audioDeviceAboutToStart (this);
+            if (newCallback != nullptr)
+                newCallback->audioDeviceAboutToStart (this);
 
             const ScopedLock sl (callbackLock);
-            callback = callback_;
+            callback = newCallback;
         }
     }
 
@@ -209,17 +208,20 @@ private:
     float* outputChannels[3];
     bool monoInputChannelNumber, monoOutputChannelNumber;
 
-    void prepareFloatBuffers()
+    void prepareFloatBuffers (int bufferSize)
     {
-        floatData.setSize (numInputChannels + numOutputChannels, actualBufferSize);
-        zeromem (inputChannels, sizeof (inputChannels));
-        zeromem (outputChannels, sizeof (outputChannels));
+        if (numInputChannels + numOutputChannels > 0)
+        {
+            floatData.setSize (numInputChannels + numOutputChannels, bufferSize);
+            zeromem (inputChannels, sizeof (inputChannels));
+            zeromem (outputChannels, sizeof (outputChannels));
 
-        for (int i = 0; i < numInputChannels; ++i)
-            inputChannels[i] = floatData.getSampleData (i);
+            for (int i = 0; i < numInputChannels; ++i)
+                inputChannels[i] = floatData.getSampleData (i);
 
-        for (int i = 0; i < numOutputChannels; ++i)
-            outputChannels[i] = floatData.getSampleData (i + numInputChannels);
+            for (int i = 0; i < numOutputChannels; ++i)
+                outputChannels[i] = floatData.getSampleData (i + numInputChannels);
+        }
     }
 
     //==================================================================================================
@@ -235,6 +237,9 @@ private:
 
         if (callback != nullptr)
         {
+            // This shouldn't ever get triggered, but please let me know if it does!
+            jassert (numFrames <= floatData.getNumSamples());
+
             if (audioInputIsAvailable && numInputChannels > 0)
             {
                 short* shortData = (short*) data->mBuffers[0].mData;
@@ -325,7 +330,12 @@ private:
             CFNumberGetValue (routeChangeReasonRef, kCFNumberSInt32Type, &routeChangeReason);
 
             if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable)
-                fixAudioRouteIfSetToReceiver();
+            {
+                const ScopedLock sl (callbackLock);
+
+                if (callback != nullptr)
+                    callback->audioDeviceError ("Old device unavailable");
+            }
         }
 
         updateDeviceInfo();
@@ -340,7 +350,7 @@ private:
 
             Float32 bufferDuration = preferredBufferSize / sampleRate;
             UInt32 bufferDurationSize = sizeof (bufferDuration);
-            AudioSessionGetProperty (kAudioSessionProperty_CurrentHardwareIOBufferDuration, &bufferDurationSize, &bufferDurationSize);
+            AudioSessionGetProperty (kAudioSessionProperty_CurrentHardwareIOBufferDuration, &bufferDurationSize, &bufferDuration);
             actualBufferSize = (int) (sampleRate * bufferDuration + 0.5);
 
             AudioOutputUnitStart (audioUnit);
@@ -357,13 +367,13 @@ private:
 
         static void interruptionListenerCallback (void* client, UInt32 interruptionType)
         {
-            const Array <IPhoneAudioIODevice*>& activeDevices = static_cast <AudioSessionHolder*> (client)->activeDevices;
+            const Array <iOSAudioIODevice*>& activeDevices = static_cast <AudioSessionHolder*> (client)->activeDevices;
 
             for (int i = activeDevices.size(); --i >= 0;)
                 activeDevices.getUnchecked(i)->interruptionListener (interruptionType);
         }
 
-        Array <IPhoneAudioIODevice*> activeDevices;
+        Array <iOSAudioIODevice*> activeDevices;
     };
 
     static AudioSessionHolder& getSessionHolder()
@@ -376,14 +386,14 @@ private:
     {
         if (interruptionType == kAudioSessionBeginInterruption)
         {
-            close();
+            isRunning = false;
+            AudioOutputUnitStop (audioUnit);
+            AudioSessionSetActive (false);
 
-            {
-                const ScopedLock sl (callbackLock);
+            const ScopedLock sl (callbackLock);
 
-                if (callback != nullptr)
-                    callback->audioDeviceError ("iOS audio session interruption");
-            }
+            if (callback != nullptr)
+                callback->audioDeviceError ("iOS audio session interruption");
         }
 
         if (interruptionType == kAudioSessionEndInterruption)
@@ -398,12 +408,12 @@ private:
     static OSStatus processStatic (void* client, AudioUnitRenderActionFlags* flags, const AudioTimeStamp* time,
                                    UInt32 /*busNumber*/, UInt32 numFrames, AudioBufferList* data)
     {
-        return static_cast <IPhoneAudioIODevice*> (client)->process (flags, time, numFrames, data);
+        return static_cast <iOSAudioIODevice*> (client)->process (flags, time, numFrames, data);
     }
 
     static void routingChangedStatic (void* client, AudioSessionPropertyID, UInt32 /*inDataSize*/, const void* propertyValue)
     {
-        static_cast <IPhoneAudioIODevice*> (client)->routingChanged (propertyValue);
+        static_cast <iOSAudioIODevice*> (client)->routingChanged (propertyValue);
     }
 
     //==================================================================================================
@@ -483,26 +493,26 @@ private:
             //DBG ("audio route: " + nsStringToJuce (route));
 
             if ([route hasPrefix: @"Receiver"])
-            {
-                UInt32 audioRouteOverride = kAudioSessionOverrideAudioRoute_Speaker;
-                AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute, sizeof (audioRouteOverride), &audioRouteOverride);
-            }
+                setSessionUInt32Property (kAudioSessionProperty_OverrideAudioRoute, kAudioSessionOverrideAudioRoute_Speaker);
 
             CFRelease (audioRoute);
         }
     }
 
-    JUCE_DECLARE_NON_COPYABLE (IPhoneAudioIODevice);
+    static void setSessionUInt32Property (AudioSessionPropertyID propID, UInt32 value)
+    {
+        AudioSessionSetProperty (propID, sizeof (value), &value);
+    }
+
+    JUCE_DECLARE_NON_COPYABLE (iOSAudioIODevice)
 };
 
 
 //==============================================================================
-class IPhoneAudioIODeviceType  : public AudioIODeviceType
+class iOSAudioIODeviceType  : public AudioIODeviceType
 {
 public:
-    //==============================================================================
-    IPhoneAudioIODeviceType()
-        : AudioIODeviceType ("iPhone Audio")
+    iOSAudioIODeviceType()  : AudioIODeviceType ("iOS Audio")
     {
     }
 
@@ -510,7 +520,7 @@ public:
 
     StringArray getDeviceNames (bool wantInputNames) const
     {
-        return StringArray ("iPhone Audio");
+        return StringArray ("iOS Audio");
     }
 
     int getDefaultDeviceIndex (bool forInput) const
@@ -529,18 +539,18 @@ public:
                                  const String& inputDeviceName)
     {
         if (outputDeviceName.isNotEmpty() || inputDeviceName.isNotEmpty())
-            return new IPhoneAudioIODevice (outputDeviceName.isNotEmpty() ? outputDeviceName
-                                                                          : inputDeviceName);
+            return new iOSAudioIODevice (outputDeviceName.isNotEmpty() ? outputDeviceName
+                                                                       : inputDeviceName);
 
         return nullptr;
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IPhoneAudioIODeviceType);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (iOSAudioIODeviceType)
 };
 
 //==============================================================================
 AudioIODeviceType* AudioIODeviceType::createAudioIODeviceType_iOSAudio()
 {
-    return new IPhoneAudioIODeviceType();
+    return new iOSAudioIODeviceType();
 }

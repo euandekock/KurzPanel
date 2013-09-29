@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -90,14 +89,23 @@ namespace OggVorbisNamespace
 
 //==============================================================================
 static const char* const oggFormatName = "Ogg-Vorbis file";
-static const char* const oggExtensions[] = { ".ogg", 0 };
+
+const char* const OggVorbisAudioFormat::encoderName = "encoder";
+const char* const OggVorbisAudioFormat::id3title = "id3title";
+const char* const OggVorbisAudioFormat::id3artist = "id3artist";
+const char* const OggVorbisAudioFormat::id3album = "id3album";
+const char* const OggVorbisAudioFormat::id3comment = "id3comment";
+const char* const OggVorbisAudioFormat::id3date = "id3date";
+const char* const OggVorbisAudioFormat::id3genre = "id3genre";
+const char* const OggVorbisAudioFormat::id3trackNumber = "id3trackNumber";
+
 
 //==============================================================================
 class OggReader : public AudioFormatReader
 {
 public:
     OggReader (InputStream* const inp)
-        : AudioFormatReader (inp, TRANS (oggFormatName)),
+        : AudioFormatReader (inp, oggFormatName),
           reservoir (2, 4096),
           reservoirStart (0),
           samplesInReservoir (0)
@@ -106,10 +114,10 @@ public:
         sampleRate = 0;
         usesFloatingPointData = true;
 
-        callbacks.read_func = &oggReadCallback;
-        callbacks.seek_func = &oggSeekCallback;
+        callbacks.read_func  = &oggReadCallback;
+        callbacks.seek_func  = &oggSeekCallback;
         callbacks.close_func = &oggCloseCallback;
-        callbacks.tell_func = &oggTellCallback;
+        callbacks.tell_func  = &oggTellCallback;
 
         const int err = ov_open_callbacks (input, &ovFile, 0, 0, callbacks);
 
@@ -133,7 +141,7 @@ public:
 
     //==============================================================================
     bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      int64 startSampleInFile, int numSamples)
+                      int64 startSampleInFile, int numSamples) override
     {
         while (numSamples > 0)
         {
@@ -213,12 +221,12 @@ public:
     //==============================================================================
     static size_t oggReadCallback (void* ptr, size_t size, size_t nmemb, void* datasource)
     {
-        return (size_t) (static_cast <InputStream*> (datasource)->read (ptr, (int) (size * nmemb))) / size;
+        return (size_t) (static_cast<InputStream*> (datasource)->read (ptr, (int) (size * nmemb))) / size;
     }
 
     static int oggSeekCallback (void* datasource, OggVorbisNamespace::ogg_int64_t offset, int whence)
     {
-        InputStream* const in = static_cast <InputStream*> (datasource);
+        InputStream* const in = static_cast<InputStream*> (datasource);
 
         if (whence == SEEK_CUR)
             offset += in->getPosition();
@@ -236,7 +244,7 @@ public:
 
     static long oggTellCallback (void* datasource)
     {
-        return (long) static_cast <InputStream*> (datasource)->getPosition();
+        return (long) static_cast<InputStream*> (datasource)->getPosition();
     }
 
 private:
@@ -245,7 +253,7 @@ private:
     AudioSampleBuffer reservoir;
     int reservoirStart, samplesInReservoir;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OggReader);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OggReader)
 };
 
 //==============================================================================
@@ -257,8 +265,8 @@ public:
                const unsigned int numChannels_,
                const unsigned int bitsPerSample_,
                const int qualityIndex,
-               const StringPairArray& metadataValues)
-        : AudioFormatWriter (out, TRANS (oggFormatName), sampleRate_, numChannels_, bitsPerSample_),
+               const StringPairArray& metadata)
+        : AudioFormatWriter (out, oggFormatName, sampleRate_, numChannels_, bitsPerSample_),
           ok (false)
     {
         using namespace OggVorbisNamespace;
@@ -270,9 +278,14 @@ public:
         {
             vorbis_comment_init (&vc);
 
-            const String encoder (metadataValues [OggVorbisAudioFormat::encoderName]);
-            if (encoder.isNotEmpty())
-                vorbis_comment_add_tag (&vc, "ENCODER", const_cast <char*> (encoder.toUTF8().getAddress()));
+            addMetadata (metadata, OggVorbisAudioFormat::encoderName,    "ENCODER");
+            addMetadata (metadata, OggVorbisAudioFormat::id3title,       "TITLE");
+            addMetadata (metadata, OggVorbisAudioFormat::id3artist,      "ARTIST");
+            addMetadata (metadata, OggVorbisAudioFormat::id3album,       "ALBUM");
+            addMetadata (metadata, OggVorbisAudioFormat::id3comment,     "COMMENT");
+            addMetadata (metadata, OggVorbisAudioFormat::id3date,        "DATE");
+            addMetadata (metadata, OggVorbisAudioFormat::id3genre,       "GENRE");
+            addMetadata (metadata, OggVorbisAudioFormat::id3trackNumber, "TRACKNUMBER");
 
             vorbis_analysis_init (&vd, &vi);
             vorbis_block_init (&vd, &vb);
@@ -294,8 +307,8 @@ public:
                 if (ogg_stream_flush (&os, &og) == 0)
                     break;
 
-                output->write (og.header, og.header_len);
-                output->write (og.body, og.body_len);
+                output->write (og.header, (size_t) og.header_len);
+                output->write (og.body,   (size_t) og.body_len);
             }
 
             ok = true;
@@ -327,7 +340,7 @@ public:
     }
 
     //==============================================================================
-    bool write (const int** samplesToWrite, int numSamples)
+    bool write (const int** samplesToWrite, int numSamples) override
     {
         if (ok)
         {
@@ -377,8 +390,8 @@ public:
                     if (ogg_stream_pageout (&os, &og) == 0)
                         break;
 
-                    output->write (og.header, og.header_len);
-                    output->write (og.body, og.body_len);
+                    output->write (og.header, (size_t) og.header_len);
+                    output->write (og.body,   (size_t) og.body_len);
 
                     if (ogg_page_eos (&og))
                         break;
@@ -398,13 +411,20 @@ private:
     OggVorbisNamespace::vorbis_dsp_state vd;
     OggVorbisNamespace::vorbis_block vb;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OggWriter);
+    void addMetadata (const StringPairArray& metadata, const char* name, const char* vorbisName)
+    {
+        const String s (metadata [name]);
+
+        if (s.isNotEmpty())
+            vorbis_comment_add_tag (&vc, vorbisName, const_cast <char*> (s.toRawUTF8()));
+    }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OggWriter)
 };
 
 
 //==============================================================================
-OggVorbisAudioFormat::OggVorbisAudioFormat()
-    : AudioFormat (TRANS (oggFormatName), StringArray (oggExtensions))
+OggVorbisAudioFormat::OggVorbisAudioFormat()  : AudioFormat (oggFormatName, ".ogg")
 {
 }
 
@@ -414,21 +434,22 @@ OggVorbisAudioFormat::~OggVorbisAudioFormat()
 
 Array<int> OggVorbisAudioFormat::getPossibleSampleRates()
 {
-    const int rates[] = { 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000, 0 };
-    return Array <int> (rates);
+    const int rates[] = { 8000, 11025, 12000, 16000, 22050, 32000,
+                          44100, 48000, 88200, 96000, 176400, 192000 };
+
+    return Array<int> (rates, numElementsInArray (rates));
 }
 
 Array<int> OggVorbisAudioFormat::getPossibleBitDepths()
 {
-    const int depths[] = { 32, 0 };
-    return Array <int> (depths);
+    const int depths[] = { 32 };
+
+    return Array<int> (depths, numElementsInArray (depths));
 }
 
 bool OggVorbisAudioFormat::canDoStereo()    { return true; }
 bool OggVorbisAudioFormat::canDoMono()      { return true; }
 bool OggVorbisAudioFormat::isCompressed()   { return true; }
-
-const char* const OggVorbisAudioFormat::encoderName = "encoder";
 
 AudioFormatReader* OggVorbisAudioFormat::createReaderFor (InputStream* in, const bool deleteStreamIfOpeningFails)
 {
@@ -465,30 +486,35 @@ StringArray OggVorbisAudioFormat::getQualityOptions()
 
 int OggVorbisAudioFormat::estimateOggFileQuality (const File& source)
 {
-    FileInputStream* const in = source.createInputStream();
-
-    if (in != nullptr)
+    if (FileInputStream* const in = source.createInputStream())
     {
-        ScopedPointer <AudioFormatReader> r (createReaderFor (in, true));
+        ScopedPointer<AudioFormatReader> r (createReaderFor (in, true));
 
         if (r != nullptr)
         {
-            const int64 numSamps = r->lengthInSamples;
-            r = nullptr;
+            const double lengthSecs = r->lengthInSamples / r->sampleRate;
+            const int approxBitsPerSecond = (int) (source.getSize() * 8 / lengthSecs);
 
-            const int64 fileNumSamps = source.getSize() / 4;
-            const double ratio = numSamps / (double) fileNumSamps;
+            const StringArray qualities (getQualityOptions());
+            int bestIndex = 0;
+            int bestDiff = 10000;
 
-            if (ratio > 12.0)
-                return 0;
-            else if (ratio > 6.0)
-                return 1;
-            else
-                return 2;
+            for (int i = qualities.size(); --i >= 0;)
+            {
+                const int diff = std::abs (qualities[i].getIntValue() - approxBitsPerSecond);
+
+                if (diff < bestDiff)
+                {
+                    bestDiff = diff;
+                    bestIndex = i;
+                }
+            }
+
+            return bestIndex;
         }
     }
 
-    return 1;
+    return 0;
 }
 
 #endif

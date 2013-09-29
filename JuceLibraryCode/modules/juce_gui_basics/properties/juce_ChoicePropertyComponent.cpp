@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -27,23 +26,28 @@ class ChoicePropertyComponent::RemapperValueSource    : public Value::ValueSourc
                                                         private ValueListener
 {
 public:
-    RemapperValueSource (const Value& sourceValue_, const Array<var>& mappings_)
-       : sourceValue (sourceValue_),
-         mappings (mappings_)
+    RemapperValueSource (const Value& source, const Array<var>& map)
+       : sourceValue (source), mappings (map)
     {
         sourceValue.addListener (this);
     }
 
     var getValue() const
     {
-        return mappings.indexOf (sourceValue.getValue()) + 1;
+        const var targetValue (sourceValue.getValue());
+
+        for (int i = 0; i < mappings.size(); ++i)
+            if (mappings.getReference(i).equalsWithSameType (targetValue))
+                return i + 1;
+
+        return mappings.indexOf (targetValue) + 1;
     }
 
     void setValue (const var& newValue)
     {
-        const var remappedVal (mappings [(int) newValue - 1]);
+        const var remappedVal (mappings [static_cast <int> (newValue) - 1]);
 
-        if (remappedVal != sourceValue)
+        if (! remappedVal.equalsWithSameType (sourceValue))
             sourceValue = remappedVal;
     }
 
@@ -56,7 +60,7 @@ protected:
         sendChangeMessage (true);
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RemapperValueSource);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RemapperValueSource)
 };
 
 
@@ -69,10 +73,10 @@ ChoicePropertyComponent::ChoicePropertyComponent (const String& name)
 
 ChoicePropertyComponent::ChoicePropertyComponent (const Value& valueToControl,
                                                   const String& name,
-                                                  const StringArray& choices_,
+                                                  const StringArray& choiceList,
                                                   const Array <var>& correspondingValues)
     : PropertyComponent (name),
-      choices (choices_),
+      choices (choiceList),
       isCustomClass (false)
 {
     // The array of corresponding values must contain one value for each of the items in
@@ -81,7 +85,8 @@ ChoicePropertyComponent::ChoicePropertyComponent (const Value& valueToControl,
 
     createComboBox();
 
-    comboBox.getSelectedIdAsValue().referTo (Value (new RemapperValueSource (valueToControl, correspondingValues)));
+    comboBox.getSelectedIdAsValue().referTo (Value (new RemapperValueSource (valueToControl,
+                                                                             correspondingValues)));
 }
 
 ChoicePropertyComponent::~ChoicePropertyComponent()
@@ -131,7 +136,7 @@ void ChoicePropertyComponent::refresh()
             comboBox.addListener (this);
         }
 
-        comboBox.setSelectedId (getIndex() + 1, true);
+        comboBox.setSelectedId (getIndex() + 1, dontSendNotification);
     }
 }
 

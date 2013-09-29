@@ -1,29 +1,28 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
 
-DialogWindow::DialogWindow (const String& name, const Colour& colour,
+DialogWindow::DialogWindow (const String& name, Colour colour,
                             const bool escapeCloses, const bool onDesktop)
     : DocumentWindow (name, colour, DocumentWindow::closeButton, onDesktop),
       escapeKeyTriggersCloseButton (escapeCloses)
@@ -70,9 +69,7 @@ public:
                         options.escapeKeyTriggersCloseButton, true)
     {
         setUsingNativeTitleBar (options.useNativeTitleBar);
-
-        if (! JUCEApplication::isStandaloneApp())
-            setAlwaysOnTop (true); // for a plugin, make it always-on-top because the host windows are often top-level
+        setAlwaysOnTop (juce_areThereAnyAlwaysOnTopWindows());
 
         if (options.content.willDeleteObject())
             setContentOwned (options.content.release(), true);
@@ -83,13 +80,13 @@ public:
         setResizable (options.resizable, options.useBottomRightCornerResizer);
     }
 
-    void closeButtonPressed()
+    void closeButtonPressed() override
     {
         setVisible (false);
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE (DefaultDialogWindow);
+    JUCE_DECLARE_NON_COPYABLE (DefaultDialogWindow)
 };
 
 DialogWindow::LaunchOptions::LaunchOptions() noexcept
@@ -102,11 +99,16 @@ DialogWindow::LaunchOptions::LaunchOptions() noexcept
 {
 }
 
-DialogWindow* DialogWindow::LaunchOptions::launchAsync()
+DialogWindow* DialogWindow::LaunchOptions::create()
 {
     jassert (content != nullptr); // You need to provide some kind of content for the dialog!
 
-    DefaultDialogWindow* const d = new DefaultDialogWindow (*this);
+    return new DefaultDialogWindow (*this);
+}
+
+DialogWindow* DialogWindow::LaunchOptions::launchAsync()
+{
+    DialogWindow* const d = create();
     d->enterModalState (true, nullptr, true);
     return d;
 }
@@ -122,7 +124,7 @@ int DialogWindow::LaunchOptions::runModal()
 void DialogWindow::showDialog (const String& dialogTitle,
                                Component* const contentComponent,
                                Component* const componentToCentreAround,
-                               const Colour& backgroundColour,
+                               Colour backgroundColour,
                                const bool escapeKeyTriggersCloseButton,
                                const bool resizable,
                                const bool useBottomRightCornerResizer)
@@ -144,7 +146,7 @@ void DialogWindow::showDialog (const String& dialogTitle,
 int DialogWindow::showModalDialog (const String& dialogTitle,
                                    Component* const contentComponent,
                                    Component* const componentToCentreAround,
-                                   const Colour& backgroundColour,
+                                   Colour backgroundColour,
                                    const bool escapeKeyTriggersCloseButton,
                                    const bool resizable,
                                    const bool useBottomRightCornerResizer)

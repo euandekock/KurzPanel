@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE library - "Jules' Utility Class Extensions"
-   Copyright 2004-11 by Raw Material Software Ltd.
+   This file is part of the JUCE library.
+   Copyright (c) 2013 - Raw Material Software Ltd.
 
-  ------------------------------------------------------------------------------
+   Permission is granted to use this software under the terms of either:
+   a) the GPL v2 (or any later version)
+   b) the Affero GPL v3
 
-   JUCE can be redistributed and/or modified under the terms of the GNU General
-   Public License (Version 2), as published by the Free Software Foundation.
-   A copy of the license is included in the JUCE distribution, or can be found
-   online at www.gnu.org/licenses.
+   Details of these licenses can be found at: www.gnu.org/licenses
 
    JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
    A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  ------------------------------------------------------------------------------
+   ------------------------------------------------------------------------------
 
    To release a closed-source product which uses JUCE, commercial licenses are
-   available: visit www.rawmaterialsoftware.com/juce for more information.
+   available: visit www.juce.com for more information.
 
   ==============================================================================
 */
@@ -32,13 +31,13 @@ public:
         setWantsKeyboardFocus (false);
     }
 
-    void paintButton (Graphics& g, bool over, bool down)
+    void paintButton (Graphics& g, bool over, bool down) override
     {
         getLookAndFeel().drawScrollbarButton (g, owner, getWidth(), getHeight(),
                                               direction, owner.isVertical(), over, down);
     }
 
-    void clicked()
+    void clicked() override
     {
         owner.moveScrollbarInSteps ((direction == 1 || direction == 2) ? 1 : -1);
     }
@@ -48,7 +47,7 @@ public:
 private:
     ScrollBar& owner;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScrollbarButton);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ScrollbarButton)
 };
 
 
@@ -79,23 +78,24 @@ ScrollBar::~ScrollBar()
 }
 
 //==============================================================================
-void ScrollBar::setRangeLimits (const Range<double>& newRangeLimit)
+void ScrollBar::setRangeLimits (Range<double> newRangeLimit, NotificationType notification)
 {
     if (totalRange != newRangeLimit)
     {
         totalRange = newRangeLimit;
-        setCurrentRange (visibleRange);
+        setCurrentRange (visibleRange, notification);
         updateThumbPosition();
     }
 }
 
-void ScrollBar::setRangeLimits (const double newMinimum, const double newMaximum)
+void ScrollBar::setRangeLimits (const double newMinimum, const double newMaximum, NotificationType notification)
 {
     jassert (newMaximum >= newMinimum); // these can't be the wrong way round!
-    setRangeLimits (Range<double> (newMinimum, newMaximum));
+    setRangeLimits (Range<double> (newMinimum, newMaximum), notification);
 }
 
-bool ScrollBar::setCurrentRange (const Range<double>& newRange)
+bool ScrollBar::setCurrentRange (Range<double> newRange,
+                                 const NotificationType notification)
 {
     const Range<double> constrainedRange (totalRange.constrainRange (newRange));
 
@@ -104,7 +104,12 @@ bool ScrollBar::setCurrentRange (const Range<double>& newRange)
         visibleRange = constrainedRange;
 
         updateThumbPosition();
-        triggerAsyncUpdate();
+
+        if (notification != dontSendNotification)
+            triggerAsyncUpdate();
+
+        if (notification == sendNotificationSync)
+            handleUpdateNowIfNeeded();
 
         return true;
     }
@@ -112,14 +117,14 @@ bool ScrollBar::setCurrentRange (const Range<double>& newRange)
     return false;
 }
 
-void ScrollBar::setCurrentRange (const double newStart, const double newSize)
+void ScrollBar::setCurrentRange (const double newStart, const double newSize, NotificationType notification)
 {
-    setCurrentRange (Range<double> (newStart, newStart + newSize));
+    setCurrentRange (Range<double> (newStart, newStart + newSize), notification);
 }
 
-void ScrollBar::setCurrentRangeStart (const double newStart)
+void ScrollBar::setCurrentRangeStart (const double newStart, NotificationType notification)
 {
-    setCurrentRange (visibleRange.movedToStartAt (newStart));
+    setCurrentRange (visibleRange.movedToStartAt (newStart), notification);
 }
 
 void ScrollBar::setSingleStepSize (const double newSingleStepSize) noexcept
@@ -127,24 +132,24 @@ void ScrollBar::setSingleStepSize (const double newSingleStepSize) noexcept
     singleStepSize = newSingleStepSize;
 }
 
-bool ScrollBar::moveScrollbarInSteps (const int howManySteps)
+bool ScrollBar::moveScrollbarInSteps (const int howManySteps, NotificationType notification)
 {
-    return setCurrentRange (visibleRange + howManySteps * singleStepSize);
+    return setCurrentRange (visibleRange + howManySteps * singleStepSize, notification);
 }
 
-bool ScrollBar::moveScrollbarInPages (const int howManyPages)
+bool ScrollBar::moveScrollbarInPages (const int howManyPages, NotificationType notification)
 {
-    return setCurrentRange (visibleRange + howManyPages * visibleRange.getLength());
+    return setCurrentRange (visibleRange + howManyPages * visibleRange.getLength(), notification);
 }
 
-bool ScrollBar::scrollToTop()
+bool ScrollBar::scrollToTop (NotificationType notification)
 {
-    return setCurrentRange (visibleRange.movedToStartAt (getMinimumRangeLimit()));
+    return setCurrentRange (visibleRange.movedToStartAt (getMinimumRangeLimit()), notification);
 }
 
-bool ScrollBar::scrollToBottom()
+bool ScrollBar::scrollToBottom (NotificationType notification)
 {
-    return setCurrentRange (visibleRange.movedToEndAt (getMaximumRangeLimit()));
+    return setCurrentRange (visibleRange.movedToEndAt (getMaximumRangeLimit()), notification);
 }
 
 void ScrollBar::setButtonRepeatSpeed (const int initialDelayInMillisecs_,
@@ -352,7 +357,7 @@ void ScrollBar::mouseDrag (const MouseEvent& e)
 {
     const int mousePos = vertical ? e.y : e.x;
 
-    if (isDraggingThumb && lastMousePos != mousePos)
+    if (isDraggingThumb && lastMousePos != mousePos && thumbAreaSize > thumbSize)
     {
         const int deltaPixels = mousePos - dragStartMousePos;
 
@@ -404,12 +409,12 @@ bool ScrollBar::keyPressed (const KeyPress& key)
 {
     if (isVisible())
     {
-        if (key == KeyPress::upKey || key == KeyPress::leftKey)         return moveScrollbarInSteps (-1);
-        else if (key == KeyPress::downKey || key == KeyPress::rightKey) return moveScrollbarInSteps (1);
-        else if (key == KeyPress::pageUpKey)                            return moveScrollbarInPages (-1);
-        else if (key == KeyPress::pageDownKey)                          return moveScrollbarInPages (1);
-        else if (key == KeyPress::homeKey)                              return scrollToTop();
-        else if (key == KeyPress::endKey)                               return scrollToBottom();
+        if (key == KeyPress::upKey || key == KeyPress::leftKey)    return moveScrollbarInSteps (-1);
+        if (key == KeyPress::downKey || key == KeyPress::rightKey) return moveScrollbarInSteps (1);
+        if (key == KeyPress::pageUpKey)                            return moveScrollbarInPages (-1);
+        if (key == KeyPress::pageDownKey)                          return moveScrollbarInPages (1);
+        if (key == KeyPress::homeKey)                              return scrollToTop();
+        if (key == KeyPress::endKey)                               return scrollToBottom();
     }
 
     return false;
