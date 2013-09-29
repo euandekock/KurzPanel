@@ -447,6 +447,176 @@ Rack::Rack ()
     label23->setColour (TextEditor::textColourId, Colours::black);
     label23->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (iButton10 = new ImageButton ("new button"));
+    iButton10->addListener (this);
+
+    iButton10->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton11 = new ImageButton ("new button"));
+    iButton11->addListener (this);
+
+    iButton11->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton12 = new ImageButton ("new button"));
+    iButton12->addListener (this);
+
+    iButton12->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton13 = new ImageButton ("new button"));
+    iButton13->addListener (this);
+
+    iButton13->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton14 = new ImageButton ("new button"));
+    iButton14->addListener (this);
+
+    iButton14->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton15 = new ImageButton ("new button"));
+    iButton15->addListener (this);
+
+    iButton15->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton16 = new ImageButton ("new button"));
+    iButton16->addListener (this);
+
+    iButton16->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton17 = new ImageButton ("new button"));
+    iButton17->addListener (this);
+
+    iButton17->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton18 = new ImageButton ("new button"));
+    iButton18->addListener (this);
+
+    iButton18->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (iButton19 = new ImageButton ("new button"));
+    iButton19->addListener (this);
+
+    iButton19->setImages (false, true, true,
+                          ImageCache::getFromMemory (buttonUp_png, buttonUp_pngSize), 1.000f, Colour (0x00000000),
+                          Image(), 1.000f, Colour (0x00000000),
+                          ImageCache::getFromMemory (buttonDn_png, buttonDn_pngSize), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (label24 = new Label ("new label",
+                                            "A"));
+    label24->setFont (Font (15.00f, Font::plain));
+    label24->setJustificationType (Justification::centred);
+    label24->setEditable (false, false, false);
+    label24->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label24->setColour (Label::textColourId, Colours::white);
+    label24->setColour (TextEditor::textColourId, Colours::black);
+    label24->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label25 = new Label ("new label",
+                                            "B"));
+    label25->setFont (Font (15.00f, Font::plain));
+    label25->setJustificationType (Justification::centred);
+    label25->setEditable (false, false, false);
+    label25->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label25->setColour (Label::textColourId, Colours::white);
+    label25->setColour (TextEditor::textColourId, Colours::black);
+    label25->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label26 = new Label ("new label",
+                                            "C"));
+    label26->setFont (Font (15.00f, Font::plain));
+    label26->setJustificationType (Justification::centred);
+    label26->setEditable (false, false, false);
+    label26->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label26->setColour (Label::textColourId, Colours::white);
+    label26->setColour (TextEditor::textColourId, Colours::black);
+    label26->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label27 = new Label ("new label",
+                                            "D"));
+    label27->setFont (Font (15.00f, Font::plain));
+    label27->setJustificationType (Justification::centred);
+    label27->setEditable (false, false, false);
+    label27->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label27->setColour (Label::textColourId, Colours::white);
+    label27->setColour (TextEditor::textColourId, Colours::black);
+    label27->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label28 = new Label ("new label",
+                                            "E"));
+    label28->setFont (Font (15.00f, Font::plain));
+    label28->setJustificationType (Justification::centred);
+    label28->setEditable (false, false, false);
+    label28->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label28->setColour (Label::textColourId, Colours::white);
+    label28->setColour (TextEditor::textColourId, Colours::black);
+    label28->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label29 = new Label ("new label",
+                                            "F"));
+    label29->setFont (Font (15.00f, Font::plain));
+    label29->setJustificationType (Justification::centred);
+    label29->setEditable (false, false, false);
+    label29->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label29->setColour (Label::textColourId, Colours::white);
+    label29->setColour (TextEditor::textColourId, Colours::black);
+    label29->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label30 = new Label ("new label",
+                                            "G"));
+    label30->setFont (Font (15.00f, Font::plain));
+    label30->setJustificationType (Justification::centred);
+    label30->setEditable (false, false, false);
+    label30->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label30->setColour (Label::textColourId, Colours::white);
+    label30->setColour (TextEditor::textColourId, Colours::black);
+    label30->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label31 = new Label ("new label",
+                                            "H"));
+    label31->setFont (Font (15.00f, Font::plain));
+    label31->setJustificationType (Justification::centred);
+    label31->setEditable (false, false, false);
+    label31->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label31->setColour (Label::textColourId, Colours::white);
+    label31->setColour (TextEditor::textColourId, Colours::black);
+    label31->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label32 = new Label ("new label",
+                                            "I"));
+    label32->setFont (Font (15.00f, Font::plain));
+    label32->setJustificationType (Justification::centred);
+    label32->setEditable (false, false, false);
+    label32->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label32->setColour (Label::textColourId, Colours::white);
+    label32->setColour (TextEditor::textColourId, Colours::black);
+    label32->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label33 = new Label ("new label",
+                                            "J"));
+    label33->setFont (Font (15.00f, Font::plain));
+    label33->setJustificationType (Justification::centred);
+    label33->setEditable (false, false, false);
+    label33->setColour (Label::backgroundColourId, Colour (0x00000000));
+    label33->setColour (Label::textColourId, Colours::white);
+    label33->setColour (TextEditor::textColourId, Colours::black);
+    label33->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     addAndMakeVisible (iButtonChanDD = new ImageButton ("new button"));
     iButtonChanDD->addListener (this);
 
@@ -479,7 +649,7 @@ Rack::Rack ()
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (900, 200);
+    setSize (900, 270);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -567,6 +737,26 @@ Rack::~Rack()
     label21 = nullptr;
     label22 = nullptr;
     label23 = nullptr;
+    iButton10 = nullptr;
+    iButton11 = nullptr;
+    iButton12 = nullptr;
+    iButton13 = nullptr;
+    iButton14 = nullptr;
+    iButton15 = nullptr;
+    iButton16 = nullptr;
+    iButton17 = nullptr;
+    iButton18 = nullptr;
+    iButton19 = nullptr;
+    label24 = nullptr;
+    label25 = nullptr;
+    label26 = nullptr;
+    label27 = nullptr;
+    label28 = nullptr;
+    label29 = nullptr;
+    label30 = nullptr;
+    label31 = nullptr;
+    label32 = nullptr;
+    label33 = nullptr;
     iButtonChanDD = nullptr;
     iButtonProgDD = nullptr;
     iButtonValDD = nullptr;
@@ -642,6 +832,26 @@ void Rack::resized()
     label21->setBounds (24, 16, 104, 24);
     label22->setBounds (128, 16, 24, 24);
     label23->setBounds (640, 48, 90, 60);
+    iButton10->setBounds (256, 208, 30, 30);
+    iButton11->setBounds (320, 208, 30, 30);
+    iButton12->setBounds (384, 208, 30, 30);
+    iButton13->setBounds (448, 208, 30, 30);
+    iButton14->setBounds (512, 208, 30, 30);
+    iButton15->setBounds (576, 208, 30, 30);
+    iButton16->setBounds (640, 208, 30, 30);
+    iButton17->setBounds (704, 208, 30, 30);
+    iButton18->setBounds (768, 208, 30, 30);
+    iButton19->setBounds (832, 208, 30, 30);
+    label24->setBounds (256, 234, 30, 30);
+    label25->setBounds (320, 234, 30, 30);
+    label26->setBounds (384, 234, 30, 30);
+    label27->setBounds (448, 234, 30, 30);
+    label28->setBounds (512, 234, 30, 30);
+    label29->setBounds (576, 234, 30, 30);
+    label30->setBounds (640, 234, 30, 30);
+    label31->setBounds (704, 234, 30, 30);
+    label32->setBounds (768, 234, 30, 30);
+    label33->setBounds (832, 234, 30, 30);
     iButtonChanDD->setBounds (424, 24, 14, 14);
     iButtonProgDD->setBounds (552, 24, 14, 14);
     iButtonValDD->setBounds (680, 24, 14, 14);
@@ -816,6 +1026,219 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
         sendSynthKey(K_KEY_STORE);
         //[/UserButtonCode_iButtonStore]
     }
+    else if (buttonThatWasClicked == iButton10)
+    {
+        //[UserButtonCode_iButton10] -- add your button handler code here..
+        if(progDir.Programs.Status == KurzDirList::KDIR_EMPTY)
+            {
+            //sendQueue.clear();
+            //remoteLink->sendDataPacket(msg_42, 7);
+            //remoteLink->sendDataPacket(msg_44, 7);
+            //remoteLink->sendDataPacket(msg_45, 7);
+            //remoteLink->sendDataPacket(msg_46, 7);
+            //remoteLink->sendDataPacket(msg_47, 7);
+            //remoteLink->sendDataPacket(msg_4B, 7);
+            //remoteLink->sendDataPacket(msg_4C, 7);
+            //remoteLink->sendDataPacket(msg_4D, 7);
+            //remoteLink->sendDataPacket(msg_4E, 7);
+            //remoteLink->sendDataPacket(msg_4F, 7);
+            remoteLink->sendDataPacket(msg_50, 7);
+            //remoteLink->sendDataPacket(msg_51, 7);
+            //remoteLink->sendDataPacket(msg_5B, 7);
+            //remoteLink->sendDataPacket(msg_5C, 7);
+            //remoteLink->sendDataPacket(msg_5E, 7);
+            //remoteLink->sendDataPacket(msg_5F, 7);
+            //remoteLink->sendDataPacket(msg_LFO1, 16);
+
+            }
+        else if (progDir.Programs.Status == KurzDirList::KDIR_OK)
+            {
+            progDir.Programs.setSysexLink(remoteLink);
+            k_ShowDirList *showDirList = new k_ShowDirList(progDir, (KurzDirList *)&progDir.Programs);
+            DialogWindow::showModalDialog(String(progDir.Programs.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
+            showDirList->resized();
+
+            delete showDirList;
+
+            //progDir.Programs.ShowList();
+            }
+
+        //[/UserButtonCode_iButton10]
+    }
+    else if (buttonThatWasClicked == iButton11)
+    {
+        //[UserButtonCode_iButton11] -- add your button handler code here..
+        if(progDir.LFOShapes.Status == KurzDirList::KDIR_EMPTY)
+            {
+            remoteLink->sendDataPacket(msg_44, 7);
+            }
+        else if (progDir.LFOShapes.Status == KurzDirList::KDIR_OK)
+            {
+            progDir.LFOShapes.setSysexLink(remoteLink);
+            k_ShowDirList *showDirList = new k_ShowDirList(progDir, (KurzDirList *)&progDir.LFOShapes);
+            DialogWindow::showModalDialog(String(progDir.LFOShapes.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
+            showDirList->resized();
+
+            delete showDirList;
+            }
+        //[/UserButtonCode_iButton11]
+    }
+    else if (buttonThatWasClicked == iButton12)
+    {
+        //[UserButtonCode_iButton12] -- add your button handler code here..
+        if(progDir.MasterTable.Status == KurzDirList::KDIR_EMPTY)
+            {
+            remoteLink->sendDataPacket(msg_42, 7);
+            }
+        else if (progDir.MasterTable.Status == KurzDirList::KDIR_OK)
+            {
+            progDir.MasterTable.setSysexLink(remoteLink);
+            k_ShowDirList *showDirList = new k_ShowDirList(progDir, (KurzDirList *)&progDir.MasterTable);
+            DialogWindow::showModalDialog(String(progDir.MasterTable.TypeDesc.c_str()), showDirList, showDirList, Colours::black, false, true, true);
+            showDirList->resized();
+
+            delete showDirList;
+            }
+
+        //[/UserButtonCode_iButton12]
+    }
+    else if (buttonThatWasClicked == iButton13)
+    {
+        //[UserButtonCode_iButton13] -- add your button handler code here..
+        KurzLFOShapeList lfoDir = progDir.LFOShapes;
+
+        if(lfoDir.List[0x02].Status == KurzDirEntry::KITEM_FULL)
+            {
+            map<uint8, KurzLFOShape>::iterator i;
+
+            i = lfoDir.LFOShapes.find(0x02);
+
+            if(i != lfoDir.LFOShapes.end())
+                {
+                KurzLFOShape &shape = i->second;
+                KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
+                DialogWindow::showModalDialog(String(lfoDir.List[0x01].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
+                delete LFOView;
+                }
+            }
+        else
+            {
+            remoteLink->sendDataPacket(msg_LFO2, 16);
+            }
+        //[/UserButtonCode_iButton13]
+    }
+    else if (buttonThatWasClicked == iButton14)
+    {
+        //[UserButtonCode_iButton14] -- add your button handler code here..
+        KurzLFOShapeList lfoDir = progDir.LFOShapes;
+
+        if(lfoDir.List[0x0f].Status == KurzDirEntry::KITEM_FULL)
+            {
+            map<uint8, KurzLFOShape>::iterator i;
+
+            i = lfoDir.LFOShapes.find(0x0f);
+
+            if(i != lfoDir.LFOShapes.end())
+                {
+                KurzLFOShape &shape = i->second;
+                KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
+                DialogWindow::showModalDialog(String(lfoDir.List[0x01].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
+                delete LFOView;
+                }
+            }
+        else
+            {
+            remoteLink->sendDataPacket(msg_LFO15, 16);
+            }
+        //[/UserButtonCode_iButton14]
+    }
+    else if (buttonThatWasClicked == iButton15)
+    {
+        //[UserButtonCode_iButton15] -- add your button handler code here..
+        KurzLFOShapeList lfoDir = progDir.LFOShapes;
+
+        if(lfoDir.List[0x05].Status == KurzDirEntry::KITEM_FULL)
+            {
+            map<uint8, KurzLFOShape>::iterator i;
+
+            i = lfoDir.LFOShapes.find(0x05);
+
+            if(i != lfoDir.LFOShapes.end())
+                {
+                KurzLFOShape &shape = i->second;
+                KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
+                DialogWindow::showModalDialog(String(lfoDir.List[0x01].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
+                delete LFOView;
+                }
+            }
+        else
+            {
+            remoteLink->sendDataPacket(msg_LFO5, 16);
+            }
+        //[/UserButtonCode_iButton15]
+    }
+    else if (buttonThatWasClicked == iButton16)
+    {
+        //[UserButtonCode_iButton16] -- add your button handler code here..
+        KurzLFOShapeList lfoDir = progDir.LFOShapes;
+
+        if(lfoDir.List[0x13].Status == KurzDirEntry::KITEM_FULL)
+            {
+            map<uint8, KurzLFOShape>::iterator i;
+
+            i = lfoDir.LFOShapes.find(0x13);
+
+            if(i != lfoDir.LFOShapes.end())
+                {
+                KurzLFOShape &shape = i->second;
+                KurzViewLFOShape *LFOView = new KurzViewLFOShape(shape.vectWave);
+                DialogWindow::showModalDialog(String(lfoDir.List[0x01].Name.c_str()), LFOView, LFOView, Colours::black, false, true, true);
+                delete LFOView;
+                }
+            }
+        else
+            {
+            remoteLink->sendDataPacket(msg_LFO19, 16);
+            }
+        //[/UserButtonCode_iButton16]
+    }
+    else if (buttonThatWasClicked == iButton17)
+    {
+        //[UserButtonCode_iButton17] -- add your button handler code here..
+        testKnob *tstK = new testKnob();
+
+        DialogWindow::showModalDialog(String("Test Knob"), tstK, tstK, Colours::black, false, true, true);
+
+        delete tstK;
+        //[/UserButtonCode_iButton17]
+    }
+    else if (buttonThatWasClicked == iButton18)
+    {
+        //[UserButtonCode_iButton18] -- add your button handler code here..
+        //[/UserButtonCode_iButton18]
+    }
+    else if (buttonThatWasClicked == iButton19)
+    {
+        //[UserButtonCode_iButton19] -- add your button handler code here..
+        sendQueue.clear();
+        remoteLink->sendDataPacket(msg_42, 7);
+        remoteLink->sendDataPacket(msg_44, 7);
+        remoteLink->sendDataPacket(msg_45, 7);
+        remoteLink->sendDataPacket(msg_46, 7);
+        remoteLink->sendDataPacket(msg_47, 7);
+        remoteLink->sendDataPacket(msg_4B, 7);
+        remoteLink->sendDataPacket(msg_4C, 7);
+        remoteLink->sendDataPacket(msg_4D, 7);
+        remoteLink->sendDataPacket(msg_4E, 7);
+        remoteLink->sendDataPacket(msg_4F, 7);
+        remoteLink->sendDataPacket(msg_50, 7);
+        remoteLink->sendDataPacket(msg_51, 7);
+        remoteLink->sendDataPacket(msg_5B, 7);
+        //remoteLink->sendDataPacket(msg_5C, 7);
+        remoteLink->sendDataPacket(msg_5E, 7);
+        remoteLink->sendDataPacket(msg_5F, 7);
+        //[/UserButtonCode_iButton19]
+    }
     else if (buttonThatWasClicked == iButtonChanDD)
     {
         //[UserButtonCode_iButtonChanDD] -- add your button handler code here..
@@ -837,6 +1260,25 @@ void Rack::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == iButtonLoad)
     {
         //[UserButtonCode_iButtonLoad] -- add your button handler code here..
+        sendQueue.clear();
+        remoteLink->sendDataPacket(msg_42, 7);
+        remoteLink->sendDataPacket(msg_44, 7);
+        remoteLink->sendDataPacket(msg_45, 7);
+        remoteLink->sendDataPacket(msg_46, 7);
+        remoteLink->sendDataPacket(msg_47, 7);
+        remoteLink->sendDataPacket(msg_4B, 7);
+        remoteLink->sendDataPacket(msg_4C, 7);
+        remoteLink->sendDataPacket(msg_4D, 7);
+        remoteLink->sendDataPacket(msg_4E, 7);
+        //remoteLink->sendDataPacket(msg_4F, 7);
+        remoteLink->sendDataPacket(msg_50, 7);
+        //remoteLink->sendDataPacket(msg_51, 7);
+        remoteLink->sendDataPacket(msg_5B, 7);
+        //remoteLink->sendDataPacket(msg_5C, 7);
+        remoteLink->sendDataPacket(msg_5E, 7);
+        remoteLink->sendDataPacket(msg_5F, 7);
+
+        // We should probably also load all the required parameter tables here.
 
         sendVerReq();
 
@@ -1021,7 +1463,7 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component, public AsyncUpdater, public MidiInputCallback"
                  constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="0" initialWidth="900"
-                 initialHeight="200">
+                 initialHeight="270">
   <BACKGROUND backgroundColour="ff000000"/>
   <LABEL name="new label" id="70cd104284a033ee" memberName="labelLCD"
          virtualName="" explicitFocusOrder="0" pos="32 72 192 40" tooltip="Click here to force a screen refresh"
@@ -1280,6 +1722,116 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="VALUE&#10;&#10;NO       YES"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="15" bold="0" italic="0" justification="36"/>
+  <IMAGEBUTTON name="new button" id="222b6769ac116015" memberName="iButton10"
+               virtualName="" explicitFocusOrder="0" pos="256 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="865b727589fc6e65" memberName="iButton11"
+               virtualName="" explicitFocusOrder="0" pos="320 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="73f267b6b56b4315" memberName="iButton12"
+               virtualName="" explicitFocusOrder="0" pos="384 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="87b94a966850277" memberName="iButton13"
+               virtualName="" explicitFocusOrder="0" pos="448 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="9d48e6789aff33d8" memberName="iButton14"
+               virtualName="" explicitFocusOrder="0" pos="512 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="8493e7ee0cc1374e" memberName="iButton15"
+               virtualName="" explicitFocusOrder="0" pos="576 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="4ddda7e70505d361" memberName="iButton16"
+               virtualName="" explicitFocusOrder="0" pos="640 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="681089bc6e82b166" memberName="iButton17"
+               virtualName="" explicitFocusOrder="0" pos="704 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="6e2ef07195b1fdba" memberName="iButton18"
+               virtualName="" explicitFocusOrder="0" pos="768 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <IMAGEBUTTON name="new button" id="763356b452e3894c" memberName="iButton19"
+               virtualName="" explicitFocusOrder="0" pos="832 208 30 30" buttonText="new button"
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="buttonUp_png" opacityNormal="1" colourNormal="0"
+               resourceOver="" opacityOver="1" colourOver="0" resourceDown="buttonDn_png"
+               opacityDown="1" colourDown="0"/>
+  <LABEL name="new label" id="255608ee318ecc14" memberName="label24" virtualName=""
+         explicitFocusOrder="0" pos="256 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="A" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="3f372bf4ce6a9463" memberName="label25" virtualName=""
+         explicitFocusOrder="0" pos="320 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="B" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="a68a5218cab91533" memberName="label26" virtualName=""
+         explicitFocusOrder="0" pos="384 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="C" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="655569ac5224f5e4" memberName="label27" virtualName=""
+         explicitFocusOrder="0" pos="448 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="D" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="befd9b3ac3861008" memberName="label28" virtualName=""
+         explicitFocusOrder="0" pos="512 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="E" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="7b088af1f1d93c26" memberName="label29" virtualName=""
+         explicitFocusOrder="0" pos="576 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="F" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="989ab026821efc9f" memberName="label30" virtualName=""
+         explicitFocusOrder="0" pos="640 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="G" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="203fe6d1a8f88e1f" memberName="label31" virtualName=""
+         explicitFocusOrder="0" pos="704 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="H" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="314a526b04b3f73b" memberName="label32" virtualName=""
+         explicitFocusOrder="0" pos="768 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="I" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
+  <LABEL name="new label" id="a2e5eea69d36ad2a" memberName="label33" virtualName=""
+         explicitFocusOrder="0" pos="832 234 30 30" bkgCol="0" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="J" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="36"/>
   <IMAGEBUTTON name="new button" id="245c2cd1410ece92" memberName="iButtonChanDD"
                virtualName="" explicitFocusOrder="0" pos="424 24 14 14" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
