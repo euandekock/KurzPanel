@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  23 Sep 2012 2:26:08am
+  Creation date:  14 Oct 2012 11:02:51pm
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,12 +19,13 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_FC528E91__
-#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_FC528E91__
+#ifndef __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_4A73F109__
+#define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_4A73F109__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "k_program.h"
+#include "FilmStripKnob.h"
+#include "k_dir.h"
 //[/Headers]
 
 
@@ -38,36 +39,77 @@
                                                                     //[/Comments]
 */
 class KurzProgramTab  : public Component,
-                        public TableListBoxModel
+                        public ComboBoxListener
 {
 public:
     //==============================================================================
-    KurzProgramTab (KurzProgram &Prog);
+    KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg);
     ~KurzProgramTab();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-
-    // TableListBoxModel Virtual Overrides
-    int getNumRows();
-    void paintRowBackground(juce::Graphics&, int, int, int, bool);
-    void paintCell(juce::Graphics&, int, int, int, int, bool);
     //[/UserMethods]
 
     void paint (Graphics& g);
     void resized();
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
 
+    // Binary resources:
+    static const char* greenWrap40_png;
+    static const int greenWrap40_pngSize;
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    Font font;
+    KurzDir &Dir;
     KurzProgram &Program;
-    uint8 rowCount;
     //[/UserVariables]
 
     //==============================================================================
-    TableListBox* ProgramParam;
+    GroupComponent* gLFO1grp;
+    GroupComponent* gASR2grp;
+    GroupComponent* gASR1grp;
+    GroupComponent* gLFO2grp1;
+    FilmStripKnob* gLFO1Phase;
+    FilmStripKnob* gLFO1Min;
+    FilmStripKnob* gLFO1Max;
+    Label* lShape;
+    Label* lPhase1;
+    Label* lMin1;
+    Label* lMax1;
+    FilmStripKnob* gLFO2Phase;
+    FilmStripKnob* gLFO2Min;
+    FilmStripKnob* gLFO2Max;
+    Label* lShape2;
+    Label* lPhase2;
+    Label* lMin2;
+    Label* lMax2;
+    FilmStripKnob* gASR1Delay;
+    FilmStripKnob* gASR1Attack;
+    FilmStripKnob* gASR1Release;
+    FilmStripKnob* gASR1Sustain;
+    Label* lDelay1;
+    Label* lAttack1;
+    Label* lRelease1;
+    Label* lSustain1;
+    FilmStripKnob* gASR2Delay;
+    FilmStripKnob* gASR2Attack;
+    FilmStripKnob* gASR2Release;
+    FilmStripKnob* gASR2Sustain;
+    Label* lDelay2;
+    Label* lAttack2;
+    Label* lRelease2;
+    Label* lSustain2;
+    ComboBox* gLFO1Shape;
+    ComboBox* gLFO2Shape;
+    Label* lRateC;
+    ComboBox* gLFO1RateC;
+    Label* lRateC2;
+    ComboBox* gLFO2RateC;
+    ComboBox* gASR1Trig;
+    Label* lRateC3;
+    ComboBox* gASR2Trig;
+    Label* lRateC4;
 
 
     //==============================================================================
@@ -75,4 +117,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_FC528E91__
+#endif   // __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_4A73F109__

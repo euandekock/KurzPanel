@@ -11,14 +11,14 @@
       <FILE id="GB7Jqy" name="klogo32x32.png" compile="0" resource="1" file="Images/klogo32x32.png"/>
     </GROUP>
     <GROUP id="{859873B3-6FE5-42EA-F6F0-0DD8A8DBCF22}" name="Source">
+      <FILE id="htlsbD" name="KurzProgramTab.cpp" compile="1" resource="0"
+            file="Source/KurzProgramTab.cpp"/>
+      <FILE id="Ij6QyB" name="KurzProgramTab.h" compile="0" resource="0"
+            file="Source/KurzProgramTab.h"/>
       <FILE id="A8GdUZ" name="MidiList.cpp" compile="1" resource="0" file="Source/MidiList.cpp"/>
       <FILE id="QQCaVa" name="MidiList.h" compile="0" resource="0" file="Source/MidiList.h"/>
       <FILE id="Y82tR0" name="k_tablelist.cpp" compile="1" resource="0" file="Source/k_tablelist.cpp"/>
       <FILE id="tuEVjd" name="k_tablelist.h" compile="0" resource="0" file="Source/k_tablelist.h"/>
-      <FILE id="Tn05Fz" name="KurzProgramTab1.cpp" compile="1" resource="0"
-            file="Source/KurzProgramTab1.cpp"/>
-      <FILE id="lQdk31" name="KurzProgramTab1.h" compile="0" resource="0"
-            file="Source/KurzProgramTab1.h"/>
       <FILE id="nNA7M8" name="FilmStripKnob.h" compile="0" resource="0" file="Source/FilmStripKnob.h"/>
       <FILE id="L8FHPX" name="testKnob.cpp" compile="1" resource="0" file="Source/testKnob.cpp"/>
       <FILE id="vaHfbw" name="testKnob.h" compile="0" resource="0" file="Source/testKnob.h"/>

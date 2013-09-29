@@ -23,7 +23,7 @@
 //[/Headers]
 
 #include "KurzShowProgram.h"
-#include "KurzProgramTab1.h"
+#include "KurzProgramTab.h"
 #include "KurzLayerTab.h"
 
 
@@ -143,7 +143,7 @@ BEGIN_JUCER_METADATA
                    virtualName="" explicitFocusOrder="0" pos="0 0 104.053% 100%"
                    orientation="top" tabBarDepth="30" initialTab="0">
     <TAB name="Program" colour="ff555555" useJucerComp="1" contentClassName="TableListBox"
-         constructorParams="Dir, Program" jucerComponentFile="KurzProgramTab1.cpp"/>
+         constructorParams="Dir, Program" jucerComponentFile="KurzProgramTab.cpp"/>
     <TAB name="Layer 1" colour="ff555555" useJucerComp="1" contentClassName=""
          constructorParams="Program.Layer[0]" jucerComponentFile="KurzLayerTab.cpp"/>
   </TABBEDCOMPONENT>

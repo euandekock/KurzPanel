@@ -49,9 +49,9 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/KurzProgramTab_500a0b4c.o \
   $(OBJDIR)/MidiList_71c54268.o \
   $(OBJDIR)/k_tablelist_942fdd19.o \
-  $(OBJDIR)/KurzProgramTab1_b1495caf.o \
   $(OBJDIR)/testKnob_924e0091.o \
   $(OBJDIR)/KurzLayerTab_19a2f55f.o \
   $(OBJDIR)/KurzShowProgram_3ceea216.o \
@@ -103,6 +103,11 @@ strip:
 	@echo Stripping KurzPanel
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
 
+$(OBJDIR)/KurzProgramTab_500a0b4c.o: ../../Source/KurzProgramTab.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling KurzProgramTab.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/MidiList_71c54268.o: ../../Source/MidiList.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling MidiList.cpp"
@@ -111,11 +116,6 @@ $(OBJDIR)/MidiList_71c54268.o: ../../Source/MidiList.cpp
 $(OBJDIR)/k_tablelist_942fdd19.o: ../../Source/k_tablelist.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling k_tablelist.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/KurzProgramTab1_b1495caf.o: ../../Source/KurzProgramTab1.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling KurzProgramTab1.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/testKnob_924e0091.o: ../../Source/testKnob.cpp
