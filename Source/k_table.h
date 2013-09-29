@@ -2,7 +2,7 @@
 #define K_TABLE_H
 
 #include <cstring>
-#include "juce.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "k_object.h"
 
 /*

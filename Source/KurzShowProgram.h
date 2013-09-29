@@ -23,7 +23,7 @@
 #define __JUCER_HEADER_KURZSHOWPROGRAM_KURZSHOWPROGRAM_B788EEF2__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "juce.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "k_dir.h"
 //[/Headers]
 

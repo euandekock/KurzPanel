@@ -23,7 +23,7 @@
 #define __JUCER_HEADER_TESTKNOB_TESTKNOB_F4884EF1__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "juce.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "FilmStripKnob.h"
 //[/Headers]
 

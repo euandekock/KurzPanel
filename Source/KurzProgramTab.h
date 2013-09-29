@@ -23,7 +23,7 @@
 #define __JUCER_HEADER_KURZPROGRAMTAB_KURZPROGRAMTAB_FC528E91__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "juce.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "k_program.h"
 //[/Headers]
 

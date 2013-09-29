@@ -23,7 +23,7 @@
 #define __JUCER_HEADER_KURZLAYERTAB_KURZLAYERTAB_772783D8__
 
 //[Headers]     -- You can add your own extra header files here --
-#include "juce.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "k_layer.h"
 //[/Headers]
 
