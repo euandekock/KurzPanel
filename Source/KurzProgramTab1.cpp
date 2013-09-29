@@ -444,8 +444,8 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
 
     if(Program.LFO[0].lfobID > 0)
         {
-        gLFO1Shape->setSelectedId(Program.LFO[0].lfobShape, true);
-        gLFO1RateC->setSelectedId(Program.LFO[0].lfobRtCtl, true);
+        gLFO1Shape->setSelectedId(Program.LFO[0].lfobShape);
+        gLFO1RateC->setSelectedId(Program.LFO[0].lfobRtCtl);
         gLFO1Min->setValue(Program.LFO[0].lfobRtMin);
         gLFO1Max->setValue(Program.LFO[0].lfobRtMax);
         gLFO1Phase->setValue((Program.LFO[0].lfobFlags & 0x03) * 42); // Phase 0 = 0, 90 = 42, 180 = 84, 270 = 126
@@ -454,15 +454,15 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
         }
     if(Program.LFO[1].lfobID > 0)
         {
-        gLFO2Shape->setSelectedId(Program.LFO[1].lfobShape, true);
-        gLFO2RateC->setSelectedId(Program.LFO[1].lfobRtCtl, true);
+        gLFO2Shape->setSelectedId(Program.LFO[1].lfobShape);
+        gLFO2RateC->setSelectedId(Program.LFO[1].lfobRtCtl);
         gLFO2Min->setValue(Program.LFO[1].lfobRtMin);
         gLFO2Max->setValue(Program.LFO[1].lfobRtMax);
         gLFO2Phase->setValue((Program.LFO[1].lfobFlags & 0x03) * 42); // Phase 0 = 0, 90 = 42, 180 = 84, 270 = 126
         }
     if(Program.ASR[0].asrbID > 0)
         {
-        gASR1Trig->setSelectedId(Program.ASR[0].asrbTrig, true);
+        gASR1Trig->setSelectedId(Program.ASR[0].asrbTrig);
         gASR1Delay->setValue(Program.ASR[0].asrbDtime);
         gASR1Attack->setValue(Program.ASR[0].asrbAtime);
         gASR1Sustain->setValue(Program.ASR[0].asrbStime);
@@ -470,7 +470,7 @@ KurzProgramTab::KurzProgramTab (KurzDir &DirObj, KurzProgram &Prg)
         }
     if(Program.ASR[1].asrbID > 0)
         {
-        gASR2Trig->setSelectedId(Program.ASR[1].asrbTrig, true);
+        gASR2Trig->setSelectedId(Program.ASR[1].asrbTrig);
         gASR2Delay->setValue(Program.ASR[1].asrbDtime);
         gASR2Attack->setValue(Program.ASR[1].asrbAtime);
         gASR2Sustain->setValue(Program.ASR[1].asrbStime);
